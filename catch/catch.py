@@ -242,7 +242,10 @@ def querying_dicts(file, parameter):
 def organising(list_of_posts):
     posts = []
     for item in list_of_posts:
-        posts.append(" ".join(item))
+        if type(item) is str:
+            posts.append(item)
+        else:
+            posts.append(" ".join(item))
     return posts
 
 def cleaning_special_characters(list_of_posts):
