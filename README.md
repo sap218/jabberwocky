@@ -10,7 +10,7 @@ Samantha C Pendleton | v0.0.1
 `$ python3 setup.py install --user`
 
 ## catch
-`catch` annotates textual data using keywords which searches an ontology for the classes & synonyms. 
+`catch` annotates textual data using keywords which searches an ontology for the classes & synonyms. **Note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase).
 
 #### Running
 ```
