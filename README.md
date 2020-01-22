@@ -1,7 +1,5 @@
 # jabberwocky
 
-Samantha C Pendleton | v0.0.1
-
 **Tool for ontologies. Since we all know ontologies are "nonsense".**
 
 #### Install

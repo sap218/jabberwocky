@@ -216,7 +216,7 @@ def json_get(filename):
     with open(filename) as f_in:
         return(json.load(f_in)) # importing JSON
         
-def querying(file, parameter):
+def querying_list_of_dicts(file, parameter):
     posts = []
     for item in file:
         if parameter in item:
@@ -226,6 +226,18 @@ def querying(file, parameter):
                 if parameter in further_item:
                     posts.append(further_item[parameter])
     return posts
+
+def querying_dicts(file, parameter):
+    posts = []
+    for k,v in file.items():
+        if parameter in v:
+            posts.append(v[parameter])
+        else:
+            for ik,iv in v.items():
+                if parameter in iv:
+                    posts.append(iv[parameter])
+    return posts
+
 
 def organising(list_of_posts):
     posts = []
@@ -262,7 +274,14 @@ def performing_ngrams(list_of_posts, n):
 
 def textmining(textfile, parameter):
     file = json_get(textfile) # Retrieved text file
-    unstructured_posts = querying(file, parameter) # Queried text file using appropriate parameter
+    
+    try:
+        unstructured_posts = querying_list_of_dicts(file, parameter) # Queried text file using appropriate parameter
+    except:
+        pass
+    else:
+        unstructured_posts = querying_dicts(file, parameter)
+    
     structured_posts = organising(unstructured_posts) # Combing potential lists together
     cleaned_posts = cleaning_special_characters(structured_posts) # Cleaned posts file of special characters
     
