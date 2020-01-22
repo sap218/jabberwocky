@@ -27,4 +27,10 @@ Options:
 
 `$ catch -ontology doid.owl -keywords list_of_classes.txt -textfile textualdata.json -parameter post_comment`
 
+###### Output
+* a JSON file of the classes and synonyms for your reference
+* `catch` prints out the texts which include these classes/synonyms, you can use `>` to put into a separate file.
+
+##
+
 The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
