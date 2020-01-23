@@ -7,14 +7,10 @@ tags:
 authors:
   - name: Samantha C Pendleton
     orcid: 0000-0002-6169-0135
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
-  - name: Author Without ORCID
-    affiliation: 2
+    affiliation: 1 # (Multiple affiliations must be quoted)
 affiliations:
  - name: Institute of Cancer and Genomic Sciences, University of Birmingham, UK
    index: 1
- - name: Institution 2
-   index: 2
 date: 22 January 2020
 bibliography: paper.bib
 
