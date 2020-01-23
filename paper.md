@@ -32,6 +32,8 @@ There needed to be a better and easier method to annotate textual data. Especial
 
 With jabberwocky’s ``catch`` command, one can provide some keywords and it will search the chosen ontology for the classes and pairs them with their synonyms. The ``catch`` command then reads and cleans the users’ textual data, and filters the output on whether it finds a class or one of its synonyms in a value.
 
+In the repository, https://github.com/sap218/jabberwocky-tests, I use an example for ``catch``. Out of 26 blog posts, jabberwockys’ ``catch`` returned 13 posts: the correct number. When using Stanford CoreNLP, it returned all 26 posts, however separated each post by their full-stop (``catch`` returns the full post) and so output was larger: 35. One would have to again play with some data in order to see the output properly - another limitation in this area. Compared to jabberwocky’s ``catch``, the command simply returns the texts which contains the label/phrase for individuals to then conduct their own further research on the text itself. 
+
 This is straightforward but powerful, now one can effectively search their text data for some basic classes, but automatically search for all the implied meanings of those keywords too - returning a bigger collection of text to conduct research. The aim of jabberwocky for future development is to utilise the strengths of ontologies and text.
 
 # References
