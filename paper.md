@@ -1,5 +1,5 @@
 ---
-title: 'Annotating texts using ontologies and jabberwocky’s catch'
+title: 'Annotating text with ontologies using jabberwocky’s catch'
 tags:
   - Python
   - Annotation
