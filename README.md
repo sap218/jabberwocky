@@ -19,7 +19,7 @@ Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests
 ## catch
 `catch` annotates textual data using keywords which searches an ontology for the classes & synonyms. **Note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase).
 
-#### Running
+#### Usage
 ```
 $ catch --help
 Usage: catch [OPTIONS]
@@ -31,13 +31,14 @@ Options:
   -parameter TEXT  parameter for the JSON file text
   --help           Show this message and exit.
 ```
-
+#### Running
 `$ catch -ontology doid.owl -keywords list_of_classes.txt -textfile textualdata.json -parameter post_comment`
 
 ###### Output
 * a JSON file of the classes and synonyms for your reference
 * `catch` prints out the texts which include these classes/synonyms, you can use `>` to put into a separate file.
 
-##
+## Thanks!
+Don't hesitate to create an issue/request (see [contributing guidelines](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
 
 The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
