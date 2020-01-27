@@ -7,6 +7,12 @@
 
 `$ python3 setup.py install --user`
 
+#### Prerequisites
+* `import click`
+* `from bs4 import BeautifulSoup`
+* `import re`
+* `import json`
+
 #### Example
 Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) repository for the user tests of `jabberwocky` commands.
 
