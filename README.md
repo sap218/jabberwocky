@@ -7,6 +7,9 @@
 
 `$ python3 setup.py install --user`
 
+#### Example
+Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) repository for the user tests of `jabberwocky` commands.
+
 ## catch
 `catch` annotates textual data using keywords which searches an ontology for the classes & synonyms. **Note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase).
 
