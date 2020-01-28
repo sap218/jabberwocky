@@ -11,7 +11,7 @@
 ```pip3 install click BeautifulSoup4```
 
 #### Example
-Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) repository for the user tests of `jabberwocky` commands.
+Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) repository for the user tests of jabberwocky's commands.
 
 ## catch
 `catch` annotates textual data using keywords which searches an ontology for the classes & synonyms. **Note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase).
