@@ -7,10 +7,14 @@ tags:
 authors:
   - name: Samantha C Pendleton
     orcid: 0000-0002-6169-0135
-    affiliation: 1 # (Multiple affiliations must be quoted)
+    affiliation: "1, 2" # (Multiple affiliations must be quoted)
+  - name: Georgios V Gkoutos
+    affiliation: "1, 2" # (Multiple affiliations must be quoted)
 affiliations:
  - name: Institute of Cancer and Genomic Sciences, University of Birmingham, UK
    index: 1
+ - name: University Hospitals Birmingham NHS Foundation Trust, UK
+   index: 2
 date: 22 January 2020
 bibliography: paper.bib
 
@@ -44,7 +48,7 @@ The aim of the toolkit, jabberwocky, is to utilise the strengths of ontologies a
 
 # Acknowledgements
 
-Project was funded by the Medical Research Council (MRC) (MR/S502431/1).
+Project was funded by the Medical Research Council (MRC) (MR/S502431/1) & supported by Health Data Research (HDR) UK (HDRUK/CFC/01).
 
 # References
 
