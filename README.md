@@ -31,9 +31,13 @@ Options:
 #### Running
 `$ catch -ontology doid.owl -keywords list_of_classes.txt -textfile textualdata.json -parameter post_comment`
 
+`$ catch -ontology hpo.owl -keywords my_tags.txt -textfile blog_posts.json -parameter blog_text`
+
 ###### Output
 * a JSON file of the classes and synonyms for your reference
-* `catch` prints out the texts which include these classes/synonyms, you can use `>` to put into a separate file.
+* `catch` prints out the key texts, which include these classes/synonyms, in the command line
+* you can use `>` to put into a separate file
+* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `catch` with an example output file
 
 ## Thanks!
 Don't hesitate to create an issue/request (see [contributing guidelines](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
