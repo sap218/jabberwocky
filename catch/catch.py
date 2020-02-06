@@ -95,7 +95,7 @@ def ontologyPurl(ontology, keywords):
     f.write(jsonfile)
     f.close()
     
-    return jsonfile
+    return search_terms # jsonfile
 
 ####################################################
 ####################################################
@@ -231,7 +231,7 @@ def ontologyW3(ontology, keywords):
     f.write(jsonfile)
     f.close()
     
-    return jsonfile
+    return search_terms #jsonfile
 
 ####################################################
 ####################################################
@@ -408,31 +408,33 @@ def annotating(jsonfile, cleaned_posts, post_tokens):
 ####################################################
 
 @click.command()
-@click.option('-ontology', default='NULL', help='file of ontology.')
-@click.option('-keywords', default='NULL', help='list of classes/terms you want to use to search.')
-@click.option('-textfile', default='NULL', help='JSON ot TXT file of text you want annotate.')
-@click.option('-parameter', default='NULL', help='parameter for the JSON file text.')
+@click.option('--ontology', default='NULL', help='file of ontology.')
+@click.option('--keywords', default='NULL', help='list of classes/terms you want to use to search.')
+@click.option('--textfile', default='NULL', help='JSON ot TXT file of text you want annotate.')
+@click.option('--parameter', default='NULL', help='parameter for the JSON file text.')
 def main(ontology, keywords, textfile, parameter):
     if ontology == "NULL":
         print("No ontology file provided. Cannot continue.")
         exit()
-    elif keywords == "NULL":
-        keywords == False
+    if keywords == "NULL":
+        keywords = False
         #print("No keywords file provided. Cannot continue.")
         #exit()
-    elif textfile == "NULL":
+    if textfile == "NULL":
         print("No text file provided. Cannot continue.")
         exit()
-    elif textfile.endswith('.json') and parameter == "NULL":
+    if textfile.endswith('.json') and parameter == "NULL":
         print("Need parameter for tags extraction w/ JSON.")
         exit()
     
-    try:
-        search_term_dictionary = ontologyPurl(ontology, keywords)
-    except:
-        pass
-    else:
+    
+    #print("trying purl")
+    search_term_dictionary = ontologyPurl(ontology, keywords)
+    #print("purl" + str(search_term_dictionary), len(search_term_dictionary))
+    if len(search_term_dictionary) == 0:
+        #print("falling back to w3")
         search_term_dictionary = ontologyW3(ontology, keywords)
+        #print("w3" + search_term_dictionary)
     
     texts = textmining(textfile, parameter)
     
