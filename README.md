@@ -22,16 +22,18 @@ $ catch --help
 Usage: catch [OPTIONS]
 
 Options:
-  -ontology TEXT   file of ontology.
-  -keywords TEXT   list of classes/terms you want to use to search.
-  -textfile TEXT   JSON ot TXT file of text you want annotate.
-  -parameter TEXT  parameter for the JSON file text.
-  --help           Show this message and exit.
+  --ontology TEXT   file of ontology.
+  --keywords TEXT   list of classes/terms you want to use to search.
+  --textfile TEXT   JSON ot TXT file of text you want annotate.
+  --parameter TEXT  parameter for the JSON file text.
+  --help            Show this message and exit.
 ```
 #### Running
 `$ catch -ontology doid.owl -keywords list_of_classes.txt -textfile textualdata.json -parameter post_comment`
 
 `$ catch -ontology hpo.owl -keywords my_tags.txt -textfile blog_text.txt`
+
+`$ catch -ontology pato.owl -textfile patient_symptoms.txt`
 
 ###### Output
 * a JSON file of the classes and synonyms for your reference
