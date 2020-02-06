@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='jabberwocky',
-      version='0.1.0.2',
+      version='0.2.0.0',
       description='tool for ontologies',
       url='https://github.com/sap218/jabberwocky',
       author='Samantha C Pendleton',

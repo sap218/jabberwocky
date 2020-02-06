@@ -212,6 +212,18 @@ def ontologyW3(ontology, keywords):
 ####################################################
 ####################################################
 
+def unformatted_file(textfile):
+    list_of_text = []
+    with open(textfile) as inputfile:
+        for line in inputfile:
+            if line == "\n":
+                pass
+            else:
+                list_of_text.append(line.strip())
+    inputfile.close()
+    return list_of_text
+
+
 def json_get(filename):
     with open(filename) as f_in:
         return(json.load(f_in)) # importing JSON
@@ -276,15 +288,16 @@ def performing_ngrams(list_of_posts, n):
     return ngrams
 
 def textmining(textfile, parameter):
-    file = json_get(textfile) # Retrieved text file
+    if textfile.endswith('.txt'):
+        unstructured_posts = unformatted_file(textfile)
     
-    try:
-        unstructured_posts = querying_list_of_dicts(file, parameter) # Queried text file using appropriate parameter
-    except:
-        pass
-    else:
-        unstructured_posts = querying_dicts(file, parameter)
-    
+    elif textfile.endswith('.json'):
+        jsonfile = json_get(textfile) # Retrieved text file
+        try:
+            unstructured_posts = querying_dicts(jsonfile, parameter)
+        except:
+            unstructured_posts = querying_list_of_dicts(jsonfile, parameter)
+
     structured_posts = organising(unstructured_posts) # Combing potential lists together
     cleaned_posts = cleaning_special_characters(structured_posts) # Cleaned posts file of special characters
     
