@@ -381,10 +381,10 @@ def annotating(jsonfile, cleaned_posts, post_tokens):
 ####################################################
 
 @click.command()
-@click.option('-ontology', default='NULL', help='file of ontology')
-@click.option('-keywords', default='NULL', help='list of classes/terms you want to use to search')
-@click.option('-textfile', default='NULL', help='JSON file of text you want annotate')
-@click.option('-parameter', default='NULL', help='parameter for the JSON file text')
+@click.option('-ontology', default='NULL', help='file of ontology.')
+@click.option('-keywords', default='NULL', help='list of classes/terms you want to use to search.')
+@click.option('-textfile', default='NULL', help='JSON ot TXT file of text you want annotate.')
+@click.option('-parameter', default='NULL', help='parameter for the JSON file text.')
 def main(ontology, keywords, textfile, parameter):
     if ontology == "NULL":
         print("No ontology file provided. Cannot continue.")
@@ -395,8 +395,8 @@ def main(ontology, keywords, textfile, parameter):
     elif textfile == "NULL":
         print("No text file provided. Cannot continue.")
         exit()
-    elif parameter == "NULL":
-        print("Need the parameter for the JSON tags extraction.")
+    elif textfile.endswith('.json') and parameter == "NULL":
+        print("Need parameter for tags extraction w/ JSON.")
         exit()
     
     try:
