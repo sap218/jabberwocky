@@ -31,7 +31,7 @@ Options:
 #### Running
 `$ catch -ontology doid.owl -keywords list_of_classes.txt -textfile textualdata.json -parameter post_comment`
 
-`$ catch -ontology hpo.owl -keywords my_tags.txt -textfile blog_posts.json -parameter blog_text`
+`$ catch -ontology hpo.owl -keywords my_tags.txt -textfile blog_text.txt -parameter blog_text`
 
 ###### Output
 * a JSON file of the classes and synonyms for your reference
