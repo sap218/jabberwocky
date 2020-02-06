@@ -76,9 +76,18 @@ def finalising_terms_purl(keywords):
 def ontologyPurl(ontology, keywords):
     souped = souping(ontology) # Reading in the ontology file
     class_synonyms = ontology_search(souped) # Getting class and synonyms
-    search_terms = getting_search_terms_purl(keywords) # Reading in the list of search terms - these should be classes!   
-    search_terms = extracting_keywords_ontology(search_terms, class_synonyms) # Finding those synonyms
+
+    if keywords == False:
+        pass
+    else:
+        search_terms = getting_search_terms_purl(keywords) # Reading in the list of search terms - these should be classes!  
     
+    if keywords == False:
+        search_terms = class_synonyms # Make all
+    else:
+        search_terms = extracting_keywords_ontology(search_terms, class_synonyms) # Finding those synonyms
+    
+
     search_terms = finalising_terms_purl(search_terms) # Removing special characters and flattenning list
     
     jsonfile = json.dumps(search_terms)
@@ -88,6 +97,10 @@ def ontologyPurl(ontology, keywords):
     
     return jsonfile
 
+####################################################
+####################################################
+####################################################
+####################################################
 ####################################################
 ####################################################
 
@@ -169,6 +182,16 @@ def get_classterms_synonyms(classterms, classes, synonyms): # getting the words/
         except:
             pass
     return classterms
+def matching_class_syns(classes, synonyms):
+    for iri in classes:
+        i = classes[iri]
+        list_of_syns = []
+        for syn in synonyms:
+            s = synonyms[syn]
+            if i == s:
+                list_of_syns.append(syn)
+        classes[iri] = list_of_syns
+    return classes
 
 
 def finalising_terms_w3(keywords):
@@ -188,13 +211,17 @@ def ontologyW3(ontology, keywords):
     ontology_class_terms = ontology_classes(soup) # Extracting the classes
     ontology_synonym_terms = ontology_synonyms(soup) # Extracting the synonyms
     
-    
-    search_terms = getting_search_terms_w3(keywords) # Reading in the list of search terms, these should be classes     
-    search_terms = get_classterms_synonyms(search_terms, ontology_class_terms, ontology_synonym_terms) # Getting their synonyms
+    if keywords == False:
+        pass
+    else:
+        search_terms = getting_search_terms_w3(keywords) # Reading in the list of search terms, these should be classes     
+
+    if keywords == False:
+        search_terms = matching_class_syns(ontology_class_terms, ontology_synonym_terms)
+    else:
+        search_terms = get_classterms_synonyms(search_terms, ontology_class_terms, ontology_synonym_terms) # Getting their synonyms
     
     search_terms = finalising_terms_w3(search_terms) # Removing special characters
-    
-    
     # search_terms
     
     #############################
@@ -390,8 +417,9 @@ def main(ontology, keywords, textfile, parameter):
         print("No ontology file provided. Cannot continue.")
         exit()
     elif keywords == "NULL":
-        print("No keywords file provided. Cannot continue.")
-        exit()
+        keywords == False
+        #print("No keywords file provided. Cannot continue.")
+        #exit()
     elif textfile == "NULL":
         print("No text file provided. Cannot continue.")
         exit()
