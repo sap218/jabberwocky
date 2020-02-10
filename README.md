@@ -29,7 +29,7 @@ Options:
   --help                Show this message and exit.
 ```
 #### Running
-`$ catch --ontology doid.owl --keywords term_list.txt --textfile blogs.json.json --parameter post_text`
+`$ catch --ontology doid.owl --keywords term_list.txt --textfile blogs.json --parameter post_text`
 
 `$ catch -o hpo.owl -k my_tags.txt -t user_notes.txt`
 
