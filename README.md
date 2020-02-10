@@ -33,7 +33,7 @@ Options:
 
 `$ catch -o hpo.owl -k my_tags.txt -t user_notes.txt`
 
-`$ catch -o pato.owl --textfile patient_symptoms.json -p text_entry
+`$ catch -o pato.owl --textfile patient_symptoms.json -p text_entry`
 
 ###### Output
 * a JSON file of the classes and synonyms for your reference
