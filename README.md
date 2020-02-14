@@ -41,6 +41,32 @@ Options:
 * you can use `>` to put into a separate file
 * see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `catch` with an example output file
 
+## bite
+`bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. A user can use an ontology to avoid key terms being in the statistical model. **Note**: with the JSON, you need to give a parameter.
+
+#### Usage
+```
+$ bite --help
+Usage: bite [OPTIONS]
+
+Options:
+  -o, --ontology TEXT   file of ontology.
+  -t, --textfile TEXT   JSON file of text you want to observe.  [required]
+  -p, --parameter TEXT  parameter for the JSON file text.  [required]
+  --help                Show this message and exit.
+```
+#### Running
+`$ bite --ontology doid.owl --textfile patient_symptoms.json --parameter text_entry`
+
+`$ bite -o hpo.owl -t blog_posts.json -p post_text`
+
+`$ bite --textfile social_media_posts.json --parameter user-text`
+
+###### Output
+* a TXT file of all classes and synonyms which were in the ontology - for your reference
+* `bite` prints out the important terms from the textual data: sorted by value - which also makes a CSV
+* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `bite`
+
 ## Thanks!
 Don't hesitate to create an issue/request (see [contributing guidelines](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
 
