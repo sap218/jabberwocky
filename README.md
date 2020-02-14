@@ -8,7 +8,7 @@
 `$ python3 setup.py install --user`
 
 #### Prerequisites
-```pip3 install click BeautifulSoup4```
+```pip3 install click BeautifulSoup4 scikit-learn pandas```
 
 #### Example
 Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) repository for the user tests of jabberwocky's commands.
