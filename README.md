@@ -2,6 +2,9 @@
 
 **Tool for ontologies. Since we all know ontologies are "nonsense".**
 
+* `catch` to extract elements of text using key words
+* `bite` to look at important words from text
+
 #### Install
 `$ git clone https://github.com/sap218/jabberwocky`
 
@@ -12,6 +15,8 @@
 
 #### Example
 Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) repository for the user tests of jabberwocky's commands.
+
+---
 
 ## catch
 `catch` annotates textual data using an ontology's classes & synonyms, with a set of keywords one can limit their search. **Note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase). **Note**: if a JSON is provided, you need to give a parameter.
@@ -41,6 +46,8 @@ Options:
 * you can use `>` to put into a separate file
 * see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `catch` with an example output file
 
+---
+
 ## bite
 `bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. A user can use an ontology to avoid key terms being in the statistical model. **Note**: with the JSON, you need to give a parameter.
 
@@ -66,6 +73,8 @@ Options:
 * a TXT file of all classes and synonyms which were in the ontology - for your reference
 * `bite` prints out the important terms from the textual data: sorted by value - which also makes a CSV
 * see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `bite`
+
+---
 
 ## Thanks!
 Don't hesitate to create an issue/request (see [contributing guidelines](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
