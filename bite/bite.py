@@ -449,9 +449,8 @@ def main(ontology, textfile, parameter):
     if ontology == False:
         pass
     else:
-        try:
-            final_terms = ontology_purl(ontology)
-        except:
+        final_terms = ontology_purl(ontology)
+        if len(final_terms) == 0:
             final_terms = ontology_w3(ontology)
     
     results = text_statistics(textfile, parameter, ontology, final_terms)
