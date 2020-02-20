@@ -16,36 +16,37 @@ for word in old_list:      # cycles through old list
 
 
 ## Issues
-when errors appear and you don't know why - it's frustrating. 
-
-* to make it easier for me to understand, when creating an issue you can include in your description one of the labels
-* see [`labels`](https://github.com/sap218/jabberwocky/labels) in issues - or below (`bug`, `documentation`, `duplicate`, `help`, `request`, `wontfix`)
-* this way i will be able to understand if your issue is possibly a `help` question rather than a `bug` notice
+* don't hesitate to create an issue
+* issues can be regarding anything: error reporting, feature request, or questions for help
+* add an issue with a clear description & title
+* try to know what error you are getting and make sure the input files are correct
+* i will label the issue accordingly (see [`labels`](https://github.com/sap218/jabberwocky/labels) - or below (`bug`, `documentation`, `duplicate`, `help`, `request`, `wontfix`))
+* please accept that sometimes information may not be fully understood so there could be follow-up questions
+* if you have an issue with the `README` please do say so! i encourage help to make it better, perhaps you have a better ideas than me
 
 #### bug
-* first know what error you are getting: e.g. if your `ontology_dict_class_synonyms.json` file is empty then your keywords may not be exact classes from your chosen ontology
-* add an issue with a clear description & title
-* please accept that sometimes information may not be fully understood so there could be follow-up questions
+* error reporting if there is a clear issue
+* if you know how to fix it yourself, consider doing it and creating a pull request
+* e.g. "my list of ontology classes and synonyms is empty and I'm using HPO"
 
 #### documentation
-* if you have an issue with the `README` please do say so! i encourage help to make it better, perhaps you have a better ideas than me
-* any issues which i believe can be fixed by a better documentation i will label it accordingly
+* any issues which i believe can be fixed by better documentation, i will label with `documentation`
 
 #### duplicate
 * if you have a question which you believe could have been asked before, ask anyway! I'll label as `duplicate`
 * i will try my best to ensure a link to the original issue will be provided
 
 #### help
-* if you have an question about how it works, perhaps check out [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)
+* if you have a general question about how it works/etc. - check out [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)
 * if the tests repository doesn't help, please ask away - no question is stupid
+* e.g. "can i use my own created ontology?" (FYI: yes)
 
 #### request
 * have an idea as a new feature? please tell me! 
+* if you know how to make it yourself, consider doing it and creating a pull request
 
 #### wontfix
-* sometimes people can confuse tools as something they are not, if there is an issue which i believe is not something designed for jabberwocky i will label accordingly
-* after labelling as `wontfix` i will comment why, giving you a few days to perhaps give a rebuttal otherwise i will close the issue if lack of activity
+* sometimes people can confuse tools as something they are not - if there is an `bug` or `request` which i believe is not suitably designed for jabberwocky, i will label accordingly
+* after labelling as `wontfix` i will comment why, giving you a few days (perhaps to give a rebuttal) before i close the issue from lack of response/activity
 * please accept this label, if i think a different tool is doing what you want i will redirect you
-
-
 
