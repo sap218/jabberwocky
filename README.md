@@ -1,6 +1,6 @@
 # jabberwocky
 
-**Tool for ontologies. Since we all know ontologies are "nonsense".**
+**A toolkit for ontologies. Since we all know ontologies are "nonsense".**
 
 * `catch` to extract elements of text using key words
 * `bite` to look at important words from text
