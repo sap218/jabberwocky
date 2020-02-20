@@ -447,7 +447,7 @@ def text_statistics(textfile, parameter, ontology, final_terms):
 def main(ontology, textfile, parameter):
     
     if ontology == False:
-        pass
+        final_terms = False
     else:
         final_terms = ontology_purl(ontology)
         if len(final_terms) == 0:
