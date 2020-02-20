@@ -4,7 +4,7 @@
 
 The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
 
-Don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [`guidelines`](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
+Don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [**guidelines**](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
 
 
 ### Elements
