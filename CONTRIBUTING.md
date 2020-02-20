@@ -1,5 +1,23 @@
 # Contributing Guildelines / Issues for jabberwocky :dragon_face:
 
+
+## Contributing Code
+* know how to fix a bug or want a new feature, consider either creating an issue or opening a pull request
+* if i think it is suited i will merge to master branch
+* frequent contributors will be added to a contributors list for thanks and acknowledgement
+* **note**: additional code should be commented and w/ your username to acknowledge contribution, e.g. <br> 
+```
+new_list = []
+for word in old_list:      # cycles through old list
+  if len(word) > 10:       # if word greater than 10 characters
+    new_list.append(word)  # append to new list
+    print(word)            # printing word as users may want to see as a reference - @yourusername
+``` 
+
+
+## Issues
+when errors appear and you don't know why - it's frustrating. 
+
 * to make it easier for me to understand, when creating an issue you can include in your description one of the labels
 * see [`labels`](https://github.com/sap218/jabberwocky/labels) in issues - or below (`bug`, `documentation`, `duplicate`, `help`, `request`, `wontfix`)
 * this way i will be able to understand if your issue is possibly a `help` question rather than a `bug` notice
@@ -30,8 +48,4 @@
 * please accept this label, if i think a different tool is doing what you want i will redirect you
 
 
-## Contributing Code
-* if you know how to fix a bug or want to a new feature, consider either creating an issue or opening a pull request
-* all code in pull requests should be commented with a UID, e.g. <br> ```for item in new_list: # cycles through list - @sap218```
-* if i think it is suited i will merge to master branch
-* frequent contributors will be added to a contributors list for thanks and acknowledgement 
+
