@@ -2,19 +2,31 @@
 
 **A toolkit for ontologies. Since we all know ontologies are "nonsense".**
 
-* `catch` to extract elements of text using key words
-* `bite` to look at important words from text
+The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
 
-#### Install
-`$ git clone https://github.com/sap218/jabberwocky`
+Don't hesitate to create an issue/request (see [contributing guidelines](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
 
-`$ python3 setup.py install --user`
+### Elements
 
-#### Prerequisites
+command | description
+------- | -----------
+`catch` | to extract elements of text using key words
+`bite`  | to look at important words from text
+
+---
+
+##### Prerequisites
 ```pip3 install click BeautifulSoup4 scikit-learn pandas```
 
-#### Example
-Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) repository for the user tests of jabberwocky's commands.
+##### Install
+```
+$ git clone https://github.com/sap218/jabberwocky
+$ cd jabberwocky
+$ python3 setup.py install --user
+```
+
+##### Examples
+Please see the [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)
 
 ---
 
@@ -76,7 +88,4 @@ Options:
 
 ---
 
-## Thanks!
-Don't hesitate to create an issue/request (see [contributing guidelines](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
-
-The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
+## Thanks! :dragon:
