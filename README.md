@@ -13,6 +13,7 @@ command | description
 ------- | -----------
 `catch` | to extract elements of text using key words
 `bite`  | to look at important words from text
+`arise` | adding new synonyms to an ontology
 
 
 ##### Prerequisites
@@ -90,4 +91,25 @@ $ bite --textfile social_media_posts.json --parameter user-text
 
 ---
 
+## arise
+`arise` inserts synonyms in an ontology based on your chosing, these new synonyms may be based on the tf-idf statistical analysis from `bite`.
+
+#### Usage
+```
+$ arise --help
+```
+#### Running
+```
+$ arise --ontology doid.owl --tfidf bite_output_edits.csv
+$ arise -o pato.owl -f new_synonyms.csv
+```
+
+###### Output
+* ...
+* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `bite`
+
+---
+
 ## Thanks! :dragon:
+
+**Note**: to check version, see setup.py in your local copy
