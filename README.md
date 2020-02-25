@@ -97,6 +97,12 @@ $ bite --textfile social_media_posts.json --parameter user-text
 #### Usage
 ```
 $ arise --help
+Usage: arise [OPTIONS]
+
+Options:
+  -o, --ontology TEXT  file of ontology.  [required]
+  -f, --tfidf TEXT     tf-idf CSV file of the synonyms you want to add.  [required]
+  --help               Show this message and exit.
 ```
 #### Running
 ```
@@ -105,8 +111,8 @@ $ arise -o pato.owl -f new_synonyms.csv
 ```
 
 ###### Output
-* ...
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `bite`
+* file titled, `updated_ontology.owl` in the directory you run
+* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `arise`
 
 ---
 
