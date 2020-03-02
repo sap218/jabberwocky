@@ -6,6 +6,7 @@ The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem
 
 Don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [**guidelines**](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
 
+**Note**: to check version, see setup.py in your local copy
 
 ### Elements
 
@@ -117,7 +118,4 @@ $ arise -o pato.owl -f new_synonyms.csv
 ---
 
 ## Thanks! :dragon:
-
-**Note**: to check version, see setup.py in your local copy
-
 ![jabberwocky cycle](/images/cycle.jpg)
