@@ -119,3 +119,5 @@ $ arise -o pato.owl -f new_synonyms.csv
 ## Thanks! :dragon:
 
 **Note**: to check version, see setup.py in your local copy
+
+![jabberwocky cycle](/images/cycle.jpg)
