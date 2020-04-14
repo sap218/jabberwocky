@@ -1,12 +1,6 @@
 # jabberwocky
 
-**A toolkit for ontologies. Since we all know ontologies are "nonsense".**
-
-The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
-
-Don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [**guidelines**](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
-
-**Note**: to check version, see `setup.py` in your local copy.
+A toolkit for **ontologies**. Since we all know ontologies are "*nonsense*". **Note**: to check version, see `setup.py` in your local copy.
 
 ### Elements
 
@@ -118,6 +112,11 @@ $ arise -o pato.owl -f new_synonyms.csv
 ---
 
 ## Thanks! :dragon:
+
+The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
+
+Don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [**guidelines**](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
+
 You can combine these commands together to form a process of steps of ontology synonym development and text analysis. See `jabberwocky-tests` repo for the [`jabberwocky-tests/process`](https://github.com/sap218/jabberwocky-tests/tree/master/process) directory for a chain of commands (as described in the image below).
 
 ![jabberwocky cycle](/images/cycle.jpg)
