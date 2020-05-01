@@ -17,6 +17,10 @@ command | description
 ```
 $ pip3 install click BeautifulSoup4 scikit-learn pandas
 ```
+or with the `requirements.txt` file:
+```
+$ pip3 install -r requirements.txt
+```
 
 ##### Install
 ```
