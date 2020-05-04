@@ -15,7 +15,7 @@ command | description
 
 ##### Prerequisites
 ```
-$ pip3 install click BeautifulSoup4 scikit-learn pandas
+$ pip3 install click BeautifulSoup4 scikit-learn pandas lxml
 ```
 or with the `requirements.txt` file:
 ```
