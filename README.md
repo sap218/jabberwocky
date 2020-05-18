@@ -17,7 +17,7 @@ command | description
 ```
 $ pip3 install click BeautifulSoup4 scikit-learn pandas lxml
 ```
-or with the `requirements.txt` file:
+**or after installing**, use the `requirements.txt` file:
 ```
 $ pip3 install -r requirements.txt
 ```
@@ -28,9 +28,14 @@ $ git clone https://github.com/sap218/jabberwocky
 $ cd jabberwocky
 $ python3 setup.py install --user
 ```
+**note**: if you are using a virtual environment you can avoid `--user`
 
 #### Examples
 For examples of Jabberwocky's commands in use, please see the **[`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)** repository.
+
+**OR** see [**SCENARIO.md**](https://github.com/sap218/jabberwocky/blob/master/SCENARIO.md) for further explanation. 
+
+---
 
 ---
 
