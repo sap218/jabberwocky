@@ -33,6 +33,8 @@ $ python3 setup.py install --user
 #### Ontology formats
 `jabberwocky` works with `OWL` ontology formats such as `OWL/XML` and also `RDF/XML`. For example biomedical ontologies such as `doid.owl`, `hpo.owl`, and `uberon.owl` will all work.
 
+**note**: if you are using your own created ontology, make sure you define annotations with the `rdfs:` schema, e.g. `rdfs:hasExactSynonym`.
+
 #### Examples
 For examples of Jabberwocky's commands in use, please see the **[`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)** repository.
 
