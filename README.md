@@ -30,6 +30,9 @@ $ python3 setup.py install --user
 ```
 **note**: if you are using a virtual environment you can avoid `--user`
 
+#### Ontology formats
+`jabberwocky` works with `OWL` ontology formats such as `OWL/XML` and also `RDF/XML`. For example biomedical ontologies such as `doid.owl`, `hpo.owl`, and `uberon.owl` will all work.
+
 #### Examples
 For examples of Jabberwocky's commands in use, please see the **[`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)** repository.
 
