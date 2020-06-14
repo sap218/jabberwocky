@@ -56,7 +56,7 @@ Options:
   -o, --ontology TEXT   file of ontology. [required]
   -k, --keywords TEXT   list of classes/terms you want to use to search.
   -t, --textfile TEXT   JSON or TXT file of text you want annotate. [required]
-  -p, --parameter TEXT  parameter for the JSON file text.
+  -p, --parameter TEXT  parameter/field for the JSON text data.
   --help                Show this message and exit.
 ```
 #### Running
