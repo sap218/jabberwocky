@@ -45,7 +45,7 @@ For examples of Jabberwocky's commands in use, please see the **[`jabberwocky-te
 ---
 
 ## catch
-`catch` essentially "catches" key elements from textual data using an ontology's classes & synonyms, with a set of keywords one can limit their search. **Note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase). **Note**: if a `.json` is provided, you need to give a parameter.
+`catch` essentially "catches" key elements from textual data using an ontology's classes & synonyms, with a set of keywords one can limit their search. **Note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase). **Note**: if a `.json` is provided, you need specify the field inside the JSON that contains the textual data to process.
 
 #### Usage
 ```
@@ -61,9 +61,7 @@ Options:
 ```
 #### Running
 ```
-$ catch --ontology doid.owl --keywords term_list.txt --textfile blogs.json --parameter post_text
-$ catch -o hpo.owl -k my_tags.txt -t user_notes.txt
-$ catch -o pato.owl --textfile patient_symptoms.json -p text_entry
+$ catch -o ../ontology/pocketmonsters.owl -k listofwords.txt -t public_forum.json -p post
 ```
 
 ###### Output
@@ -75,7 +73,7 @@ $ catch -o pato.owl --textfile patient_symptoms.json -p text_entry
 ---
 
 ## bite
-`bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. A user can use an ontology to avoid key terms being in the statistical model. **Note**: with the `.json` input you need to give a parameter.
+`bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. A user can use an ontology to avoid key terms being in the statistical model. **Note**: with the `.json` input you need specify the field inside the JSON that contains the textual data to process.
 
 #### Usage
 ```
@@ -90,9 +88,7 @@ Options:
 ```
 #### Running
 ```
-$ bite --ontology doid.owl --textfile patient_symptoms.json --parameter text_entry
-$ bite -o hpo.owl -t blog_posts.json -p post_text
-$ bite --textfile social_media_posts.json --parameter user-text
+$ bite -t public_forum.json -p post
 ```
 
 ###### Output
@@ -103,7 +99,7 @@ $ bite --textfile social_media_posts.json --parameter user-text
 ---
 
 ## arise
-`arise` inserts synonyms in an ontology based on your chosing: you define is these synonyms are "exact", "broad", "related", or "narrow" - these new synonyms may be based on the tf-idf statistical analysis from `bite`.
+`arise` inserts synonyms in an ontology based on your chosing: **you** define if these synonyms are "exact", "broad", "related", or "narrow" - these new synonyms may be based on the tf-idf statistical analysis from `bite`.
 
 #### Usage
 ```
@@ -117,8 +113,7 @@ Options:
 ```
 #### Running
 ```
-$ arise --ontology doid.owl --tfidf bite_output_edits.csv
-$ arise -o pato.owl -f new_synonyms.csv
+$ arise -o ../ontology/pocketmonsters.owl -f new_synonyms_tfidf.csv
 ```
 
 ###### Output
