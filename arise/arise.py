@@ -83,7 +83,7 @@ def appending_to_ont(soup, matched_csv, class_synonyms_df):
     finding = soup.find_all('Ontology') # finding all owl classes
     for concept in finding:
         for synonym in matched_csv:
-            concept.append(BeautifulSoup(('<AnnotationAssertion><AnnotationProperty abbreviatedIRI="rdfs:has%sSynonym"/><IRI>%s</IRI><Literal>%s</Literal></AnnotationAssertion>' % (((str(class_synonyms_df.loc[class_synonyms_df['synonym'] == synonym, 'type'].iloc[0]).capitalize())), 
+            concept.append(BeautifulSoup(('<AnnotationAssertion><AnnotationProperty abbreviatedIRI="oboInOWL:has%sSynonym"/><IRI>%s</IRI><Literal>%s</Literal></AnnotationAssertion>' % (((str(class_synonyms_df.loc[class_synonyms_df['synonym'] == synonym, 'type'].iloc[0]).capitalize())), 
                                                                                                                                                                                      matched_csv[synonym], synonym)),
                                            'xml',
                                            ))
