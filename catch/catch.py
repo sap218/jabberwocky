@@ -126,7 +126,7 @@ def ontology_classes(soup): # getting classes
 
 def ontology_synonyms(soup): # getting synonyms
     synonyms = {}
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'rdfs:hasExactSynonym'})
+    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'oboInOWL:hasExactSynonym'})
     for item in finding:
         try:
             iri = item.find_next_sibling('IRI').get_text() # plus IRIs
@@ -135,7 +135,7 @@ def ontology_synonyms(soup): # getting synonyms
             synonyms.update({synonym.lower() : iri})
         except:
             pass
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'rdfs:hasBroadSynonym'})
+    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'oboInOWL:hasBroadSynonym'})
     for item in finding:
         try:
             iri = item.find_next_sibling('IRI').get_text() # plus IRIs
@@ -144,7 +144,7 @@ def ontology_synonyms(soup): # getting synonyms
             synonyms.update({synonym.lower() : iri})
         except:
             pass
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'rdfs:hasNarrowSynonym'})
+    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'oboInOWL:hasNarrowSynonym'})
     for item in finding:
         try:
             iri = item.find_next_sibling('IRI').get_text() # plus IRIs
@@ -153,7 +153,7 @@ def ontology_synonyms(soup): # getting synonyms
             synonyms.update({synonym.lower() : iri})
         except:
             pass
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'rdfs:hasRelatedSynonym'})
+    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'oboInOWL:hasRelatedSynonym'})
     for item in finding:
         try:
             iri = item.find_next_sibling('IRI').get_text() # plus IRIs
@@ -410,8 +410,8 @@ def annotating(jsonfile, cleaned_posts, post_tokens):
 @click.command()
 @click.option('-o', '--ontology', 'ontology', required=True, help='file of ontology.')
 @click.option('-k', '--keywords', 'keywords', default=False, help='list of classes/terms you want to use to search.')
-@click.option('-t', '--textfile', 'textfile', required=True, help='JSON ot TXT file of text you want annotate.')
-@click.option('-p', '--parameter', 'parameter', default='NULL', help='parameter for the JSON file text.')
+@click.option('-t', '--textfile', 'textfile', required=True, help='JSON or TXT file of text you want annotate.')
+@click.option('-p', '--parameter', 'parameter', default='NULL', help='parameter/field of the the JSON text data.')
 def main(ontology, keywords, textfile, parameter):
     #if keywords == "NULL":
         #keywords = False
