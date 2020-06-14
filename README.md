@@ -103,7 +103,7 @@ $ bite --textfile social_media_posts.json --parameter user-text
 ---
 
 ## arise
-`arise` inserts synonyms in an ontology based on your chosing, these new synonyms may be based on the tf-idf statistical analysis from `bite`.
+`arise` inserts synonyms in an ontology based on your chosing: you define is these synonyms are "exact", "broad", "related", or "narrow" - these new synonyms may be based on the tf-idf statistical analysis from `bite`.
 
 #### Usage
 ```
