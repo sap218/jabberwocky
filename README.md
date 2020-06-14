@@ -55,7 +55,7 @@ Usage: catch [OPTIONS]
 Options:
   -o, --ontology TEXT   file of ontology. [required]
   -k, --keywords TEXT   list of classes/terms you want to use to search.
-  -t, --textfile TEXT   JSON ot TXT file of text you want annotate. [required]
+  -t, --textfile TEXT   JSON or TXT file of text you want annotate. [required]
   -p, --parameter TEXT  parameter for the JSON file text.
   --help                Show this message and exit.
 ```
