@@ -1,0 +1,3 @@
+[submodule "tests/jabberwocky-tests"]
+	path = tests/jabberwocky-tests
+	url = https://github.com/sap218/jabberwocky-tests
