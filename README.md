@@ -40,6 +40,13 @@ For examples of Jabberwocky's commands in use, please see the **[`jabberwocky-te
 
 **OR** see [**SCENARIO.md**](https://github.com/sap218/jabberwocky/blob/master/SCENARIO.md) for further explanation. 
 
+**OR** to run the automated tests (in the cloned directory):
+```
+$ git submodule init
+$ git submodule update
+$ tox
+```
+
 ---
 
 ---
