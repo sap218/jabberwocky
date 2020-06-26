@@ -126,6 +126,9 @@ $ arise -o ../ontology/pocketmonsters.owl -f new_synonyms_tfidf.csv
 
 The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
 
+**Contributors** - thank you!
+- @majensen for setting up automated testing w/ `pytest` https://github.com/sap218/jabberwocky/pull/13 
+
 You can combine these commands together to form a process of steps of ontology synonym development and text analysis. See `jabberwocky-tests` repo for the [`jabberwocky-tests/process`](https://github.com/sap218/jabberwocky-tests/tree/master/process) directory for a chain of commands (as described in the image below).
 
 ![jabberwocky cycle](/images/cycle.jpg)
