@@ -1,8 +1,12 @@
 # jabberwocky
 
-A toolkit for **ontologies**. Since we all know ontologies are "*nonsense*". **Note**: to check version, see `setup.py` in your local copy.
+a toolkit for **ontologies**. Since we all know ontologies are "*nonsense*". 
 
-Don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [**guidelines**](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
+[![DOI](https://zenodo.org/badge/227571502.svg)](https://zenodo.org/badge/latestdoi/227571502) **v1.0.0.0** released 29/06/2020  
+
+**note**: see `setup.py` in your local copy for version number
+
+don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [**guidelines**](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
 
 #### Elements
 
@@ -31,12 +35,12 @@ $ python3 setup.py install --user
 **note**: if you are using a virtual environment you can avoid `--user`
 
 #### Ontology formats
-`jabberwocky` works with `OWL` ontology formats such as `OWL/XML` and also `RDF/XML`. For example biomedical ontologies such as `doid.owl`, `hpo.owl`, and `uberon.owl` will all work, plus your own created.
+`jabberwocky` works with `OWL` ontology formats such as `OWL/XML` and also `RDF/XML`. for example biomedical ontologies such as `doid.owl`, `hpo.owl`, and `uberon.owl` will all work, plus your own created.
 
-**note**: make sure annotations are defined with the `oboInOWL:` schema, e.g. `hasExactSynonym` should have the IRI `http://www.geneontology.org/formats/oboInOWL#hasExactSynonym`. But ensure you fix the prefix to `<Prefix name="oboInOWL" IRI="http://www.geneontology.org/formats/oboInOWL#"/>`. 
+**note**: make sure annotations are defined with the `oboInOWL:` schema, e.g. `hasExactSynonym` should have the IRI `http://www.geneontology.org/formats/oboInOWL#hasExactSynonym`. but ensure you fix the prefix to `<Prefix name="oboInOWL" IRI="http://www.geneontology.org/formats/oboInOWL#"/>`. 
 
 #### Examples
-For examples of Jabberwocky's commands in use, please see the **[`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)** repository.
+for examples of Jabberwocky's commands in use, please see the **[`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)** repository.
 
 **OR** see [**SCENARIO.md**](https://github.com/sap218/jabberwocky/blob/master/SCENARIO.md) for further explanation. 
 
@@ -52,7 +56,7 @@ $ tox
 ---
 
 ## catch
-`catch` essentially "catches" key elements from textual data using an ontology's classes & synonyms, with a set of keywords one can limit their search. **Note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase). **Note**: if a `.json` is provided, you need specify the field inside the JSON that contains the textual data to process.
+`catch` essentially "catches" key elements from textual data using an ontology's classes & synonyms, with a set of keywords one can limit their search. **note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase). **note**: if a `.json` is provided, you need specify the field inside the JSON that contains the textual data to process.
 
 #### Usage
 ```
@@ -80,7 +84,7 @@ $ catch -o ../ontology/pocketmonsters.owl -k listofwords.txt -t public_forum.jso
 ---
 
 ## bite
-`bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. A user can use an ontology to avoid key terms being in the statistical model. **Note**: with the `.json` input you need specify the field inside the JSON that contains the textual data to process.
+`bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. a user can use an ontology to avoid key terms being in the statistical model. **note**: with the `.json` input you need specify the field inside the JSON that contains the textual data to process.
 
 #### Usage
 ```
@@ -131,10 +135,10 @@ $ arise -o ../ontology/pocketmonsters.owl -f new_synonyms_tfidf.csv
 
 ## Thanks! :dragon:
 
-The poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
+the poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem.
 
 **Contributors** - thank you!
-- @majensen for setting up automated testing w/ `pytest` https://github.com/sap218/jabberwocky/pull/13 
+- [@majensen](https://github.com/majensen) for setting up automated testing w/ `pytest` - [see pull request #13 for more details](https://github.com/sap218/jabberwocky/pull/13)
 
 You can combine these commands together to form a process of steps of ontology synonym development and text analysis. See `jabberwocky-tests` repo for the [`jabberwocky-tests/process`](https://github.com/sap218/jabberwocky-tests/tree/master/process) directory for a chain of commands (as described in the image below).
 
