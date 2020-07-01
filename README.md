@@ -2,9 +2,9 @@
 
 a toolkit for **ontologies**. Since we all know ontologies are "*nonsense*". 
 
-[![DOI](https://zenodo.org/badge/227571502.svg)](https://zenodo.org/badge/latestdoi/227571502) **v1.0.0.0** released 29/06/2020  
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02168/status.svg)](https://doi.org/10.21105/joss.02168) [![DOI](https://zenodo.org/badge/227571502.svg)](https://zenodo.org/badge/latestdoi/227571502) 
 
-**note**: see `setup.py` in your local copy for version number
+**note**: see `setup.py` in your local copy for version number | or if used the `Releases` then **v1.0.0.0** [29/06/2020]
 
 don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [**guidelines**](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
 
