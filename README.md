@@ -140,6 +140,26 @@ the poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem
 **Contributors** - thank you!
 - [@majensen](https://github.com/majensen) for setting up automated testing w/ `pytest` - [see pull request #13 for more details](https://github.com/sap218/jabberwocky/pull/13)
 
+**Citing**
+```
+@article{Pendleton2020,
+  doi = {10.21105/joss.02168},
+  url = {https://doi.org/10.21105/joss.02168},
+  year = {2020},
+  publisher = {The Open Journal},
+  volume = {5},
+  number = {51},
+  pages = {2168},
+  author = {Samantha C. Pendleton and Georgios V. Gkoutos},
+  title = {Jabberwocky: an ontology-aware toolkit for manipulating text},
+  journal = {Journal of Open Source Software}
+}
+```
+
+---
+
+## ONE LAST THING...
+
 You can combine these commands together to form a process of steps of ontology synonym development and text analysis. See `jabberwocky-tests` repo for the [`jabberwocky-tests/process`](https://github.com/sap218/jabberwocky-tests/tree/master/process) directory for a chain of commands (as described in the image below).
 
 ![jabberwocky cycle](/images/cycle.jpg)
