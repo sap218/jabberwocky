@@ -1,11 +1,10 @@
-# Jabberwocky
-Full-depth explanation, informative scenarios, and working examples for the Jabberwocky toolkit - for installation instructions, see the [Jabberwocky](https://github.com/sap218/jabberwocky) repository. Here 
+### >> see [SCENARIO](SCENARIO.md) for a working tutorial
 
-### see [SCENARIO](SCENARIO.md) for a working tutorial
+Ontologies are useful for their condense and structured format of a domain of knowledge. Specifically their organised terms and corresponding synonyms. Many NLP tools don't utilize ontologies, Jabberwocky uses ontologies for synonym curation. Here we provide a full-depth explanation, informative scenarios, and working examples for the Jabberwocky toolkit - for installation instructions, see the [Jabberwocky](https://github.com/sap218/jabberwocky) repository. 
 
 ## About the Commands
 
----
+Below is an-indepth explanation of the commands which you can use with Jabberwocky.
 
 ## bandersnatch
 `bandersnatch` curates synonyms for a list of key terms / or words of interest from an ontology of your choice, you provide a list of ontology synonym tags. **note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase).
@@ -29,7 +28,6 @@ $ jab-bandersnatch -o pocketmonsters.owl -s ontology_synonym_tags.txt -k words_o
 
 ###### Output
 * a `.json` file: `output_ontology_label_synonyms.json` of the classes and synonyms for your reference - this can be used for the `catch` command
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `bandersnatch` with input and outputs
 
 ---
 
@@ -59,7 +57,6 @@ $ jab-catch -k output_ontology_label_synonyms.json -t example_textfile.json -p u
 ###### Output
 * a `.json` file: `output_terms_match.json` which includes the posts for each word of interest
 * a `.txt` file: `output_terms_match_raw.txt` which includes all elements / sentences from the text file which includes a term of interest
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `catch` with input and outputs
 
 ---
 
@@ -92,7 +89,6 @@ $ jab-bite -k output_ontology_label_synonyms.json -t example_textfile.json -p us
 ###### Output
 * a `.tsv` file: `tfidf_results.tsv` of all terms and their tf-idf score
 * a `.pdf` file: `tfidf_plot.pdf` the plot output which is requested if a user makes `--graph True` and presents the 20 (default=30) top scoring terms
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `bite` with input and outputs
 
 ---
 
@@ -117,6 +113,5 @@ $ jab-arise -o pocketmonsters.owl -f tfidf_new_synonyms.tsv
 
 ###### Output
 * a `.owl` file: `updated_ontology.owl`
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `arise` with input and outputs
 
 

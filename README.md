@@ -1,5 +1,7 @@
 # jabberwocky
 
+>> see [site](https://sap218.github.io/jabberwocky/) for in-depth explanation and working scenarios (including test files)
+
 a toolkit for **ontologies**. Since we all know ontologies are "*nonsense*". 
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02168/status.svg)](https://doi.org/10.21105/joss.02168) [![DOI](https://zenodo.org/badge/227571502.svg)](https://zenodo.org/badge/latestdoi/227571502) 
@@ -41,9 +43,7 @@ $ python3 setup.py install --user
 `jabberwocky` works with the `OWL` ontology format: `RDF/XML` - for example, well-known biomedical ontologies such as `doid.owl`, `hpo.owl`, and `uberon.owl` will all work, plus your own created.
 
 #### Examples
-for examples of Jabberwocky's commands in use, please see the **[`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)** repository.
-
-**OR** see [**SCENARIO.md**](https://github.com/sap218/jabberwocky/blob/master/SCENARIO.md) for further explanation. 
+for examples of Jabberwocky's commands in use, please see the **[site](https://sap218.github.io/jabberwocky/SCENARIO.html)**.
 
 **OR** to run the automated tests (in the cloned directory):
 ```
@@ -53,7 +53,6 @@ $ tox
 ```
 
 ---
-
 ---
 
 ## bandersnatch
@@ -61,24 +60,8 @@ $ tox
 
 #### Usage
 ```
-$ jab-bandersnatch --help
-Usage: jab-bandersnatch [OPTIONS]
-
-Options:
-  -o, --ontology TEXT     file of ontology.  [required]
-  -s, --synonymtags TEXT  list of XML tags for synonym curation.  [required]
-  -k, --keywords TEXT     list of class labels you want to use to search.
-                          [required]
-  --help                  Show this message and exit.
-```
-#### Running
-```
 $ jab-bandersnatch -o pocketmonsters.owl -s ontology_synonym_tags.txt -k words_of_interest.txt
 ```
-
-###### Output
-* a `.json` file: `output_ontology_label_synonyms.json` of the classes and synonyms for your reference - this can be used for the `catch` command
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `bandersnatch` with input and outputs
 
 ---
 
@@ -87,28 +70,8 @@ $ jab-bandersnatch -o pocketmonsters.owl -s ontology_synonym_tags.txt -k words_o
 
 #### Usage
 ```
-$ jab-catch --help
-Usage: jab-catch [OPTIONS]
-
-Options:
-  -k, --keywords TEXT        list of terms and synonyms you want for grep, can
-                             be from the ontology output.  [required]
-  -t, --textfile TEXT        JSON or TXT file of text you want annotate.
-                             [required]
-  -p, --parameter TEXT       parameter of the the JSON text data.
-  -i, --innerparameter TEXT  inner parameter of the the JSON text data if
-                             expecting replies.
-  --help                     Show this message and exit.
-```
-#### Running
-```
 $ jab-catch -k output_ontology_label_synonyms.json -t example_textfile.json -p user-comment -i inner-user-comment-reply
 ```
-
-###### Output
-* a `.json` file: `output_terms_match.json` which includes the posts for each word of interest
-* a `.txt` file: `output_terms_match_raw.txt` which includes all elements / sentences from the text file which includes a term of interest
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `catch` with input and outputs
 
 ---
 
@@ -117,31 +80,8 @@ $ jab-catch -k output_ontology_label_synonyms.json -t example_textfile.json -p u
 
 #### Usage
 ```
-$ jab-bite --help
-Usage: jab-bite [OPTIONS]
-
-Options:
-  -k, --keywords TEXT        list of terms and synonyms you want to remove
-                             from tf-idf analysis.
-  -t, --textfile TEXT        JSON or TXT file of text you want annotate.
-                             [required]
-  -p, --parameter TEXT       parameter of the the JSON text data.
-  -i, --innerparameter TEXT  inner parameter of the the JSON text data if
-                             expecting replies.
-  -g, --graph TEXT           make True if you want a plot of top 30 terms.
-  -l, --limit TEXT           change if want a different plot limit.
-  --help                     Show this message and exit.
-
-```
-#### Running
-```
 $ jab-bite -k output_ontology_label_synonyms.json -t example_textfile.json -p user-comment -i inner-user-comment-reply -g True -l 20
 ```
-
-###### Output
-* a `.tsv` file: `tfidf_results.tsv` of all terms and their tf-idf score
-* a `.pdf` file: `tfidf_plot.pdf` the plot output which is requested if a user makes `--graph True` and presents the 20 (default=30) top scoring terms
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `bite` with input and outputs
 
 ---
 
@@ -150,23 +90,8 @@ $ jab-bite -k output_ontology_label_synonyms.json -t example_textfile.json -p us
 
 #### Usage
 ```
-$ jab-arise --help
-Usage: jab-arise [OPTIONS]
-
-Options:
-  -o, --ontology TEXT  file of ontology.  [required]
-  -f, --tfidf TEXT     TSV file of the synonyms you want to add, can be based
-                       from the tf-idf results.  [required]
-  --help               Show this message and exit.
-```
-#### Running
-```
 $ jab-arise -o pocketmonsters.owl -f tfidf_new_synonyms.tsv
 ```
-
-###### Output
-* a `.owl` file: `updated_ontology.owl`
-* see [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests) for an example of `arise` with input and outputs
 
 ---
 
@@ -197,6 +122,6 @@ the poem "Jabberwocky" written by Lewis Carrol is described as a "nonsense" poem
 
 ## ONE LAST THING...
 
-You can combine these commands together to form a process of steps of ontology synonym development and text analysis. See `jabberwocky-tests` repo for the [`jabberwocky-tests/process`](https://github.com/sap218/jabberwocky-tests/tree/master/process) directory for a chain of commands (as described in the image below).
+You can combine these commands together to form a process of steps of ontology synonym development and text analysis.
 
 ![jabberwocky cycle](/images/cycle.jpg)
