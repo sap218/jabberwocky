@@ -4,3 +4,5 @@ scikit-learn
 pandas
 lxml
 pytest
+spacy
+matplotlib
