@@ -11,6 +11,9 @@ Jabberwocky is a toolkit for **ontologies**. Since we all know ontologies are "*
 See `setup.py` in your local copy for version number | or `Releases`:
 * **v1.0.0.0** [29/06/2020]
 * **v2.0.0.0** [10/05/2021]
+     - includes `spacy PhraseMatcher`
+     - own synonym tags
+     - plot output for tf-idf
 
 ##### Install
 ```
