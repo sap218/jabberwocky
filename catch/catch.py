@@ -1,443 +1,128 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@date: Tue Jan 21 12:15:00 2020
+@date: May 2021
 @author: Samantha C Pendleton
-@description: to catch
+@description: to grep posts from a text file, output those which include terms of interest
 @GitHub: github.com/sap218/jabberwocky
 """
 
 import click 
-from bs4 import BeautifulSoup
-import re
 import json
+import re
+import spacy
+from spacy.matcher import PhraseMatcher
+nlp=spacy.load("en_core_web_sm")
 
-####################################################
-####################################################
-####################################################
-####################################################
-####################################################
-
-def souping(ontology_file):
-    myfile = open(ontology_file, "rt") 
-    contents = myfile.read()  
-    myfile.close() 
-    soup = BeautifulSoup(contents,'xml')
-    return soup
-
-def ontology_search(soup):
-    finding = soup.find_all('owl:Class')
-    class_synonyms = {}
-    for item in finding:
-        try:
-            label = item.find("rdfs:label").get_text().lower()
-            e = item.find_all('oboInOwl:hasExactSynonym')
-            b = item.find_all('oboInOwl:hasBroadSynonym')
-            n = item.find_all('oboInOwl:hasNarrowSynonym')
-            r = item.find_all('oboInOwl:hasRelatedSynonym')
-            current_synonyms = [[x.get_text().lower() for x in e]] # rmv []
-            current_synonyms.append([x.get_text().lower() for x in b])
-            current_synonyms.append([x.get_text().lower() for x in n])
-            current_synonyms.append([x.get_text().lower() for x in r])
-            class_synonyms[label] = current_synonyms
-        except Exception as e:
-            #print(e, s, item)
-            pass
-    return class_synonyms
-
-
-def getting_search_terms_purl(keywords): # inputting the list of words file
-    search_words_file = open(keywords, "r")
-    words = []
-    for item in search_words_file:
-        words.append(item.strip("\n").strip(" ").lower())
-    return words
-
-def extracting_keywords_ontology(keywords, ontology_dict):
-    searching = {}
-    for item in ontology_dict:
-        if item in keywords:
-            searching.update({item:ontology_dict[item]})
-    return searching
-
-
-def finalising_terms_purl(keywords):
-    for i in keywords: # flattening the lists 
-        keywords[i] = [i for sublist in keywords[i] for i in sublist]    
-        
-    for item in keywords:
-        syns = []
-        for i in keywords[item]:
-            i = re.sub("[)(,]", "", i)
-            syns.append(i)
-        keywords[item] = syns
-    return keywords
-
-def ontologyPurl(ontology, keywords):
-    souped = souping(ontology) # Reading in the ontology file
-    class_synonyms = ontology_search(souped) # Getting class and synonyms
-
-    if keywords == False:
-        pass
-    else:
-        search_terms = getting_search_terms_purl(keywords) # Reading in the list of search terms - these should be classes!  
-    
-    if keywords == False:
-        search_terms = class_synonyms # Make all
-    else:
-        search_terms = extracting_keywords_ontology(search_terms, class_synonyms) # Finding those synonyms
-    
-
-    search_terms = finalising_terms_purl(search_terms) # Removing special characters and flattenning list
-    
-    jsonfile = json.dumps(search_terms)
-    f = open("ontology_dict_class_synonyms.json","w")
-    f.write(jsonfile)
-    f.close()
-    
-    return search_terms # jsonfile
-
-####################################################
-####################################################
-####################################################
-####################################################
-####################################################
-####################################################
-
-def opening_ontology(ontology_file): # opening the ontology
-    ontology = open(ontology_file, "rt")
-    contents = ontology.read()
-    ontology.close()
-    soup = BeautifulSoup(contents,'xml') # souped it 
-    return soup
-
-def ontology_classes(soup): # getting classes
-    concepts = {}
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'rdfs:label'}) 
-    for item in finding:
-        try:
-            iri = item.find_next_sibling('IRI').get_text() # plus IRIs
-            #iri = iri[1:]
-            classes = item.find_next_sibling('Literal').get_text()
-            concepts.update({classes.lower() : iri})
-        except:
-            pass
-    return concepts
-
-def ontology_synonyms(soup): # getting synonyms
-    synonyms = {}
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'oboInOWL:hasExactSynonym'})
-    for item in finding:
-        try:
-            iri = item.find_next_sibling('IRI').get_text() # plus IRIs
-            #iri = iri[1:]
-            synonym = item.find_next_sibling('Literal').get_text()
-            synonyms.update({synonym.lower() : iri})
-        except:
-            pass
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'oboInOWL:hasBroadSynonym'})
-    for item in finding:
-        try:
-            iri = item.find_next_sibling('IRI').get_text() # plus IRIs
-            #iri = iri[1:]
-            synonym = item.find_next_sibling('Literal').get_text()
-            synonyms.update({synonym.lower() : iri})
-        except:
-            pass
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'oboInOWL:hasNarrowSynonym'})
-    for item in finding:
-        try:
-            iri = item.find_next_sibling('IRI').get_text() # plus IRIs
-            #iri = iri[1:]
-            synonym = item.find_next_sibling('Literal').get_text()
-            synonyms.update({synonym.lower() : iri})
-        except:
-            pass
-    finding = soup.find_all('AnnotationProperty', {'abbreviatedIRI':'oboInOWL:hasRelatedSynonym'})
-    for item in finding:
-        try:
-            iri = item.find_next_sibling('IRI').get_text() # plus IRIs
-            #iri = iri[1:]
-            synonym = item.find_next_sibling('Literal').get_text()
-            synonyms.update({synonym.lower() : iri})
-        except:
-            pass
-    return synonyms
-
-
-def getting_search_terms_w3(file): # inputting the list of words file
-    search_words_file = open(file, "r")
-    search_words = {}
-    for word in search_words_file:
-        search_words[(word.strip("\n").strip(" ").lower())] = [] # as a dictionary
-    search_words_file.close()
-    return search_words
-def get_classterms_synonyms(classterms, classes, synonyms): # getting the words/classes their synonyms
-    for item in classterms:
-        try:
-            iri = classes[item]
-            for syn in synonyms:
-                if synonyms[syn] == iri:
-                    classterms[item].append(syn)
-        except:
-            pass
-    return classterms
-def matching_class_syns(classes, synonyms):
-    for iri in classes:
-        i = classes[iri]
-        list_of_syns = []
-        for syn in synonyms:
-            s = synonyms[syn]
-            if i == s:
-                list_of_syns.append(syn)
-        classes[iri] = list_of_syns
-    return classes
-
-
-def finalising_terms_w3(keywords):
-    for item in keywords:
-        syns = []
-        for i in keywords[item]:
-            i = re.sub("[)(,]", "", i)
-            syns.append(i)
-        keywords[item] = syns
-    return keywords
-
-
-
-
-def ontologyW3(ontology, keywords):
-    soup = opening_ontology(ontology) # Reading in the ontology
-    ontology_class_terms = ontology_classes(soup) # Extracting the classes
-    ontology_synonym_terms = ontology_synonyms(soup) # Extracting the synonyms
-    
-    if keywords == False:
-        pass
-    else:
-        search_terms = getting_search_terms_w3(keywords) # Reading in the list of search terms, these should be classes     
-
-    if keywords == False:
-        search_terms = matching_class_syns(ontology_class_terms, ontology_synonym_terms)
-    else:
-        search_terms = get_classterms_synonyms(search_terms, ontology_class_terms, ontology_synonym_terms) # Getting their synonyms
-    
-    search_terms = finalising_terms_w3(search_terms) # Removing special characters
-    # search_terms
-    
-    #############################
-    
-    jsonfile = json.dumps(search_terms)
-    f = open("ontology_dict_class_synonyms.json","w")
-    f.write(jsonfile)
-    f.close()
-    
-    return search_terms #jsonfile
-
-####################################################
-####################################################
-####################################################
-####################################################
-####################################################
-
-def unformatted_file(textfile):
-    list_of_text = []
-    with open(textfile) as inputfile:
-        for line in inputfile:
-            if line == "\n":
-                pass
-            else:
-                list_of_text.append(line.strip())
-    inputfile.close()
-    return list_of_text
-
-
-def json_get(filename):
-    with open(filename) as f_in:
-        return(json.load(f_in)) # importing JSON
-        
-def querying_list_of_dicts(file, parameter):
-    posts = []
-    for item in file:
-        if parameter in item:
-            posts.append(item[parameter])
-        else:
-            for further_item in item:
-                if parameter in further_item:
-                    posts.append(further_item[parameter])
-    return posts
-
-def querying_dicts(file, parameter):
-    posts = []
-    for k,v in file.items():
-        if parameter in v:
-            posts.append(v[parameter])
-        else:
-            for ik,iv in v.items():
-                if parameter in iv:
-                    posts.append(iv[parameter])
-    return posts
-
-
-def organising(list_of_posts):
-    posts = []
-    for item in list_of_posts:
-        if type(item) is str:
-            posts.append(item)
-        else:
-            posts.append(" ".join(item))
-    return posts
-
-def cleaning_special_characters(list_of_posts):
-    cleaned_posts = []
-    for posts in list_of_posts:
-        post = (re.sub("[^A-Za-z0-9']+", " ", posts)) # keeping '
-        p = (re.sub("'", "", post)) # now removing '
-        cleaned_posts.append(p.lower())
-    return cleaned_posts
-
-def tokenising(cleaned_threads):
-    tokens = []
-    for post in cleaned_threads:
-        tokens.append(post.split()) # single words
-    return tokens
-
-def ngram_function(input, n): # https://stackoverflow.com/a/13424002
-    input = input.split(' ')
-    output = []
-    for i in range(len(input)-n+1):
-        output.append(input[i:i+n])
-    return output
-def performing_ngrams(list_of_posts, n):
-    ngrams = []
-    for post in list_of_posts:
-        bigrams = [' '.join(x) for x in ngram_function(post, n)]
-        ngrams.append(bigrams)
-    return ngrams
-
-def textmining(textfile, parameter):
-    if textfile.endswith('.txt'):
-        unstructured_posts = unformatted_file(textfile)
-    
-    elif textfile.endswith('.json'):
-        jsonfile = json_get(textfile) # Retrieved text file
-        try:
-            unstructured_posts = querying_dicts(jsonfile, parameter)
-        except:
-            unstructured_posts = querying_list_of_dicts(jsonfile, parameter)
-
-    structured_posts = organising(unstructured_posts) # Combing potential lists together
-    cleaned_posts = cleaning_special_characters(structured_posts) # Cleaned posts file of special characters
-    
-    post_tokens = tokenising(cleaned_posts) # Tokenised for indivdual words
-    
-    return cleaned_posts, post_tokens
-
-####################################################
-####################################################
-
-def dictionary_to_list(dictionary):
-    list_of_terms = []
-    for key, value in dictionary.items():
-        temp = [key,value]
-        list_of_terms.append(temp)
-    dictionary = [item for sublist in list_of_terms for item in sublist] # flattening inner lists
-    return dictionary
-
-def flattening_dict_list(dictionary_list):
-    flat_dict_list = []
-    for item in dictionary_list:
-        if type(item) is str:
-            flat_dict_list.append(item)
-        else:
-            for i in item:
-                flat_dict_list.append(i)  
-    return flat_dict_list
-
-
-def searching_indexes(keywords, post_tokens, list_of_posts):
-    result = []
-    for term in keywords:
-        if " " in term:
-            x = 0
-            
-            n = (term.count(" ")+1)
-            ngramming = performing_ngrams(list_of_posts, n)
-            
-            for post in ngramming:
-                for gram in post:
-                    if term == gram:
-                        #result.append(post)
-                        result.append(x)
-                x = x + 1
-        else:
-            x = 0
-            for post in post_tokens:
-                for token in post:
-                    if term == token:
-                        #result.append(post)
-                        result.append(x)
-                x = x + 1
-    result = list(set(result))
-    return result
-
-def index_to_post(indexes, posts):
-    result = []
-    for number in indexes:
-        result.append(posts[number])
-    return result
-
-def annotating(jsonfile, cleaned_posts, post_tokens):
-    ontology_class_syns = json_get("ontology_dict_class_synonyms.json")
-    #ontology_class_syns = json_get(jsonfile)
-    list_of_dictionary_terms = dictionary_to_list(ontology_class_syns) # Making dictionary into list & flattening inner lists
-    search_terms = flattening_dict_list(list_of_dictionary_terms) # Flattening inner lists
-    indexes = searching_indexes(search_terms, post_tokens, cleaned_posts) # Searching & retrieving indexes 
-    result = index_to_post(indexes, cleaned_posts)  # Getting the post from the index
-
-    return result
-
-####################################################
-####################################################
-####################################################
-####################################################
-####################################################
-####################################################
-####################################################
-####################################################
+def clean_text(post):
+    post = post.replace("-", "")
+    post = (re.sub("[^A-Za-z0-9']+", " ", post)) # keeping '
+    post = (re.sub("'", "", post))
+    return post.lower().strip()
+     
 ####################################################
 ####################################################
 
 @click.command()
-@click.option('-o', '--ontology', 'ontology', required=True, help='file of ontology.')
-@click.option('-k', '--keywords', 'keywords', default=False, help='list of classes/terms you want to use to search.')
+@click.option('-k', '--keywords', 'keywords', required=True, help='list of terms and synonyms you want for grep, can be from the ontology output.')
 @click.option('-t', '--textfile', 'textfile', required=True, help='JSON or TXT file of text you want annotate.')
-@click.option('-p', '--parameter', 'parameter', default='NULL', help='parameter/field of the the JSON text data.')
-def main(ontology, keywords, textfile, parameter):
-    #if keywords == "NULL":
-        #keywords = False
-        #print("No keywords file provided. Cannot continue.")
-        #exit()
-    if textfile.endswith('.json') and parameter == "NULL":
-        print("Need parameter for tags extraction w/ JSON.")
-        exit()
+@click.option('-p', '--parameter', 'parameter', default='NULL', help='parameter of the the JSON text data.')
+@click.option('-i', '--innerparameter', 'innerparameter', default='NULL', help='inner parameter of the the JSON text data if expecting replies.')
+def main(keywords, textfile, parameter, innerparameter):
+
+    #keywords = "input/word_of_interest_with_synonyms.json"
+    #keywords = "../ontology/output_ontology_label_synonyms.json"
+
+    with open(keywords) as j: # if no ontology is given, use this json
+        searching_concepts_of_interest = json.load(j)
     
+    ####################################################
     
-    #print("trying purl")
-    search_term_dictionary = ontologyPurl(ontology, keywords)
-    #print("purl" + str(search_term_dictionary), len(search_term_dictionary))
-    if len(search_term_dictionary) == 0:
-        #print("falling back to w3")
-        search_term_dictionary = ontologyW3(ontology, keywords)
-        #print("w3" + search_term_dictionary)
+    #textfile = "../test_data/example_textfile.txt"
     
-    texts = textmining(textfile, parameter)
+    #textfile = "../test_data/example_textfile.json"
+    #parameter = "post"
+    #innerparameter = "reply"
     
-    annotations = annotating(search_term_dictionary, texts[0], texts[1])
+    if textfile.endswith('.txt'):
+        with open(textfile) as t:
+            raw_posts = [clean_text(post.rstrip()) for post in t]
+            all_threads = [[]]
+            for post in raw_posts:
+                if not post: all_threads.append([])
+                else: all_threads[-1].append(post)
+    #elif textfile.endswith('.json'):
+    else:
+        parameter_comment = parameter
+        parameter_inner_comment = innerparameter
+        with open(textfile) as j:
+            raw_json_text = json.load(j)
+        all_threads = []
+        for item,thread in raw_json_text.items():
+            current_thread_posts = []
+            for user_info in thread:
+                current_thread_posts.append(clean_text(user_info[parameter_comment]))
+                if parameter_inner_comment:
+                    try:
+                        for inner_user in user_info[parameter_inner_comment]:
+                            current_thread_posts.append(clean_text(inner_user[parameter_comment]))
+                            for inner_inner_user in inner_user[parameter_inner_comment]:
+                                current_thread_posts.append(clean_text(inner_inner_user[parameter_comment]))
+                    except:
+                        pass
+            all_threads.append(current_thread_posts)
     
-    for post in annotations:
-        print(post + "\n")
+    all_posts = [item for sublist in all_threads for item in sublist]
     
-#############################
+    ####################################################
+     
+    searching_concepts_of_interest_lemma = {}
+    for term,term_synonyms in searching_concepts_of_interest.items():
+        doc=nlp(term)
+        lemma_term = []
+        for token in doc:
+            lemma_term.append(token.lemma_)
+        lemma_synonym = []
+        for synonym in term_synonyms:
+            doc=nlp(synonym)
+            lemma_ss = []
+            for token in doc:
+                lemma_ss.append(token.lemma_)
+            lemma_synonym.append(" ".join(lemma_ss))
+        searching_concepts_of_interest_lemma[" ".join(lemma_term)] = lemma_synonym
+    
+    ####################################################
+    
+    matched_term_posts = {}
+    for term,synonyms in searching_concepts_of_interest_lemma.items():
+        matcher = PhraseMatcher(nlp.vocab, attr='LEMMA')
+        terminology_list = [term] + synonyms
+        termFinder = [nlp(text) for text in terminology_list]
+        matcher.add("termFinder", None, *termFinder)
+        
+        matched_posts_for_term = []
+        for post in all_posts:
+            spacy_doc = nlp(post)
+            matches = matcher(spacy_doc)
+            if not matches: # if empty then post did not match the symptom
+                pass
+            else:
+                matched_posts_for_term.append(post) 
+        matched_term_posts[term] = matched_posts_for_term
+    
+    with open('output_terms_match.json', 'w') as j:
+        json.dump(matched_term_posts, j, indent=4)
+    
+    matched_posts = []
+    for term,posts in matched_term_posts.items():
+        for post in posts:
+            matched_posts.append(post)
+    with open('output_terms_match_raw.txt', 'w') as t:
+        for post in list(set(matched_posts)):
+            t.write("%s\n" % post)
+        
+####################################################
+####################################################
 
 if __name__ == "__main__":
     main()
