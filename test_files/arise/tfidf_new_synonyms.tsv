@@ -1,0 +1,7 @@
+synonym	class	type
+path	route	oboInOWL:hasRelatedSynonym
+evolve	generation	oboInOWL:hasBroadSynonym
+flew	flying	oboInOWL:hasExactSynonym
+mega	large	oboInOWL:hasRelatedSynonym
+breed	type	oboInOWL:hasNarrowSynonym
+air	flying	oboInOWL:hasNarrowSynonym

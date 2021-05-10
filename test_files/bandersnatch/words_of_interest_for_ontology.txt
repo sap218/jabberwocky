@@ -1,0 +1,7 @@
+generation one
+dragon
+fairy
+water
+small
+large
+generation six
