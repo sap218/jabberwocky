@@ -1,7 +1,11 @@
 {
     "small": [],
-    "large": [],
-    "route": [],
+    "large": [
+        "mega"
+    ],
+    "route": [
+        "path"
+    ],
     "generation one": [
         "generation 1",
         "gen 1",

@@ -1,0 +1,4 @@
+oboInOWL:hasExactSynonym
+oboInOWL:hasRelatedSynonym
+oboInOWL:hasNarrowSynonym
+oboInOWL:hasBroadSynonym

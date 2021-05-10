@@ -3,7 +3,7 @@
 ### >> go back to [main page](https://sap218.github.io/jabberwocky/)
 
 
-### >> go to `jabberwocky/test_files` for the following [relevant files](https://github.com/sap218/jabberwocky/tree/master/test_files) for the following examples
+### >> go to [`jabberwocky/test_files`](https://github.com/sap218/jabberwocky/tree/master/test_files) for the example data of the following examples
 
 ## Aim
 
@@ -42,7 +42,11 @@ Finally, you have some terms of interest, `words_of_interest_for_ontology.txt`. 
 ```
 generation one
 dragon
-...
+route
+water
+small
+large
+generation six
 ```
 Using the command `bandersnatch`:
 ```
@@ -53,6 +57,7 @@ The output `output_ontology_label_synonyms.json` includes your terms of interest
 {
     "small": [],
     "large": [],
+    "route": [],
     "generation one": [
         "generation 1",
         "gen 1",
@@ -64,8 +69,7 @@ The output `output_ontology_label_synonyms.json` includes your terms of interest
         "gen six"
     ],
     "water": [],
-    "dragon": [],
-    "fairy": []
+    "dragon": []
 }
 ```
 
@@ -73,7 +77,7 @@ The output `output_ontology_label_synonyms.json` includes your terms of interest
 
 [test_files](https://github.com/sap218/jabberwocky/tree/master/test_files/catch) for `catch`
 
-Next, using the `catch` command, you provide the previous `bandersnatch` output: `output_ontology_label_synonyms.json` **OR** your own created `.json`.
+Next, using the `catch` command, you provide the previous `bandersnatch` output: `output_ontology_label_synonyms.json` **OR** your own created `.json`, in the example you can see `own_created_word_w_synonyms.json` which includes different synonyms not in the ontology, e.g. "small" has the synonym "tiny". **NOTE**: for the remaining scenario, we will be using `output_ontology_label_synonyms.json`.
 
 You have the social media posts, in the `test_files/catch` directory I provide two formats, `social_media_posts.txt` and `social_media_posts.json` - below is an example of the newline-separated unformatted `.txt`:
 ```
@@ -90,14 +94,14 @@ The `.json` example is below - when using this formatted version, you will need 
 ```
 Below is an example of running `catch`:
 ```
-$ jab-catch -k output_ontology_label_synonyms.json -t example_textfile.json -p post -i reply
+$ jab-catch -k output_ontology_label_synonyms.json -t social_media_posts.json -p post -i reply
 ```
-The outputs include `output_terms_match_raw.txt` which include a `.txt` file of newline-separated posts which included one of the terms of interest
+The outputs include `output_terms_match_raw.txt` which include a `.txt` file of newline-separated posts which included one of the terms of interest - this output has **9 posts** (remember this number)
 ```
 what route is best for small normal pokemon my skitty needs a friend
 any small pokemon nearby i need to catch a metapod
 ```
-Additionally, the posts formatted as with their terms of interest: 
+Additionally, the posts formatted as with their terms of interest, `output_terms_match.json`: 
 ```
 {
     "small": [
@@ -115,7 +119,7 @@ Following the same social media input files as `catch`, you provide a `social_me
 
 Below is an example of running `bite`:
 ```
-$ jab-bite -k output_ontology_label_synonyms.json -t example_textfile.json -p post -i reply -g True -l 20
+$ jab-bite -k output_ontology_label_synonyms.json -t social_media_posts.txt -g True
 ```
 The output includes `tfidf_results.tsv`, which is a tab-separated file of terms and their tf-idf score, as seen below:
 ```
@@ -125,7 +129,7 @@ path	1.8866845905817748
 pokemon	1.8215522309449206
 ...
 ```
-You can also request a plot of term scores as a bar plot (using `-g`) and set the term limit (`-l`) - the plot is saved as: `tfidf_plot.pdf`.
+You can also request a plot of term scores as a bar plot and set the term limit (`-l`) - the plot is saved as: `tfidf_plot.pdf`.
 
 ## Arise
 
@@ -151,6 +155,16 @@ The output is an updated ontology `updated-ontology.owl`. See below the broad sy
 
 ## **Lets go back to the beginning**
 
-Using `bandersnatch` with `updated-ontology.owl`, the `output_ontology_label_synonyms.json` output will include the new synonyms!
+## Bandersnatch ROUND 2
 
-Finally, using `catch`, with the updated `output_ontology_label_synonyms.json` - the output posts should be increased due to more synonyms!
+Using `bandersnatch` with `updated-ontology.owl`, the `output_ontology_label_synonyms.json` output will include the new synonyms, for example "route" now has the synonym "path". For this example, I renamed it to `roundtwo_output_ontology_label_synonyms.json`.
+```
+$ jab-bandersnatch -o updated-ontology.owl -s ontology_synonym_tags.txt -k words_of_interest_for_ontology.txt
+```
+
+## Catch ROUND 2
+
+Finally, using `catch`, with the updated `roundtwo_output_ontology_label_synonyms.json` - the output posts should be increased due to more synonyms, from **9 posts to 13**.
+```
+$ jab-catch -k roundtwo_output_ontology_label_synonyms.json -t social_media_posts.txt
+```
