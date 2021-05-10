@@ -1,6 +1,6 @@
 # Jabberwocky Scenario
 
-go back to [main page](https://github.com/sap218/jabberwocky/docs/README.md)
+go back to [main page](https://sap218.github.io/jabberwocky/)
 
 You have extracted textual data: blog posts from a social media platform. These social media posts include varios individuals discussing a topic, which you are researching. In this scenario the users are talking about [*pokemon*](https://simple.wikipedia.org/wiki/Pok%C3%A9mon).
 
