@@ -4,7 +4,9 @@ a toolkit for **ontologies**. Since we all know ontologies are "*nonsense*".
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02168/status.svg)](https://doi.org/10.21105/joss.02168) [![DOI](https://zenodo.org/badge/227571502.svg)](https://zenodo.org/badge/latestdoi/227571502) 
 
-**note**: see `setup.py` in your local copy for version number | or if used the `Releases` then **v1.0.0.0** [29/06/2020]
+**note**: see `setup.py` in your local copy for version number | or `Releases`:
+* **v1.0.0.0** [29/06/2020]
+* **v2.0.0.0** [10/05/2021]
 
 don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issues) or [`pull request`](https://github.com/sap218/jabberwocky/pulls) (see [**guidelines**](https://github.com/sap218/jabberwocky/blob/master/CONTRIBUTING.md) first).
 
@@ -12,6 +14,7 @@ don't hesitate to create an [`issue`](https://github.com/sap218/jabberwocky/issu
 
 command | description
 ------- | -----------
+`bandersnatch` | to extract synonyms from an RDF/XML syntax `OWL` ontology
 `catch` | to extract elements of text using key words
 `bite`  | to look at important words from text
 `arise` | adding new synonyms to an ontology
@@ -19,7 +22,7 @@ command | description
 
 ##### Prerequisites
 ```
-$ pip3 install click BeautifulSoup4 scikit-learn pandas lxml
+$ pip3 install click BeautifulSoup4 scikit-learn pandas lxml pytest spacy matplotlib
 ```
 **or after installing**, use the `requirements.txt` file:
 ```
