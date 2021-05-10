@@ -23,6 +23,7 @@ Options:
 ```
 #### Running
 ```
+$ jab-bandersnatch --ontology pocketmonsters.owl --synonymtags ontology_synonym_tags.txt --keywords words_of_interest.txt
 $ jab-bandersnatch -o pocketmonsters.owl -s ontology_synonym_tags.txt -k words_of_interest.txt
 ```
 
@@ -32,7 +33,7 @@ $ jab-bandersnatch -o pocketmonsters.owl -s ontology_synonym_tags.txt -k words_o
 ---
 
 ## catch
-`catch` essentially "catches" key elements / sentences from textual data using a `.json` of key terms and their synonyms. **note**: if a `.json` is provided, you need specify the parameter for the field that contains the textual data to process.
+`catch` essentially "catches" key elements / sentences from textual data using a `.json` of key terms and their synonyms, if not using the `output_ontology_label_synonyms.json` from `bandersnatch`, then you can provide your own. The main element of `catch` is the textfile, which can be `.txt` or `.json` - if a `.json` is provided you need specify the parameter for the field that contains the textual data to process.
 
 #### Usage
 ```
@@ -51,17 +52,18 @@ Options:
 ```
 #### Running
 ```
-$ jab-catch -k output_ontology_label_synonyms.json -t example_textfile.json -p user-comment -i inner-user-comment-reply
+$ jab-catch --keywords output_ontology_label_synonyms.json --textfile example_textfile.txt
+$ jab-catch -k own_labels_synonyms.json -t example_tweets.json -p tweet-comment -i tweet-reply
 ```
 
 ###### Output
-* a `.json` file: `output_terms_match.json` which includes the posts for each word of interest
 * a `.txt` file: `output_terms_match_raw.txt` which includes all elements / sentences from the text file which includes a term of interest
+* a `.json` file: `output_terms_match.json` which includes the posts for each word of interest
 
 ---
 
 ## bite
-`bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. a user can use a list of key terms to remove from the text in order to avoid being in the statistical model - meaning other terms may be ranked higher. **note**: with the `.json` input you need specify the field inside the JSON that contains the textual data to process.
+`bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. a user can use a list of key terms to remove from the text in order to avoid being in the statistical model - meaning other terms may be ranked higher. **note**: with the `.json` input you need specify the field inside the JSON that contains the textual data to process (same as `catch`).
 
 #### Usage
 ```
@@ -83,12 +85,14 @@ Options:
 ```
 #### Running
 ```
-$ jab-bite -k output_ontology_label_synonyms.json -t example_textfile.json -p user-comment -i inner-user-comment-reply -g True -l 20
+$ jab-bite --textfile facebook_posts.txt 
+$ jab-bite -k output_ontology_label_synonyms.json -t example_tweets.json -p tweet-comment -i tweet-reply
+$ jab-bite -k own_labels_synonyms.json -t facebook_posts.txt -g True
 ```
 
 ###### Output
 * a `.tsv` file: `tfidf_results.tsv` of all terms and their tf-idf score
-* a `.pdf` file: `tfidf_plot.pdf` the plot output which is requested if a user makes `--graph True` and presents the 20 (default=30) top scoring terms
+* a `.pdf` file: `tfidf_plot.pdf` the plot output which is requested if a user makes `--graph True` and presents the (default) 30-top scoring terms
 
 ---
 
@@ -108,6 +112,7 @@ Options:
 ```
 #### Running
 ```
+$ jab-arise --ontology pocketmonsters.owl --tfidf tfidf_new_synonyms.tsv
 $ jab-arise -o pocketmonsters.owl -f tfidf_new_synonyms.tsv
 ```
 

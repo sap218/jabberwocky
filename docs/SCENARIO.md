@@ -3,7 +3,7 @@
 ### >> go back to [main page](https://sap218.github.io/jabberwocky/)
 
 
-### >> go to [`jabberwocky/test_files`](https://github.com/sap218/jabberwocky/tree/master/test_files) for the example data of the following examples
+### >> go to [`jabberwocky/test_files`](https://github.com/sap218/jabberwocky/tree/master/test_files) for data of the following examples
 
 ## Aim
 
