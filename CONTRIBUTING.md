@@ -1,52 +1,46 @@
-# Contributing Guildelines / Issues for jabberwocky :dragon_face:
-
+# Contributing Guildelines / Issues for Jabberwocky :dragon_face:
 
 ## Contributing Code
-* know how to fix a bug or want a new feature, consider either creating an issue or opening a pull request
-* if i think it is suited i will merge to master branch
-* frequent contributors will be added to a contributors list for thanks and acknowledgement
-* **note**: additional code should be commented and w/ your username to acknowledge contribution, e.g. <br> 
+* If you intend to add a new feature or fix a bug, consider either creating an **Issue** or editing code directly and then opening a **Pull request**
+* If suitable, I will work on the Issue or merge in
+* Frequent contributors will be added to a contributors list for thanks and acknowledgement
+* **Note**: code should be commented and include your username to acknowledge contribution, e.g.
+
 ```
-new_list = []
-for word in old_list:      # cycles through old list
-  if len(word) > 10:       # if word greater than 10 characters
-    new_list.append(word)  # append to new list
-    print(word)            # printing word as users may want to see as a reference - @yourusername
+print("Hello world") # example comment as a reference - @yourusername
 ``` 
 
-
 ## Issues
-* don't hesitate to create an issue
-* issues can be regarding anything: error reporting, feature request, or questions for help
-* add an issue with a clear description & title
-* try to know what error you are getting and make sure the input files are correct
-* i will label the issue accordingly (see [`labels`](https://github.com/sap218/jabberwocky/labels) - or below (`bug`, `documentation`, `duplicate`, `help`, `request`, `wontfix`))
-* please accept that sometimes information may not be fully understood so there could be follow-up questions
-* if you have an issue with the `README` please do say so! i encourage help to make it better, perhaps you have a better ideas than me
+* Please don't hesitate to create an **Issue**
+* Issues can relate to anything: error reporting, feature request, or questions for help, e.g.
+* If the `README` isn't clear, please do report this! I encourage suggestions!
+* Please add Issues with a clear title and as much information as possible, e.g.
+* If reporting a bug, try to trace your steps and detail this (include error message, etc.)
+* Please accept that sometimes information may not be fully understood or more detail is needed so most likely there will be follow-up questions
+* I will label the issue accordingly see below for [`label`](https://github.com/sap218/jabberwocky/labels) information:
 
 #### bug
-* error reporting if there is a clear issue
-* if you know how to fix it yourself, consider doing it and creating a pull request
-* e.g. "my list of ontology classes and synonyms is empty and I'm using HPO"
+* error reporting - any user problems will be tagged with `bug`
 
 #### documentation
-* any issues which i believe can be fixed by better documentation, i will label with `documentation`
+* pertains to Issues that can be solved by improving the documentation
 
 #### duplicate
-* if you have a question which you believe could have been asked before, ask anyway! I'll label as `duplicate`
-* i will try my best to ensure a link to the original issue will be provided
+* although a question may have been asked before, don't hesitate to ask anyway - I'll label as `duplicate` and reference the solved/closed Issue
 
 #### help
-* if you have a general question about how it works/etc. - check out [`jabberwocky-tests`](https://github.com/sap218/jabberwocky-tests)
-* if the tests repository doesn't help, please ask away - no question is stupid
-* e.g. "can i use my own created ontology?" (FYI: yes)
+* this may be similar to `documentation` but rather this tag can include other things more general (e.g. a question about functions)
 
 #### request
-* have an idea as a new feature? please tell me! 
-* if you know how to make it yourself, consider doing it and creating a pull request
+* this label highlights new features - users are encouraged to ask! 
 
 #### wontfix
-* sometimes people can confuse tools as something they are not - if there is an `bug` or `request` which i believe is not suitably designed for jabberwocky, i will label accordingly
-* after labelling as `wontfix` i will comment why, giving you a few days (perhaps to give a rebuttal) before i close the issue from lack of response/activity
-* please accept this label, if i think a different tool is doing what you want i will redirect you
+* this label covers all aspects of the repository: bugs, features, documentation, etc.
+* there may be circumstances that a bug appears but a fix wouldn't make sense for Jabberwocky's scope
+* after labelling as `wontfix` I will comment why, giving you a few days (perhaps to rebuttal) before I close the issue from lack of response/activity
+* if I can help in any other way (e.g. linking to a different tool) I will try
+* please accept this label: I will always try my best to meet the needs of the user but also considering what is best for Jabberwocky
 
+***
+
+End of page.
