@@ -1,10 +1,8 @@
-# README
+# README - `bandersnatch`
 
-`bandersnatch` curates synonyms for a list of key terms / or words of interest from an ontology of your choice, you provide a list of ontology synonym tags. **note**: it is recommended your list of keywords are exactly the classes from your chosen ontology (all in lowercase).
-```
-$ jab-bandersnatch -o hpo.owl -s ontology_synonym_tags.txt -k words_of_interest.txt
-```
+- extracts all concepts from an ontology based on a) a list of annotation tags and b) a list of concepts / words of interest 
+- it is recommended that these words of interest are in the same format as the ontology classes (case/special chars)
 
 ***
 
-End of page.
+End of page

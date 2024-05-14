@@ -1,0 +1,48 @@
+{
+    "Any small pokemon nearby? I need to catch a Metapod!": [
+        "small"
+    ],
+    "I think only gen 6 pokemon are on this path - try route 2.": [
+        "gen 6",
+        "route"
+    ],
+    "I've checked that route twice already. I just want my Caterpie to evolve already.": [
+        "route"
+    ],
+    "Anyone else dislike the new Pokedex? What happened to old fashioned gen 1?": [
+        "gen 1"
+    ],
+    "Anyone want a battle? I'm on route 13.": [
+        "route"
+    ],
+    "No thanks, I'm, trying to catch a flying type in the mountatins with the clear air.": "NO ANNOTATION",
+    "I'll be there soon. Need to heal first.": "NO ANNOTATION",
+    "Currently on the opposite path, training for Brock's gym.": "NO ANNOTATION",
+    "I'll join too - it'll be nice for Ekans to get some practice - I'll be flying by air.": "NO ANNOTATION",
+    "Really? Still with an Ekans? Any chance it'll evolve soon?.": "NO ANNOTATION",
+    "Not yet. Taking is slow - Team Rocket are after one.": "NO ANNOTATION",
+    "I'll join but we should move to the meadow area near that route.": [
+        "route"
+    ],
+    "So where are you guys meeting again?": "NO ANNOTATION",
+    "Remember to be careful everyone! If you see any grunts of Team Rocket please notify us via your pokedex. We are always alert on the path if you need assistance.": "NO ANNOTATION",
+    "Feel free to pop in the centre if you want to rest.": "NO ANNOTATION",
+    "Hey guys! Lake near route 7 I saw a Gyarados!": [
+        "route"
+    ],
+    "I need one for my pokedex - luckily I'm only a few minutes away, I won't be too long, just coming down the path now.": "NO ANNOTATION",
+    "Hurry it'll mega-evolve! The other one flew away and I was too late.": "NO ANNOTATION",
+    "What is mega-evolve?": "NO ANNOTATION",
+    "What?! You've not heard of it?!": "NO ANNOTATION",
+    "Drat! I didn't know it took a while for Magikarps to evolve.": "NO ANNOTATION",
+    "What route is best for small normal pokemon? My Skitty needs a friend.": [
+        "route",
+        "small"
+    ],
+    "Not sure.": "NO ANNOTATION",
+    "Do you mean cat-breed pokemon?": "NO ANNOTATION",
+    "The path near the school is always a good choice.": "NO ANNOTATION",
+    "Go to route 4, we're totally not on that path and we don't plan on catching your Skitty away from you.": [
+        "route"
+    ]
+}
