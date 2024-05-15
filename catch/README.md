@@ -1,6 +1,6 @@
 # README - `catch`
 
-- annotates unstructured text with key terms / words of interest, which can be the outcome from `bandersnatch`
+- annotates unstructured text with concepts, which can be `bandersnatch` output
 - output includes `.json` and `.txt`
 
 ***

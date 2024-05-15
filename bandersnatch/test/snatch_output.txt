@@ -1,13 +1,49 @@
+generation
+type
+size
+small
+medium
+large
+route
 generation one
 generation 1
 gen 1
 gen one
-dragon
-route
-water
-small
-large
+generation two
+generation 2
+gen 2
+gen two
+generation three
+generation 3
+gen 3
+gen three
+generation four
+generation 4
+gen 4
+gen four
+generation five
+generation 5
+gen 5
+gen five
 generation six
 generation 6
 gen 6
 gen six
+normal
+grass
+water
+fire
+electric
+ground
+rock
+flying
+bug
+poison
+fighting
+psychic
+ghost
+dark
+ice
+steel
+dragon
+fairy

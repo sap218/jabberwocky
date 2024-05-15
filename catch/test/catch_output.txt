@@ -1,5 +1,5 @@
 ANNOTATED ({'small'}): Any small pokemon nearby? I need to catch a Metapod!
-ANNOTATED ({'gen 6', 'route'}): I think only gen 6 pokemon are on this path - try route 2.
+ANNOTATED ({'route', 'gen 6'}): I think only gen 6 pokemon are on this path - try route 2.
 ANNOTATED ({'route'}): I've checked that route twice already. I just want my Caterpie to evolve already.
 ANNOTATED ({'gen 1'}): Anyone else dislike the new Pokedex? What happened to old fashioned gen 1?
 ANNOTATED ({'route'}): Anyone want a battle? I'm on route 13.

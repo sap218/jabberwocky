@@ -15,19 +15,12 @@ import spacy
 from spacy.matcher import PhraseMatcher
 nlp = spacy.load("en_core_web_sm")
 
-'''
-def clean_text(post):
-    post = post.replace("-", "")
-    post = (re.sub("[^A-Za-z0-9']+", " ", post)) # keeping '
-    post = (re.sub("'", "", post))
-    return post.lower().strip()
-'''
-     
+####################################################
+
 def cleantext(post):
     post = re.sub(' +', ' ', post) # double spaces
     post = re.sub("[^A-Za-z0-9']+", " ", post).replace("'", "").strip()
     return post
-
 
 # https://gist.github.com/sebleier/554280?permalink_comment_id=2639949#gistcomment-2639949
 stopWords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', "that'll", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd', 'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
@@ -37,19 +30,6 @@ def remove_stop_words(text, stopWords):
     return ' '.join(word for word in text.split() if word.lower() not in stopWords)
 
 ####################################################
-
-'''
-@click.command()
-@click.option('-t', '--textfile', 'textfile', required=True, help='JSON or TXT file of text you want annotate.')
-'''
-#def main(keywords, textfile, parameter, innerparameter):
-
-#keywords = "input/word_of_interest_with_synonyms.json"
-#keywords = "../ontology/output_ontology_label_synonyms.json"
-
-#with open(keywords) as j: # if no ontology is given, use this json
-#    searching_concepts_of_interest = json.load(j)
-
 
 words_of_interest = []
 # with open(keywords, "r") as t:
@@ -165,13 +145,11 @@ for post in list_of_posts_clean_stpwrd:
             matched_span = doc[start:end]
             matched_concepts.add(matched_span.text)
             
-        matched_output_list.append("ANNOTATED (%s): %s" % ( matched_concepts, list_of_posts[x]) )#post) )
-        #matched_output_dictionary[post] = {"key":"ANNOTATED", "annotated":list(matched_concepts)}
+        matched_output_list.append("ANNOTATED (%s): %s" % ( matched_concepts, list_of_posts[x]) )
         matched_output_dictionary[list_of_posts[x]] = list(matched_concepts)
         
     else: 
-        matched_output_list.append("NO ANNOTATION: %s" % list_of_posts[x]) #post)
-        #matched_output_dictionary[post] = {"key":"NO ANNOTATION"}
+        matched_output_list.append("NO ANNOTATION: %s" % list_of_posts[x])
         matched_output_dictionary[list_of_posts[x]] = "NO ANNOTATION"
 
     x = x + 1
@@ -196,6 +174,7 @@ del matched_concepts, matches, matched_span, match_id, start, end
 
 with open('test/catch_output.json', 'w') as j:
     json.dump(matched_output_dictionary, j, indent=4)
+del j
 
 with open('test/catch_output.txt', 'w') as t:
     for word in matched_output_list:

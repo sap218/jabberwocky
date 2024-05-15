@@ -11,8 +11,6 @@
 """
 
 from bs4 import BeautifulSoup
-import json
-import re
 
 ####################################################
 
@@ -45,15 +43,27 @@ del find_all_concepts, flatten, label, list_synonyms, synonym_finding, synonym_f
 
 ####################################################
 
-try:
-    words_of_interest = []
-    # with open(keywords, "r") as t:
-    with open("test/words_of_interest.txt", "r") as t:
-        for word in t:
-            words_of_interest.append(word.strip("\n").strip(" ")) # words of interest
-    del t, word
-except FileNotFoundError:
+to_use_own_defined_concepts = False
+
+if to_use_own_defined_concepts:
+    try:
+        words_of_interest = []
+        # with open(keywords, "r") as t:
+        with open("test/words_of_interest.txt", "r") as t:
+            for word in t:
+                words_of_interest.append(word.strip("\n").strip(" ")) # words of interest
+        print("Concepts file found")
+        del t, word
+        
+    except FileNotFoundError:
+        words_of_interest = None
+        print("Concepts file not found - using all ontology classes and synonyms (from tags)")
+
+else:
     words_of_interest = None
+    print("Using all ontology classes and synonyms (from tags)")
+
+####################################################
 
 if words_of_interest: 
     search_concepts = {key: classes_and_synonyms[key] for key in words_of_interest}

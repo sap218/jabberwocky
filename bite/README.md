@@ -1,10 +1,10 @@
-# README
+# README - `bite` 
 
-`bite` runs a tf-idf statistical analysis: searching for important terms in a text corpus. a user can use a list of key terms to remove from the text in order to avoid being in the statistical model - meaning other terms may be ranked higher. **note**: again with `catch`, if you provide a `.json` of text data, you need specify the field that contains the textual data to process. Using `-g True` means you'll get a bar plot of the (default) 30-top terms.
-```
-$ jab-bite -k label_with_synonyms.json -t twitter_posts.txt -g True
-```
+- runs tf-idf statistical analysis: ranking terms in unstructured text from most important
+- users can provide a list of concepts to remove from text so they aren't included in the statistical model
+- these concepts can be `bandersnatch` output
+- also with a bar plot of the (default) 30-top terms
 
 ***
 
-End of page.
+End of page
