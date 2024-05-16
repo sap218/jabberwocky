@@ -11,14 +11,17 @@
     # https://towardsdatascience.com/natural-language-processing-feature-engineering-using-tf-idf-e8b9d00e7e76
 """
 
-import json
 import pandas as pd
 import re
+import time
+
 from sklearn.feature_extraction.text import TfidfVectorizer
-import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 
 import spacy
 nlp = spacy.load("en_core_web_sm")
+
+import matplotlib.pyplot as plt
 
 ####################################################
 
@@ -48,11 +51,6 @@ def remove_stop_words(text, stopWords):
 
 ####################################################
 
-#@click.option('-g', '--graph', 'graph', default=False, help='make True if you want a plot of top 30 terms.')
-#@click.option('-l', '--limit', 'limit', default='NULL', help='change if want a different plot limit.')
-#def main(keywords, textfile, parameter, innerparameter, graph, limit):
-
-
 concepts_to_remove = True
 
 if concepts_to_remove:
@@ -71,23 +69,23 @@ if concepts_to_remove:
     del t, word
     
     words_of_interest_clean = [cleantext(x.lower()) for x in words_of_interest]
-    words_of_interest_clean_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean]
+    #words_of_interest_clean_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean]
     
     # preprocess concepts: Lemmatize
-    words_of_interest_clean_stpwrd_lemma = []
-    for concept in words_of_interest_clean_stpwrd:
+    words_of_interest_clean_lemma = []
+    for concept in words_of_interest_clean:
         doc = nlp(concept)
         lemma_item = " ".join([token.lemma_ for token in doc])
-        words_of_interest_clean_stpwrd_lemma.append(lemma_item)
+        words_of_interest_clean_lemma.append(lemma_item)
     del doc, concept, lemma_item    
     
-    del words_of_interest_clean, words_of_interest_clean_stpwrd
+    words_of_interest_clean_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean_lemma]
+    
+    del words_of_interest_clean, words_of_interest_clean_lemma
 
 
 else:
-    words_of_interest_clean_stpwrd_lemma = []
-
-
+    words_of_interest_clean_lemma_stpwrd = []
 
 
 ####################################################
@@ -104,9 +102,9 @@ del t, post
 list_of_posts = list(filter(None, list_of_posts))
 
 list_of_posts_clean = [cleantext(x.lower()) for x in list_of_posts]
-list_of_posts_clean_stpwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean]
 
-del list_of_posts_clean
+#list_of_posts_clean_stpwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean]
+#del list_of_posts_clean
 
 ####################################################
 
@@ -123,69 +121,76 @@ with open("../catch/test/catch_output.txt", "r") as t:
 del t, post
 
 list_of_posts_clean = [cleantext(x.lower()) for x in list_of_posts]
-list_of_posts_clean_stpwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean]
 
-del list_of_posts_clean
+#list_of_posts_clean_stpwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean]
+#del list_of_posts_clean
 
 ####################################################
 
 # preprocess sentences: Lemmatize
-list_of_posts_clean_stpwrd_lemma = []
-for post in list_of_posts_clean_stpwrd:
+list_of_posts_clean_lemma = []
+for post in list_of_posts_clean:
     doc = nlp(post)
     lemma_item = " ".join([token.lemma_ for token in doc])
-    list_of_posts_clean_stpwrd_lemma.append(lemma_item)
-del doc, post, lemma_item, list_of_posts_clean_stpwrd
+    list_of_posts_clean_lemma.append(lemma_item)
+del doc, post, lemma_item, list_of_posts_clean
+
+list_of_posts_clean_lemma_stopwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean_lemma]
+del list_of_posts_clean_lemma
 
 ####################################################
 ####################################################
 
-list_of_posts_clean_stpwrd_lemma_filtered = []
-for sentence in list_of_posts_clean_stpwrd_lemma:
+list_of_posts_clean_lemma_stpwrd_filtered = []
+for sentence in list_of_posts_clean_lemma_stopwrd:
     sentence = sentence.split()
     
-    for word in words_of_interest_clean_stpwrd_lemma:
+    for word in words_of_interest_clean_lemma_stpwrd:
         word = word.split()
         
         sentence = [w for w in sentence if w not in word]
         
-    list_of_posts_clean_stpwrd_lemma_filtered.append(" ".join(sentence))
+    list_of_posts_clean_lemma_stpwrd_filtered.append(" ".join(sentence))
 
 del sentence, word
-del list_of_posts_clean_stpwrd_lemma
+del list_of_posts_clean_lemma_stopwrd
 
 ####################################################
 ####################################################
 
+start_time = time.time()
 
 tfidf_vectorizer = TfidfVectorizer()
-tfidf_matrix = tfidf_vectorizer.fit_transform(list_of_posts_clean_stpwrd_lemma_filtered)
+tfidf_matrix = tfidf_vectorizer.fit_transform(list_of_posts_clean_lemma_stpwrd_filtered)
 feature_names = tfidf_vectorizer.get_feature_names_out()
 
+end_time = time.time() - start_time
+print( "Seconds taken to run tf-idf: %s" % str(round(end_time, 3)) )
+del start_time, end_time
 
 tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=feature_names)
-tfidf_df['Sentence'] = list_of_posts_clean_stpwrd_lemma_filtered # col to show original sentences
+tfidf_df['Sentence'] = list_of_posts_clean_lemma_stpwrd_filtered # col to show original sentences
 tfidf_df = tfidf_df[['Sentence'] + [col for col in tfidf_df.columns if col != 'Sentence']] # sentence first col
 del tfidf_matrix, tfidf_vectorizer, feature_names
 
 
 summary_scores = tfidf_df.drop(columns=['Sentence']).agg('mean', axis=0)
-summary_df = pd.DataFrame({'Word': summary_scores.index, 'Score': summary_scores.values})
-del summary_scores, tfidf_df
+tfidf_df_sum = pd.DataFrame({'Word': summary_scores.index, 'Score': summary_scores.values})
+del summary_scores
 
 
-from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
-summary_df['Score'] = scaler.fit_transform(summary_df[['Score']])
-summary_df = summary_df.sort_values("Score", ascending=False)
-summary_df.to_csv('test/tfidf.tsv', index=False, sep="\t")
+tfidf_df_sum['Score'] = scaler.fit_transform(tfidf_df_sum[['Score']])
+tfidf_df_sum = tfidf_df_sum.sort_values("Score", ascending=False)
+del scaler
 
+tfidf_df_sum.to_csv('test/tfidf.tsv', index=False, sep="\t")
 
 ####################################################
 ####################################################
-'''
-#graph = True
-#limit = "NULL"
+
+graph = True
+limit = "NULL"
 
 if limit == "NULL":
     limit = 30
@@ -193,14 +198,13 @@ if limit == "NULL":
 if graph:
     fig = plt.figure()
     ax = fig.add_axes([0,0,1,1])
-    ax.bar(tfidf["words"][:limit],tfidf["count"][:limit], color='steelblue')
+    ax.bar(tfidf_df_sum["Word"][:limit],tfidf_df_sum["Score"][:limit], color='steelblue')
     plt.xticks(rotation=90)
-    ax.set_ylabel('Score')
+    ax.set_ylabel('Average Score')
     ax.set_xlabel('Term')
-    ax.set_title('Bar plot of mean tf-idf for top %s terms' % limit)
-    #plt.show()
-    plt.savefig('tfidf_plot.pdf', bbox_inches='tight')
-'''
+    ax.set_title('Bar plot of average TF-IDF score for top %s terms' % limit)
+    plt.savefig('test/tfidf_plot.pdf', bbox_inches='tight')
+del ax, fig
 
 ####################################################
 
