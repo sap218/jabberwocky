@@ -1,10 +1,9 @@
-# README
+# README - `arise` 
 
-`arise` inserts synonyms in an ontology: **you** define these synonyms (e.g. "exact", "broad", "related", or "narrow") - these new synonyms may be based on the tf-idf statistical analysis from `bite`.
-```
-$ jab-arise -o pocketmonsters.owl -f tfidf_new_synonyms.tsv
-```
+- inserts annotations in an ontology
+- user defines the tag (e.g. 'oboInOWL:hasRelatedSynonym', or x-ref)
+- note: new synonyms can be derived from TF-IDF (`bite`) output
 
 ***
 
-End of page.
+End of page
