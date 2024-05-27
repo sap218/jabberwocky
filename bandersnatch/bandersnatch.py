@@ -3,7 +3,7 @@
 """
 @date: 2024
 @author: Samantha C Pendleton
-@description: to curate terms and their synonyms from an ontology file
+@description: curate classes (& synonyms) from an ontology
 @GitHub: github.com/sap218/jabberwocky
 
 @useful links:

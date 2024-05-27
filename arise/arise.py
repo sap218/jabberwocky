@@ -3,7 +3,7 @@
 """
 @date: 2024
 @author: Samantha C Pendleton
-@description: to update an ontology
+@description: annotate ontology classes
 @GitHub: github.com/sap218/jabberwocky
 
 @useful links:

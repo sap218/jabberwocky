@@ -3,8 +3,8 @@
         "small"
     ],
     "I think only gen 6 pokemon are on this path - try route 2.": [
-        "route",
-        "gen 6"
+        "gen 6",
+        "route"
     ],
     "I've checked that route twice already. I just want my Caterpie to evolve already.": [
         "route"
@@ -15,10 +15,15 @@
     "Anyone want a battle? I'm on route 13.": [
         "route"
     ],
-    "No thanks, I'm, trying to catch a flying type in the mountatins with the clear air.": "NO ANNOTATION",
+    "No thanks, I'm, trying to catch a flying type in the mountatins with the clear air.": [
+        "fly",
+        "type"
+    ],
     "I'll be there soon. Need to heal first.": "NO ANNOTATION",
     "Currently on the opposite path, training for Brock's gym.": "NO ANNOTATION",
-    "I'll join too - it'll be nice for Ekans to get some practice - I'll be flying by air.": "NO ANNOTATION",
+    "I'll join too - it'll be nice for Ekans to get some practice - I'll be flying by air.": [
+        "fly"
+    ],
     "Really? Still with an Ekans? Any chance it'll evolve soon?.": "NO ANNOTATION",
     "Not yet. Taking is slow - Team Rocket are after one.": "NO ANNOTATION",
     "I'll join but we should move to the meadow area near that route.": [
@@ -31,12 +36,15 @@
         "route"
     ],
     "I need one for my pokedex - luckily I'm only a few minutes away, I won't be too long, just coming down the path now.": "NO ANNOTATION",
-    "Hurry it'll mega-evolve! The other one flew away and I was too late.": "NO ANNOTATION",
+    "Hurry it'll mega-evolve! The other one flew away and I was too late.": [
+        "fly"
+    ],
     "What is mega-evolve?": "NO ANNOTATION",
     "What?! You've not heard of it?!": "NO ANNOTATION",
     "Drat! I didn't know it took a while for Magikarps to evolve.": "NO ANNOTATION",
     "What route is best for small normal pokemon? My Skitty needs a friend.": [
         "route",
+        "normal",
         "small"
     ],
     "Not sure.": "NO ANNOTATION",
