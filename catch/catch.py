@@ -5,6 +5,9 @@
 @author: Samantha C Pendleton
 @description: with words of interest, grep a text file
 @GitHub: github.com/sap218/jabberwocky
+
+@useful links:
+    # https://matplotlib.org/stable/users/explain/colors/colormaps.html
 """
 
 import re
@@ -20,13 +23,9 @@ import matplotlib.pyplot as plt
 
 ####################################################
 
-def cleantext(post):
-    post = re.sub(' +', ' ', post) # double spaces
-    post = re.sub("[^A-Za-z0-9']+", " ", post).replace("'", " ").strip() # ""?
-    return post
+from HIGHLEVEL import *
 
 ''' stopWords '''
-from STOPWORDS import *
 stopWords = [cleantext(x.lower()) for x in stopWords]
 
 def remove_stop_words(text, stopWords):
@@ -120,7 +119,7 @@ start_time = time.time()
 
 
 matched_output_list = []
-matched_output_dictionary = {}
+#matched_output_dictionary = {}
 
 list_of_posts_clean_lemma_stpwrd = []
 
@@ -154,12 +153,12 @@ for post in list_of_posts_clean:
             matched_span = doc[start:end]
             matched_concepts.add(matched_span.text)
             
-        matched_output_list.append("ANNOTATED (%s): %s" % ( matched_concepts, list_of_posts[x]) )
-        matched_output_dictionary[list_of_posts[x]] = list(matched_concepts)
+        matched_output_list.append([ list(matched_concepts), list_of_posts[x] ])
+        #matched_output_dictionary[list_of_posts[x]] = list(matched_concepts)
         
     else: 
-        matched_output_list.append("NO ANNOTATION: %s" % list_of_posts[x])
-        matched_output_dictionary[list_of_posts[x]] = "NO ANNOTATION"
+        matched_output_list.append([ "NO ANNOTATION", list_of_posts[x] ])
+        #matched_output_dictionary[list_of_posts[x]] = "NO ANNOTATION"
 
     x = x + 1
 
@@ -174,23 +173,40 @@ del matched_concepts, matches, matched_span, match_id, start, end
 ####################################################
 ####################################################
 
-with open('test/catch_output.json', 'w') as j:
-    json.dump(matched_output_dictionary, j, indent=4)
-del j
+grep_format = True
+not_annotated = False
+
+to_output = []
+
+for x in matched_output_list:
+    if not_annotated:
+        if x[0] == "NO ANNOTATION": to_output.append(x[1])
+    else:
+        if grep_format:
+            if x[0] != "NO ANNOTATION": to_output.append(x[1])
+            
+        else:
+            if x[0] != "NO ANNOTATION": to_output.append( "%s, %s" % ( x[0] ,x[1]) )
+
 
 with open('test/catch_output.txt', 'w') as t:
-    for word in matched_output_list:
+    for word in to_output:
         t.write(word + '\n')
 del t, word
 
+#with open('test/catch_output.json', 'w') as j:
+#    json.dump(matched_output_dictionary, j, indent=4)
+#del j
+
+
 ####################################################
 ####################################################
+
 
 graph = True
 
 # words_of_interest_clean_lemma_stpwrd
 
-# https://matplotlib.org/stable/users/explain/colors/colormaps.html
 cm = [
       'Set3', # Pastel
       'viridis', #purple -> green
@@ -205,7 +221,7 @@ wc = WordCloud(
     contour_color='black', contour_width=10,
     
     max_words=30, min_font_size=10,
-    #stopwords = ['ill'], # words don't want to plot
+    #stopwords = ['word'], # words don't want to plot
     collocations = True, # words joined together
     normalize_plurals=False,
     
@@ -219,6 +235,7 @@ plt.tight_layout(pad = 0)
 plt.imshow(wc, interpolation="bilinear")
 #plt.savefig('test/wordcloud.pdf')
 plt.savefig('test/wordcloud.png')
+
 
 ####################################################
 

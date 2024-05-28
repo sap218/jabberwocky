@@ -1,26 +1,12 @@
-ANNOTATED ({'small'}): Any small pokemon nearby? I need to catch a Metapod!
-ANNOTATED ({'gen 6', 'route'}): I think only gen 6 pokemon are on this path - try route 2.
-ANNOTATED ({'route'}): I've checked that route twice already. I just want my Caterpie to evolve already.
-ANNOTATED ({'gen 1'}): Anyone else dislike the new Pokedex? What happened to old fashioned gen 1?
-ANNOTATED ({'route'}): Anyone want a battle? I'm on route 13.
-ANNOTATED ({'fly', 'type'}): No thanks, I'm, trying to catch a flying type in the mountatins with the clear air.
-NO ANNOTATION: I'll be there soon. Need to heal first.
-NO ANNOTATION: Currently on the opposite path, training for Brock's gym.
-ANNOTATED ({'fly'}): I'll join too - it'll be nice for Ekans to get some practice - I'll be flying by air.
-NO ANNOTATION: Really? Still with an Ekans? Any chance it'll evolve soon?.
-NO ANNOTATION: Not yet. Taking is slow - Team Rocket are after one.
-ANNOTATED ({'route'}): I'll join but we should move to the meadow area near that route.
-NO ANNOTATION: So where are you guys meeting again?
-NO ANNOTATION: Remember to be careful everyone! If you see any grunts of Team Rocket please notify us via your pokedex. We are always alert on the path if you need assistance.
-NO ANNOTATION: Feel free to pop in the centre if you want to rest.
-ANNOTATED ({'route'}): Hey guys! Lake near route 7 I saw a Gyarados!
-NO ANNOTATION: I need one for my pokedex - luckily I'm only a few minutes away, I won't be too long, just coming down the path now.
-ANNOTATED ({'fly'}): Hurry it'll mega-evolve! The other one flew away and I was too late.
-NO ANNOTATION: What is mega-evolve?
-NO ANNOTATION: What?! You've not heard of it?!
-NO ANNOTATION: Drat! I didn't know it took a while for Magikarps to evolve.
-ANNOTATED ({'route', 'normal', 'small'}): What route is best for small normal pokemon? My Skitty needs a friend.
-NO ANNOTATION: Not sure.
-NO ANNOTATION: Do you mean cat-breed pokemon?
-NO ANNOTATION: The path near the school is always a good choice.
-ANNOTATED ({'route'}): Go to route 4, we're totally not on that path and we don't plan on catching your Skitty away from you.
+Any small pokemon nearby? I need to catch a Metapod!
+I think only gen 6 pokemon are on this path - try route 2.
+I've checked that route twice already. I just want my Caterpie to evolve already.
+Anyone else dislike the new Pokedex? What happened to old fashioned gen 1?
+Anyone want a battle? I'm on route 13.
+No thanks, I'm, trying to catch a flying type in the mountatins with the clear air.
+I'll join too - it'll be nice for Ekans to get some practice - I'll be flying by air.
+I'll join but we should move to the meadow area near that route.
+Hey guys! Lake near route 7 I saw a Gyarados!
+Hurry it'll mega-evolve! The other one flew away and I was too late.
+What route is best for small normal pokemon? My Skitty needs a friend.
+Go to route 4, we're totally not on that path and we don't plan on catching your Skitty away from you.

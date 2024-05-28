@@ -7,7 +7,6 @@
 @GitHub: github.com/sap218/jabberwocky
 
 @useful links:
-    # https://stackoverflow.com/questions/35898699/why-is-beautifulsoup-altering-the-format-of-my-xml
     # https://www.crummy.com/software/BeautifulSoup/bs4/doc/#insert
 """
 

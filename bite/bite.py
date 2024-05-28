@@ -7,8 +7,7 @@
 @GitHub: github.com/sap218/jabberwocky
 
 @useful links:
-    # https://gist.github.com/sebleier/554280#gistcomment-2860409
-    # https://towardsdatascience.com/natural-language-processing-feature-engineering-using-tf-idf-e8b9d00e7e76
+    # https://python-charts.com/matplotlib/styles/
 """
 
 import re
@@ -24,13 +23,9 @@ nlp = spacy.load("en_core_web_sm")
 
 ####################################################
 
-def cleantext(post):
-    post = re.sub(' +', ' ', post) # double spaces
-    post = re.sub("[^A-Za-z0-9']+", " ", post).replace("'", " ").strip()
-    return post
+from HIGHLEVEL import *
 
 ''' stopWords '''
-from STOPWORDS import *
 stopWords = [cleantext(x.lower()) for x in stopWords]
 
 def remove_stop_words(text, stopWords):
@@ -181,16 +176,26 @@ limit = "NULL"
 
 if limit == "NULL":
     limit = 30
+    
+colours = [
+    "mediumseagreen",
+    "steelblue",
+    "lightcoral",
+    ] 
+color = colours[0]
+
+plt.style.use("seaborn-poster")
 
 if graph:
     fig = plt.figure()
     ax = fig.add_axes([0,0,1,1])
-    ax.bar(tfidf_df_sum["Word"][:limit],tfidf_df_sum["Score"][:limit], color='steelblue')
+    ax.bar(tfidf_df_sum["Word"][:limit],tfidf_df_sum["Score"][:limit], color=color)
     plt.xticks(rotation=90)
-    ax.set_ylabel('Average Score')
-    ax.set_xlabel('Term')
-    ax.set_title('Bar plot of average TF-IDF score for top %s terms' % limit)
-    plt.savefig('test/tfidf_plot.pdf', bbox_inches='tight')
+    ax.set_ylabel('Average score (normalised)')
+    ax.set_xlabel('Terms')
+    ax.set_title("Bar plot of top %s terms TF-IDF rankings" % limit)
+    #plt.savefig('test/tfidf_plot.pdf', bbox_inches='tight')
+    plt.savefig('test/top%s_terms.png' % limit, bbox_inches='tight')
 del ax, fig
 
 ####################################################

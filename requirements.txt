@@ -1,6 +1,0 @@
-BeautifulSoup4
-pandas
-matplotlib
-scikit-learn
-spacy
-pytest
