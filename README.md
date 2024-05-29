@@ -4,9 +4,9 @@
 
 Jabberwocky is a toolkit for NLP and **ontologies**. Since we all know ontologies are "*nonsense*".
 
-## Scripts
+## Functionality
 
-command | description
+script | description
 ------- | -----------
 `bandersnatch` | extract annotations from an ontology (`OWL` RDF/XML syntax)
 `catch` | annotation/grep of a corpus using key words/phrases
@@ -15,7 +15,7 @@ command | description
 
 When combining these functions, users can create an NLP workflow.
 
-![jabberwocky cycle](/images/cycle.jpg)
+![workflow](/docs/workflow.png)
 
 #### Prerequisites
 
