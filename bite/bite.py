@@ -33,18 +33,29 @@ def remove_stop_words(text, stopWords):
 
 ####################################################
 
-concepts_to_remove = True
+"""PARAMS"""
 
-if concepts_to_remove:
+to_remove_concepts = True
+# if True, words will be removed from corpus to avoid being weighted in TF-IDF
+concepts_to_remove = "snatch_output"
+
+corpus = "social_media_posts"
+
+graph = True
+# if True, will produce the tf-idf bar plot
+limit = 30
+# default is top 30 words
+cm = ["mediumseagreen","steelblue","lightcoral"] 
+# to choose item for colour of bars
+cm = cm[0]
+
+####################################################
+
+if to_remove_concepts:
 
     words_of_interest = []
-    # with open(keywords, "r") as t:
     
-    with open("../bandersnatch/test/words_of_interest.txt", "r") as t:
-        for word in t:
-            words_of_interest.append(word.strip("\n").strip(" "))
-    
-    with open("../bandersnatch/test/snatch_output.txt", "r") as t:
+    with open("../bandersnatch/test/%s.txt" % concepts_to_remove, "r") as t:
         for word in t:
             words_of_interest.append(word.strip("\n").strip(" "))
     
@@ -69,36 +80,16 @@ if concepts_to_remove:
 else:
     words_of_interest_clean_lemma_stpwrd = []
 
-
 ####################################################
 ####################################################
-
-# original social media posts
 
 list_of_posts = []
-# with open(textfile, "r") as t:
-with open("../catch/test/social_media_posts.txt", "r") as t:
+
+with open("../catch/test/%s.txt" % corpus, "r") as t:
     for post in t:
         list_of_posts.append(post.strip("\n").strip(" "))
 del t, post
 list_of_posts = list(filter(None, list_of_posts))
-
-list_of_posts_clean = [cleantext(x.lower()) for x in list_of_posts]
-
-#list_of_posts_clean_stpwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean]
-#del list_of_posts_clean
-
-####################################################
-
-# catch output but looking at no annotations
-
-list_of_posts = []
-# with open(textfile, "r") as t:
-with open("../catch/test/catch_output.txt", "r") as t:
-    for post in t:
-        post = post.strip("\n").strip(" ")
-        list_of_posts.append(post)
-del t, post
 
 list_of_posts_clean = [cleantext(x.lower()) for x in list_of_posts]
 
@@ -169,31 +160,16 @@ tfidf_df_sum.to_csv('test/bite_output.tsv', index=False, sep="\t")
 ####################################################
 ####################################################
 
-graph = True
-limit = "NULL"
-
-if limit == "NULL":
-    limit = 30
-    
-colours = [
-    "mediumseagreen",
-    "steelblue",
-    "lightcoral",
-    ] 
-color = colours[0]
-
-plt.style.use("seaborn-poster")
-
 if graph:
+    plt.style.use("seaborn-poster")
     fig = plt.figure()
     ax = fig.add_axes([0,0,1,1])
-    ax.bar(tfidf_df_sum["Word"][:limit],tfidf_df_sum["Score"][:limit], color=color)
+    ax.bar(tfidf_df_sum["Word"][:limit],tfidf_df_sum["Score"][:limit], color=cm)
     plt.xticks(rotation=90)
     ax.set_ylabel('Average score (normalised)')
     ax.set_xlabel('Terms')
     ax.set_title("Bar plot of top %s terms TF-IDF rankings" % limit)
-    #plt.savefig('test/tfidf_plot.pdf', bbox_inches='tight')
-    plt.savefig('test/top%s_terms.png' % limit, bbox_inches='tight')
+    plt.savefig('test/bite_output_tfidf.png', bbox_inches='tight')
 del ax, fig
 
 ####################################################

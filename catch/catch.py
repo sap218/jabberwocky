@@ -33,17 +33,32 @@ def remove_stop_words(text, stopWords):
 
 ####################################################
 
+"""PARAMS"""
+
+annotation_file = "snatch_output"
+corpus = "social_media_posts"
+
+grep_format = True
+# if True, outputs only post
+# if False, outputs the post WITH the annotation
+not_annotated = False
+# if True, output is the posts that were not annotated
+
+graph = True
+# if True, will produce the word cloud
+cm = ['Set3','viridis']
+cm = cm[0]
+# to choose item for colour palette
+# 0/Set3 is pastel
+# 1/viridis is purple -> green
+
+####################################################
+
 words_of_interest = []
-# with open(keywords, "r") as t:
 
-with open("../bandersnatch/test/words_of_interest.txt", "r") as t:
+with open("../bandersnatch/test/%s.txt" % annotation_file, "r") as t:
     for word in t:
         words_of_interest.append(word.strip("\n").strip(" "))
-
-with open("../bandersnatch/test/snatch_output.txt", "r") as t:
-    for word in t:
-        words_of_interest.append(word.strip("\n").strip(" "))
-
 del t, word
 
 words_of_interest_clean = [cleantext(x.lower()) for x in words_of_interest]
@@ -54,8 +69,8 @@ words_of_interest_clean = [cleantext(x.lower()) for x in words_of_interest]
 ####################################################
 
 list_of_posts = []
-# with open(textfile, "r") as t:
-with open("test/social_media_posts.txt", "r") as t:
+
+with open("test/%s.txt" % corpus, "r") as t:
     for post in t:
         list_of_posts.append(post.strip("\n").strip(" "))
 del t, post
@@ -173,9 +188,6 @@ del matched_concepts, matches, matched_span, match_id, start, end
 ####################################################
 ####################################################
 
-grep_format = True
-not_annotated = False
-
 to_output = []
 
 for x in matched_output_list:
@@ -198,44 +210,31 @@ del t, word
 #    json.dump(matched_output_dictionary, j, indent=4)
 #del j
 
-
 ####################################################
 ####################################################
 
-
-graph = True
-
-# words_of_interest_clean_lemma_stpwrd
-
-cm = [
-      'Set3', # Pastel
-      'viridis', #purple -> green
-      ] 
-cm = cm[0]
-
-wc = WordCloud(
-    width = 2048, height = 1080,
+if graph:
+    wc = WordCloud(
+        width = 2048, height = 1080,
+        
+        background_color='white',
+        colormap = cm,
+        contour_color='black', contour_width=10,
+        
+        max_words=30, min_font_size=10,
+        #stopwords = ['word'], # words don't want to plot
+        collocations = True, # words joined together
+        normalize_plurals=False,
+        
+        prefer_horizontal=0.8,scale=2,
+        random_state=123
+        ).generate(" ".join(list_of_posts_clean_lemma_stpwrd))
     
-    background_color='white',
-    colormap = cm,
-    contour_color='black', contour_width=10,
-    
-    max_words=30, min_font_size=10,
-    #stopwords = ['word'], # words don't want to plot
-    collocations = True, # words joined together
-    normalize_plurals=False,
-    
-    prefer_horizontal=0.8,scale=2,
-    random_state=123
-    ).generate(" ".join(list_of_posts_clean_lemma_stpwrd))
-
-plt.figure(figsize=(10, 5))
-plt.axis("off")
-plt.tight_layout(pad = 0)
-plt.imshow(wc, interpolation="bilinear")
-#plt.savefig('test/wordcloud.pdf')
-plt.savefig('test/wordcloud.png')
-
+    plt.figure(figsize=(10, 5))
+    plt.axis("off")
+    plt.tight_layout(pad = 0)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.savefig('test/catch_output_wordcloud.png')
 
 ####################################################
 

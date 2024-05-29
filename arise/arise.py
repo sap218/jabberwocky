@@ -15,9 +15,13 @@ import pandas as pd
 
 ####################################################
 
-ontology_name = "pocketmonsters"
+"""PARAMS"""
 
-# with open(ontology, "rt") as o:
+ontology_name = "pocketmonsters"
+annotation_file = "new_annotations"
+
+####################################################
+
 with open("../bandersnatch/test/%s.owl" % ontology_name, "rt") as o:
     ontology_file = o.read()  
 ontology_soup = BeautifulSoup(ontology_file,'xml') # BEAUTIFUL SOUP really is beautiful
@@ -25,14 +29,16 @@ del o, ontology_file
 
 ####################################################
 
-annotations = pd.read_csv('test/new_annotations.tsv', sep='\t', header=0)
+annotations = pd.read_csv('test/%s.tsv' % annotation_file, sep='\t', header=0)
 
 ####################################################
 
 finding = ontology_soup.find_all('owl:Class') # finding all owl classes
 for concept in finding:
     label = concept.find("rdfs:label").get_text()#.lower() # getting labels
+    
     for term_iteration in range(len(annotations)): # going through each row on the tf-idf dataframe
+    
         class_match_label = list(annotations['class'])[term_iteration]
         class_new_annotations = list(annotations['annotation'])[term_iteration]
         new_annotation_tag = list(annotations['tag'])[term_iteration]

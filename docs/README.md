@@ -109,11 +109,11 @@ This is where **ontologies are useful**. Ontologies are a controlled set of voca
 
 With your words of interest (ontology classes) you can run `bandersnatch` to extract all synonyms.
 
-With or without the additional synonyms, you can continue onto `catch` where a `PhraseMatcher()` [^spacy] tags each post in the corpus.
+With or without the additional synonyms, you can continue onto `catch` where a `PhraseMatcher()` function[^spacy] tags each post in the corpus.
 Now you can continue to conduct your analysis on the output.
 
 Now you wonder what words are "important" in the corpus, here you can use `bite`.
-The statistical TF-IDF [^tfidf] is applied and all words are ranked in terms of importance.
+The statistical TF-IDF algorithm[^tfidf] is applied and all words are ranked in terms of importance.
 
 With this `bite` output, you may have noticed new synonyms...
 You can use `arise` to update your ontology classes with these new synonyms.

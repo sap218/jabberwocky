@@ -14,61 +14,68 @@ from bs4 import BeautifulSoup
 
 ####################################################
 
-# with open(ontology, "rt") as o:
-with open("test/pocketmonsters.owl", "rt") as o:
+"""PARAMS"""
+
+ontology_name = "pocketmonsters"
+ontology_tags = "ontology_tags"
+
+to_use_own_defined_concepts = True
+# if True, need a txt of ontology classes
+# if False, script extracts all annotations of all class
+classes_of_interest = "words_of_interest" # file if above is True
+
+####################################################
+
+with open("test/%s.owl" % ontology_name, "rt") as o:
     ontology_file = o.read()  
 ontology_soup = BeautifulSoup(ontology_file,'xml') # BEAUTIFUL SOUP really is beautiful
 del o, ontology_file
 
-synonym_tags = []
-#with open(synonymtags, "r") as t:
-with open("test/ontology_tags.txt", "r") as t:
+annotation_tags = []
+with open("test/%s.txt" % ontology_tags, "r") as t:
     for tag in t:
-        synonym_tags.append(tag.strip("\n"))
+        annotation_tags.append(tag.strip("\n"))
 del tag, t
 
 ####################################################
 
 find_all_concepts = ontology_soup.find_all('owl:Class') # this finds all concepts in the ontology
-classes_and_synonyms = {}
+classes_and_annotations = {}
 for concept in find_all_concepts:
     label = concept.find("rdfs:label").get_text() # gets label for concept
-    list_synonyms = []
-    for synonym_format in synonym_tags: 
-        synonym_finding = concept.find_all(synonym_format) # a concept could have multiple "exact synonyms" 
-        flatten = [x.get_text() for x in synonym_finding] 
-        list_synonyms.extend(flatten)
-    classes_and_synonyms[label] = list_synonyms
-del find_all_concepts, flatten, label, list_synonyms, synonym_finding, synonym_format, synonym_tags
+    list_annotations = []
+    for tag_format in annotation_tags: 
+        finding_tags = concept.find_all(tag_format) # a concept could have multiple "exact synonyms" 
+        flatten = [x.get_text() for x in finding_tags] 
+        list_annotations.extend(flatten)
+    classes_and_annotations[label] = list_annotations
+del find_all_concepts, flatten, label, list_annotations, finding_tags, tag_format, annotation_tags
 
 ####################################################
-
-to_use_own_defined_concepts = False
 
 if to_use_own_defined_concepts:
     try:
         words_of_interest = []
-        # with open(keywords, "r") as t:
-        with open("test/words_of_interest.txt", "r") as t:
+        with open("test/%s.txt" % classes_of_interest, "r") as t:
             for word in t:
                 words_of_interest.append(word.strip("\n").strip(" ")) # words of interest
-        print("Concepts file found")
+        print("User has provided a list of ontology classes of interest - success")
         del t, word
         
     except FileNotFoundError:
         words_of_interest = None
-        print("Concepts file not found - using all ontology classes and synonyms (from tags)")
+        print("User has provided a list of ontology classes of interest - file not found! Using all classes for annotations")
 
 else:
     words_of_interest = None
-    print("Using all ontology classes and synonyms (from tags)")
+    print("User not providing a list of ontology classes of interest - using all classes for annotations")
 
 ####################################################
 
 if words_of_interest: 
-    search_concepts = {key: classes_and_synonyms[key] for key in words_of_interest}
+    search_concepts = {key: classes_and_annotations[key] for key in words_of_interest}
 else:
-    search_concepts = classes_and_synonyms.copy()
+    search_concepts = classes_and_annotations.copy()
 
 ####################################################
 
@@ -84,7 +91,6 @@ with open('test/snatch_output.txt', 'w') as t:
     for word in search_concepts:
         t.write(word + '\n')
 del t, word
-
 
 ####################################################
 
