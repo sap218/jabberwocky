@@ -2,14 +2,14 @@
 
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02168/status.svg)](https://doi.org/10.21105/joss.02168) 
 
-Jabberwocky is a toolkit for NLP and **ontologies**. Since we all know ontologies are "*nonsense*".
+Jabberwocky is a toolkit for NLP and **ontologies**. Since we all know ontologies are *nonsense*.
 
 ## Functionality
 
 script | description
 ------- | -----------
 `bandersnatch` | extract annotations from an ontology (`OWL` RDF/XML syntax)
-`catch` | annotation/grep of a corpus using key words/phrases
+`catch` | text mining (grep) a corpus using key words/phrases
 `bite`  | TF-IDF for ranking important terms from corpus
 `arise` | adding / updating ontology concepts with new annotations
 
