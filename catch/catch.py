@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 
 ####################################################
 
-from HIGHLEVEL import *
+from highlevel import *
 
 ''' stopWords '''
 stopWords = [cleantext(x.lower()) for x in stopWords]

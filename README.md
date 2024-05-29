@@ -6,6 +6,8 @@ Jabberwocky is a toolkit for NLP and **ontologies**. Since we all know ontologie
 
 ## Functionality
 
+Read the [documentation](https://sap218.github.io/jabberwocky/) for more detail.
+
 script | description
 ------- | -----------
 `bandersnatch` | extract annotations from an ontology (`OWL` RDF/XML syntax)

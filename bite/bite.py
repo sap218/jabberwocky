@@ -23,7 +23,7 @@ nlp = spacy.load("en_core_web_sm")
 
 ####################################################
 
-from HIGHLEVEL import *
+from highlevel import *
 
 ''' stopWords '''
 stopWords = [cleantext(x.lower()) for x in stopWords]
@@ -97,9 +97,7 @@ list_of_posts = []
 with open("../catch/test/catch_output.txt", "r") as t:
     for post in t:
         post = post.strip("\n").strip(" ")
-        post = post.split(":", 1)
-        if "NO ANNOTATION" in post[0]:
-            list_of_posts.append(post[1])
+        list_of_posts.append(post)
 del t, post
 
 list_of_posts_clean = [cleantext(x.lower()) for x in list_of_posts]
@@ -166,7 +164,7 @@ tfidf_df_sum['Score'] = scaler.fit_transform(tfidf_df_sum[['Score']])
 tfidf_df_sum = tfidf_df_sum.sort_values("Score", ascending=False)
 del scaler
 
-tfidf_df_sum.to_csv('test/tfidf.tsv', index=False, sep="\t")
+tfidf_df_sum.to_csv('test/bite_output.tsv', index=False, sep="\t")
 
 ####################################################
 ####################################################
