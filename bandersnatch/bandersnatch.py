@@ -10,29 +10,37 @@
     # https://stackoverflow.com/questions/35898699/why-is-beautifulsoup-altering-the-format-of-my-xml
 """
 
+import sys
 from bs4 import BeautifulSoup
 
 ####################################################
 
 """PARAMS"""
 
-ontology_name = "pocketmonsters"
-ontology_tags = "ontology_tags"
+is_this_a_test = True
 
-to_use_own_defined_concepts = True
-# if True, need a txt of ontology classes
-# if False, script extracts all annotations of all class
-classes_of_interest = "words_of_interest" # file if above is True
+if is_this_a_test:
+    ontology_name = "test/pocketmonsters"
+    ontology_tags = "test/ontology_tags"
+    classes_of_interest = "test/words_of_interest" # if empty, extract all annotations of all classes
+    output_name = "test/snatch_output"
+else:
+    ontology_name = input("Ontology:\t")
+    ontology_tags = input("Tags file:\t")
+    classes_of_interest = input(
+        "File with ontology classes of interest (leave blank if using all classes):\t"
+        )
+    output_name = "snatch_output"
 
 ####################################################
 
-with open("test/%s.owl" % ontology_name, "rt") as o:
+with open("%s.owl" % ontology_name, "rt") as o:
     ontology_file = o.read()  
 ontology_soup = BeautifulSoup(ontology_file,'xml') # BEAUTIFUL SOUP really is beautiful
 del o, ontology_file
 
 annotation_tags = []
-with open("test/%s.txt" % ontology_tags, "r") as t:
+with open("%s.txt" % ontology_tags, "r") as t:
     for tag in t:
         annotation_tags.append(tag.strip("\n"))
 del tag, t
@@ -53,18 +61,17 @@ del find_all_concepts, flatten, label, list_annotations, finding_tags, tag_forma
 
 ####################################################
 
-if to_use_own_defined_concepts:
+if len(classes_of_interest) > 0:
     try:
         words_of_interest = []
-        with open("test/%s.txt" % classes_of_interest, "r") as t:
+        with open("%s.txt" % classes_of_interest, "r") as t:
             for word in t:
                 words_of_interest.append(word.strip("\n").strip(" ")) # words of interest
         print("User has provided a list of ontology classes of interest - success")
         del t, word
         
     except FileNotFoundError:
-        words_of_interest = None
-        print("User has provided a list of ontology classes of interest - file not found! Using all classes for annotations")
+        sys.exit("User attempted to provide a list with ontology classes of interest - unsuccessful")
 
 else:
     words_of_interest = None
@@ -87,7 +94,7 @@ else:
 
 search_concepts = [key_val for key, value in search_concepts.items() for key_val in [key] + value]
 
-with open('test/snatch_output.txt', 'w') as t:
+with open('%s.txt' % output_name, 'w') as t:
     for word in search_concepts:
         t.write(word + '\n')
 del t, word

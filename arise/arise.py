@@ -17,19 +17,30 @@ import pandas as pd
 
 """PARAMS"""
 
-ontology_name = "pocketmonsters"
-annotation_file = "new_annotations"
+is_this_a_test = True
+
+if is_this_a_test:
+    ontology_name = "../bandersnatch/test/pocketmonsters"
+    annotation_file = "../arise/test/new_annotations"
+    output_name = "../arise/test/%s" % ontology_name.split("/")[-1]
+else:
+    ontology_name = input("Ontology:\t")
+    annotation_file = input("File of new annotations:\t")
+    output_name = "%s" % ontology_name.split("/")[-1]
 
 ####################################################
 
-with open("../bandersnatch/test/%s.owl" % ontology_name, "rt") as o:
+with open("%s.owl" % ontology_name, "rt") as o:
     ontology_file = o.read()  
 ontology_soup = BeautifulSoup(ontology_file,'xml') # BEAUTIFUL SOUP really is beautiful
 del o, ontology_file
 
 ####################################################
 
-annotations = pd.read_csv('test/%s.tsv' % annotation_file, sep='\t', header=0)
+try:
+    annotations = pd.read_csv('%s.tsv' % annotation_file, sep='\t', header=0)
+except:
+    annotations = pd.read_csv('%s.csv' % annotation_file, header=0)
 
 ####################################################
 
@@ -54,7 +65,7 @@ updated_ont = str(ontology_soup).replace('<?xml version="1.0" encoding="utf-8"?>
 
 ####################################################
 
-with open("test/%s_updated.owl" % ontology_name, "w") as file: # exporting # encoding="utf-8"
+with open("%s_updated.owl" % output_name, "w") as file: # exporting # encoding="utf-8"
     file.write(updated_ont)
 
 ####################################################

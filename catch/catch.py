@@ -35,28 +35,58 @@ def remove_stop_words(text, stopWords):
 
 """PARAMS"""
 
-annotation_file = "snatch_output"
-corpus = "social_media_posts"
+is_this_a_test = True
 
-grep_format = True
-# if True, outputs only post
-# if False, outputs the post WITH the annotation
-not_annotated = False
-# if True, output is the posts that were not annotated
+cm = ['Set3','viridis'] # Set3 is pastel | viridis is purple -> green
 
-graph = True
-# if True, will produce the word cloud
-cm = ['Set3','viridis']
-cm = cm[0]
-# to choose item for colour palette
-# 0/Set3 is pastel
-# 1/viridis is purple -> green
+if is_this_a_test:
+    corpus = "../catch/test/social_media_posts"
+    annotation_file = "../bandersnatch/test/snatch_output"
+    graph = "Yes"
+    cm = cm[0]
+    grep_format = True # if False, posts with have tags
+    not_annotated = False # if True, posts will be the inverted grep
+    output_name = "../catch/test/catch_output"
+    stats_output_name = "../catch/test/catch_output_stats"
+    plot_output_name = "../catch/test/catch_output_wordcloud"
+else:
+    corpus = input("Text file:\t")
+    annotation_file = input("Annotation concepts file:\t")
+    
+    graph = input("Plot wordcloud (Yes/No):\t")
+    if graph == "Yes":
+        cm = input("Choose a plotting colour from the list %s:\t" % cm)
+    
+    grep_format = input("Output in grep format or with tags (grep/tags):\t")
+    not_annotated = input("Output posts that were NOT annotated (Yes/No):\t")
+    
+    output_name = "catch_output"
+    stats_output_name = "catch_output_stats"
+    plot_output_name = "catch_output_wordcloud"
+
+####################################################
+
+if not_annotated: output_name = output_name + "_invert"
+else:
+    if grep_format: output_name = output_name + "_grep"
+    else: output_name = output_name + "_tags"
+
+####################################################
+
+if graph == "Yes": graph = True
+elif graph == "No": graph = False
+
+if grep_format == "grep": grep_format = True
+elif grep_format == "tags": grep_format = False
+
+if not_annotated == "No": not_annotated = False
+elif not_annotated == "Yes": not_annotated = True
 
 ####################################################
 
 words_of_interest = []
 
-with open("../bandersnatch/test/%s.txt" % annotation_file, "r") as t:
+with open("%s.txt" % annotation_file, "r") as t:
     for word in t:
         words_of_interest.append(word.strip("\n").strip(" "))
 del t, word
@@ -70,7 +100,7 @@ words_of_interest_clean = [cleantext(x.lower()) for x in words_of_interest]
 
 list_of_posts = []
 
-with open("test/%s.txt" % corpus, "r") as t:
+with open("%s.txt" % corpus, "r") as t:
     for post in t:
         list_of_posts.append(post.strip("\n").strip(" "))
 del t, post
@@ -198,17 +228,22 @@ for x in matched_output_list:
             if x[0] != "NO ANNOTATION": to_output.append(x[1])
             
         else:
-            if x[0] != "NO ANNOTATION": to_output.append( "%s, %s" % ( x[0] ,x[1]) )
+            if x[0] != "NO ANNOTATION": to_output.append( "%s # %s" % ( x[0] ,x[1]) )
 
 
-with open('test/catch_output.txt', 'w') as t:
+with open('%s.txt' % output_name, 'w') as t:
     for word in to_output:
         t.write(word + '\n')
-del t, word
 
 #with open('test/catch_output.json', 'w') as j:
 #    json.dump(matched_output_dictionary, j, indent=4)
 #del j
+
+with open('%s.txt' % stats_output_name, 'w') as t:
+    for word in statistics:
+        t.write(word + '\n')
+
+del t, word
 
 ####################################################
 ####################################################
@@ -234,7 +269,7 @@ if graph:
     plt.axis("off")
     plt.tight_layout(pad = 0)
     plt.imshow(wc, interpolation="bilinear")
-    plt.savefig('test/catch_output_wordcloud.png')
+    plt.savefig('%s.png' % plot_output_name)
 
 ####################################################
 

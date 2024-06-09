@@ -10,6 +10,7 @@
     # https://python-charts.com/matplotlib/styles/
 """
 
+import sys
 import re
 import time
 import pandas as pd
@@ -35,57 +36,85 @@ def remove_stop_words(text, stopWords):
 
 """PARAMS"""
 
-to_remove_concepts = True
-# if True, words will be removed from corpus to avoid being weighted in TF-IDF
-concepts_to_remove = "snatch_output"
+is_this_a_test = True
 
-corpus = "social_media_posts"
-
-graph = True
-# if True, will produce the tf-idf bar plot
-limit = 30
-# default is top 30 words
 cm = ["mediumseagreen","steelblue","lightcoral"] 
-# to choose item for colour of bars
-cm = cm[0]
+
+if is_this_a_test:
+    corpus = "../catch/test/catch_output_invert"
+    concepts_to_remove = "../bandersnatch/test/snatch_output"
+    
+    graph = "Yes"    
+    cm = cm[0]
+    limit = 30 # default is top 30 words
+
+    output_name = "../bite/test/bite_output"
+    plot_output_name = "../bite/test/bite_output_plot"
+else:
+    corpus = input("Text file:\t")
+    concepts_to_remove = input(
+        "File with concepts to remove from TF-IDF (leave blank to include all terms):\t"
+        )
+    
+    graph = input("Plot TF-IDF rankings (Yes/No):\t")
+    if graph == "Yes":
+        cm = input("Choose a colour from the list for the bar plot colours %s:\t" % cm)
+        limit = input("Bar limit for plot (default is 30):\t") # default is top 30 words
+    
+    output_name = "bite_output"
+    plot_output_name = "bite_output_plot"
 
 ####################################################
 
-if to_remove_concepts:
+if graph == "Yes":
+    graph = True
+    if len(limit) == 0: limit = 30
+elif graph == "No": graph = False
 
-    words_of_interest = []
-    
-    with open("../bandersnatch/test/%s.txt" % concepts_to_remove, "r") as t:
-        for word in t:
-            words_of_interest.append(word.strip("\n").strip(" "))
-    
-    del t, word
-    
-    words_of_interest_clean = [cleantext(x.lower()) for x in words_of_interest]
-    #words_of_interest_clean_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean]
-    
-    # preprocess concepts: Lemmatize
-    words_of_interest_clean_lemma = []
-    for concept in words_of_interest_clean:
-        doc = nlp(concept)
-        lemma_item = " ".join([token.lemma_ for token in doc])
-        words_of_interest_clean_lemma.append(lemma_item)
-    del doc, concept, lemma_item    
-    
-    words_of_interest_clean_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean_lemma]
-    
-    del words_of_interest_clean, words_of_interest_clean_lemma
+####################################################
 
+if len(concepts_to_remove) > 0:
+
+    try:    
+
+        words_of_interest = []
+        
+        with open("%s.txt" % concepts_to_remove, "r") as t:
+            for word in t:
+                words_of_interest.append(word.strip("\n").strip(" "))
+        
+        del t, word
+        
+        words_of_interest_clean = [cleantext(x.lower()) for x in words_of_interest]
+        #words_of_interest_clean_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean]
+        
+        # preprocess concepts: Lemmatize
+        words_of_interest_clean_lemma = []
+        for concept in words_of_interest_clean:
+            doc = nlp(concept)
+            lemma_item = " ".join([token.lemma_ for token in doc])
+            words_of_interest_clean_lemma.append(lemma_item)
+        del doc, concept, lemma_item    
+        
+        words_of_interest_clean_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean_lemma]
+        
+        del words_of_interest_clean, words_of_interest_clean_lemma
+    
+        print("User has provided a list of concepts to remove from TF-IDF - success")
+        
+    except FileNotFoundError:
+        sys.exit("User attempted to provide a list of concepts to remove from TF-IDF - unsuccessful")
 
 else:
-    words_of_interest_clean_lemma_stpwrd = []
+    words_of_interest_clean_lemma_stpwrd = [""]
+    print("User not providing a list of concepts to remove from TF-IDF - all terms included for reference")
 
 ####################################################
 ####################################################
 
 list_of_posts = []
 
-with open("../catch/test/%s.txt" % corpus, "r") as t:
+with open("%s.txt" % corpus, "r") as t:
     for post in t:
         list_of_posts.append(post.strip("\n").strip(" "))
 del t, post
@@ -128,7 +157,7 @@ del list_of_posts_clean_lemma_stopwrd
 
 ####################################################
 ####################################################
-
+'''
 start_time = time.time()
 
 tfidf_vectorizer = TfidfVectorizer()
@@ -155,7 +184,7 @@ tfidf_df_sum['Score'] = scaler.fit_transform(tfidf_df_sum[['Score']])
 tfidf_df_sum = tfidf_df_sum.sort_values("Score", ascending=False)
 del scaler
 
-tfidf_df_sum.to_csv('test/bite_output.tsv', index=False, sep="\t")
+tfidf_df_sum.to_csv('%s.tsv' % output_name, index=False, sep="\t")
 
 ####################################################
 ####################################################
@@ -169,9 +198,10 @@ if graph:
     ax.set_ylabel('Average score (normalised)')
     ax.set_xlabel('Terms')
     ax.set_title("Bar plot of top %s terms TF-IDF rankings" % limit)
-    plt.savefig('test/bite_output_tfidf.png', bbox_inches='tight')
+    plt.savefig('%s.png' % plot_output_name, bbox_inches='tight')
 del ax, fig
 
 ####################################################
 
 # End of script
+'''

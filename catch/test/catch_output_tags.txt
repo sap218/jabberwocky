@@ -1,0 +1,9 @@
+['small'] # Any small pokemon nearby? I need to catch a Metapod!
+['gen 6', 'route', 'gen'] # I think only gen 6 pokemon are on this path - try route 2.
+['route'] # I've checked that route twice already. I just want my Caterpie to evolve already.
+['gen 1', 'gen'] # Anyone else dislike the new Pokedex? What happened to old fashioned gen 1?
+['route'] # Anyone want a battle? I'm on route 13.
+['route'] # I'll join but we should move to the meadow area near that route.
+['route'] # Hey guys! Lake near route 7 I saw a Gyarados!
+['route', 'small'] # What route is best for small normal pokemon? My Skitty needs a friend.
+['route'] # Go to route 4, we're totally not on that path and we don't plan on catching your Skitty away from you.
