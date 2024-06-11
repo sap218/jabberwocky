@@ -26,15 +26,6 @@ from params_bite import *
 
 ####################################################
 
-if graph == "Yes":
-    graph = True
-    try: 
-        if len(limit) == 0: limit = 30
-    except: pass
-elif graph == "No": graph = False
-
-####################################################
-
 from highlevel import *
 
 ''' stopWords '''

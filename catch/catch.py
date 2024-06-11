@@ -30,15 +30,6 @@ else:
     if grep_format: output_name = output_name + "_grep"
     else: output_name = output_name + "_tags"
 
-if graph == "Yes": graph = True
-elif graph == "No": graph = False
-
-if grep_format == "grep": grep_format = True
-elif grep_format == "tags": grep_format = False
-
-if not_annotated == "No": not_annotated = False
-elif not_annotated == "Yes": not_annotated = True
-
 ####################################################
 
 from highlevel import *

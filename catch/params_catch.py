@@ -19,7 +19,7 @@ is_this_a_test = True
 if is_this_a_test:
     corpus = "../catch/test/social_media_posts"
     annotation_file = "../bandersnatch/test/snatch_output"
-    graph = "Yes"
+    graph = True
     cm = "Set3"
     grep_format = True # if False, posts with have tags
     not_annotated = False # if True, posts will be the inverted grep
@@ -31,13 +31,12 @@ else:
     corpus = ""
     annotation_file = ""
     
-    graph = "Yes"
-    if graph == "Yes":
-        cm = ""
+    grep_format = True
+    not_annotated = False
     
-    grep_format = ""
-    not_annotated = ""
-    
+    graph = True
+    cm = "Set3"
+        
     output_name = "catch_output"
     stats_output_name = "catch_output_stats"
     plot_output_name = "catch_output_wordcloud"

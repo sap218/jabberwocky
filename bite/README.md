@@ -1,22 +1,23 @@
 # README - `bite` 
 
 ## `corpus`
-- text file
+- file with each post/sentence on a new line
+- can be `catch` output (grep)
 
 ## `concepts_to_remove`
-- newline delimited `.txt` file with concepts to remove from TF-IDF
-- these concepts can be `bandersnatch` output
-- leave blank to include all terms
+- concepts file with each on a new line to remove from TF-IDF statistical rankings
+- can be `snatch` output
+- users can leave blank to use all terms in corpus
 
 ## `graph`
 - plot TF-IDF rankings
-- if so,
 
 ### `cm`
-- choose a colour - mediumseagreen, steelblue, lightcoral - for the bar plot colours
+- plotting colour for bars
+- recommended to use mediumseagreen, steelblue, or lightcoral
 
 ### `limit` 
-- plot limit for bars (default is 30)
+- plot limit for top-N terms (default is 30)
 
 ***
 

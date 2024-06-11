@@ -1,12 +1,10 @@
 # README - `arise` 
 
 ## `ontology_name`
-- ontology name
-- `.owl` not needed
-- full file path required 
+- ontology file (+path)
 
 ## `annotation_file`
-- file of annotations needed
+- file of annotations
 - can be either `.tsv` or `.csv`
 
 ***
