@@ -13,24 +13,7 @@
 import sys
 from bs4 import BeautifulSoup
 
-####################################################
-
-"""PARAMS"""
-
-is_this_a_test = True
-
-if is_this_a_test:
-    ontology_name = "test/pocketmonsters"
-    ontology_tags = "test/ontology_tags"
-    classes_of_interest = "test/words_of_interest" # if empty, extract all annotations of all classes
-    output_name = "test/snatch_output"
-else:
-    ontology_name = input("Ontology:\t")
-    ontology_tags = input("Tags file:\t")
-    classes_of_interest = input(
-        "File with ontology classes of interest (leave blank if using all classes):\t"
-        )
-    output_name = "snatch_output"
+from params_snatch import *
 
 ####################################################
 

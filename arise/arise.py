@@ -13,20 +13,7 @@
 from bs4 import BeautifulSoup
 import pandas as pd
 
-####################################################
-
-"""PARAMS"""
-
-is_this_a_test = True
-
-if is_this_a_test:
-    ontology_name = "../bandersnatch/test/pocketmonsters"
-    annotation_file = "../arise/test/new_annotations"
-    output_name = "../arise/test/%s" % ontology_name.split("/")[-1]
-else:
-    ontology_name = input("Ontology:\t")
-    annotation_file = input("File of new annotations:\t")
-    output_name = "%s" % ontology_name.split("/")[-1]
+from params_arise import *
 
 ####################################################
 

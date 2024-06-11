@@ -1,7 +1,27 @@
 # README - `catch`
 
-- annotates unstructured text with concepts, which can be `bandersnatch` output
-- output includes `.json` and `.txt`
+## `corpus`
+- text file
+
+## `annotation_file`
+- annotation concepts file
+- can be `snatch` output
+
+
+## `graph`
+- plot wordcloud
+- if so,
+
+### cm
+- plotting colour - users can provide any of interest
+- recommended to use `Set3` (pastel) or `viridis` (purple -> green)
+
+
+## grep_format
+- output in grep format or with tags (grep/tags)
+
+## not_annotated
+- output posts that were NOT annotated
 
 ***
 

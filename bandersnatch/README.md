@@ -1,8 +1,16 @@
 # README - `bandersnatch`
 
-- extracts concepts from an ontology based on a list of annotation tags
-- if user has their own list of concepts, will return the ontology synonyms (based on annotation tags)
-- it is recommended that these concepts are in the same format as the ontology classes (case/special chars)
+## `ontology_name`
+- ontology name
+- `.owl` not needed
+- full file path required 
+
+## `ontology_tags`
+- newline delimited `.txt` file
+
+## `classes_of_interest`
+- newline delimited `.txt` file with ontology classes of interest
+- users can leave blank to use all classes
 
 ***
 

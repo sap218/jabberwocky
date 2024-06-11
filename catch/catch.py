@@ -21,6 +21,24 @@ nlp = spacy.load("en_core_web_sm")
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
+from params_catch import *
+
+####################################################
+
+if not_annotated: output_name = output_name + "_invert"
+else:
+    if grep_format: output_name = output_name + "_grep"
+    else: output_name = output_name + "_tags"
+
+if graph == "Yes": graph = True
+elif graph == "No": graph = False
+
+if grep_format == "grep": grep_format = True
+elif grep_format == "tags": grep_format = False
+
+if not_annotated == "No": not_annotated = False
+elif not_annotated == "Yes": not_annotated = True
+
 ####################################################
 
 from highlevel import *
@@ -32,56 +50,6 @@ def remove_stop_words(text, stopWords):
     return ' '.join(word for word in text.split() if word.lower() not in stopWords)
 
 ####################################################
-
-"""PARAMS"""
-
-is_this_a_test = True
-
-cm = ['Set3','viridis'] # Set3 is pastel | viridis is purple -> green
-
-if is_this_a_test:
-    corpus = "../catch/test/social_media_posts"
-    annotation_file = "../bandersnatch/test/snatch_output"
-    graph = "Yes"
-    cm = cm[0]
-    grep_format = True # if False, posts with have tags
-    not_annotated = False # if True, posts will be the inverted grep
-    output_name = "../catch/test/catch_output"
-    stats_output_name = "../catch/test/catch_output_stats"
-    plot_output_name = "../catch/test/catch_output_wordcloud"
-else:
-    corpus = input("Text file:\t")
-    annotation_file = input("Annotation concepts file:\t")
-    
-    graph = input("Plot wordcloud (Yes/No):\t")
-    if graph == "Yes":
-        cm = input("Choose a plotting colour from the list %s:\t" % cm)
-    
-    grep_format = input("Output in grep format or with tags (grep/tags):\t")
-    not_annotated = input("Output posts that were NOT annotated (Yes/No):\t")
-    
-    output_name = "catch_output"
-    stats_output_name = "catch_output_stats"
-    plot_output_name = "catch_output_wordcloud"
-
-####################################################
-
-if not_annotated: output_name = output_name + "_invert"
-else:
-    if grep_format: output_name = output_name + "_grep"
-    else: output_name = output_name + "_tags"
-
-####################################################
-
-if graph == "Yes": graph = True
-elif graph == "No": graph = False
-
-if grep_format == "grep": grep_format = True
-elif grep_format == "tags": grep_format = False
-
-if not_annotated == "No": not_annotated = False
-elif not_annotated == "Yes": not_annotated = True
-
 ####################################################
 
 words_of_interest = []

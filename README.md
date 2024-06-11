@@ -15,7 +15,16 @@ script | description
 `bite`  | TF-IDF for ranking important terms from corpus
 `arise` | adding / updating ontology concepts with new annotations
 
-When combining these functions, users can create an NLP workflow.
+## Running
+
+Within each directory, there is a file `params_*.py` which users can edit.
+This means users shouldn't need to edit the main/primary script.
+
+Check the individual `READMEs` for parameter information.
+
+## Workflow
+
+When combining these Jabberwocky functions, users can create an NLP workflow.
 
 ![workflow](/docs/workflow.png)
 

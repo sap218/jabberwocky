@@ -1,9 +1,22 @@
 # README - `bite` 
 
-- runs tf-idf statistical analysis: ranking terms in unstructured text from most important
-- users can provide a list of concepts to remove from text so they aren't included in the statistical model
+## `corpus`
+- text file
+
+## `concepts_to_remove`
+- newline delimited `.txt` file with concepts to remove from TF-IDF
 - these concepts can be `bandersnatch` output
-- also with a bar plot of the (default) 30-top terms
+- leave blank to include all terms
+
+## `graph`
+- plot TF-IDF rankings
+- if so,
+
+### `cm`
+- choose a colour - mediumseagreen, steelblue, lightcoral - for the bar plot colours
+
+### `limit` 
+- plot limit for bars (default is 30)
 
 ***
 

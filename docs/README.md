@@ -16,7 +16,7 @@ See the [Jabberwocky](https://github.com/sap218/jabberwocky) repository for code
 ### bandersnatch
 Extract annotations from ontology concepts based on a list of annotation tags.
 
-Users should use ontologies in the `OWL` RDF/XML syntax.
+Users should use ontologies that are in the `OWL` RDF/XML syntax.
 (if not in this format, users can open ontology in [Protégé](https://protege.stanford.edu/) and export in correct format)
 
 Annotations in ontologies are in various formats, below shows a list of tags as an example:
@@ -40,7 +40,7 @@ If users have no words of interest then the output will include **annotations of
 ---
 
 ### catch
-Annotation of a corpus.
+Annotation of a corpus (unstructured text).
 
 Words/Phrases of interest - the `bandersnatch` output can be used here:
 ```
@@ -62,10 +62,13 @@ As you can see there is a gap between post 3 and 2 but the code drops "empty lin
 ##### Output
 `catch_output.txt` will include the posts that were annotated with a word/phrase of interest.
 
+##### Plotting
+Users can request a word cloud figure from the corpus.
+
 ---
 
 ### bite
-Rank all words in a corpus in terms of importance (via TF-IDF).
+Rank all words in a corpus in terms of importance (via TF-IDF statistical model).
 
 Users can provide a list words to remove from the text to avoid being weighted in the statistical algorithm - the `bandersnatch` output can be used here.
 
@@ -80,10 +83,14 @@ path	0.6806667025792819
 evolve	0.4746729555593563
 ```
 
+##### Plotting
+Users can request a bar plot of the top N ranked terms (defult 30).
+
 ---
 
 ### arise
-Enhances ontology classes with new annotations - these new annotations can be derived from the `bite` output (synonyms).
+Enhances ontology classes with new annotations.
+Users will provide a list of annotations, which can be derived from the `bite` output (synonyms).
 
 A dataframe should be provided with three columns, the annotation (e.g. synonym), class (exact match in ontology), and tag:
 ```

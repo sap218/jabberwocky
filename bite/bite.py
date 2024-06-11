@@ -22,6 +22,17 @@ from sklearn.preprocessing import MinMaxScaler
 import spacy
 nlp = spacy.load("en_core_web_sm")
 
+from params_bite import *
+
+####################################################
+
+if graph == "Yes":
+    graph = True
+    try: 
+        if len(limit) == 0: limit = 30
+    except: pass
+elif graph == "No": graph = False
+
 ####################################################
 
 from highlevel import *
@@ -33,44 +44,6 @@ def remove_stop_words(text, stopWords):
     return ' '.join(word for word in text.split() if word.lower() not in stopWords)
 
 ####################################################
-
-"""PARAMS"""
-
-is_this_a_test = True
-
-cm = ["mediumseagreen","steelblue","lightcoral"] 
-
-if is_this_a_test:
-    corpus = "../catch/test/catch_output_invert"
-    concepts_to_remove = "../bandersnatch/test/snatch_output"
-    
-    graph = "Yes"    
-    cm = cm[0]
-    limit = 30 # default is top 30 words
-
-    output_name = "../bite/test/bite_output"
-    plot_output_name = "../bite/test/bite_output_plot"
-else:
-    corpus = input("Text file:\t")
-    concepts_to_remove = input(
-        "File with concepts to remove from TF-IDF (leave blank to include all terms):\t"
-        )
-    
-    graph = input("Plot TF-IDF rankings (Yes/No):\t")
-    if graph == "Yes":
-        cm = input("Choose a colour from the list for the bar plot colours %s:\t" % cm)
-        limit = input("Bar limit for plot (default is 30):\t") # default is top 30 words
-    
-    output_name = "bite_output"
-    plot_output_name = "bite_output_plot"
-
-####################################################
-
-if graph == "Yes":
-    graph = True
-    if len(limit) == 0: limit = 30
-elif graph == "No": graph = False
-
 ####################################################
 
 if len(concepts_to_remove) > 0:
@@ -157,7 +130,7 @@ del list_of_posts_clean_lemma_stopwrd
 
 ####################################################
 ####################################################
-'''
+
 start_time = time.time()
 
 tfidf_vectorizer = TfidfVectorizer()
@@ -204,4 +177,3 @@ del ax, fig
 ####################################################
 
 # End of script
-'''
