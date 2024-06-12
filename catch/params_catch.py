@@ -19,6 +19,7 @@ is_this_a_test = True
 if is_this_a_test:
     corpus = "../catch/test/social_media_posts"
     annotation_file = "../bandersnatch/test/snatch_output"
+    filter_level = "light" # "heavy"
     graph = True
     cm = "Set3"
     grep_format = True # if False, posts with have tags
@@ -30,6 +31,7 @@ if is_this_a_test:
 else:
     corpus = ""
     annotation_file = ""
+    filter_level = "light"
     
     grep_format = True
     not_annotated = False

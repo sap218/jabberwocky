@@ -3,7 +3,7 @@
 """
 @date: 2024
 @author: Samantha C Pendleton
-@description: version of packages
+@description: versions
 @GitHub: github.com/sap218/jabberwocky
 """
 

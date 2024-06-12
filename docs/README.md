@@ -2,7 +2,7 @@ An ontology is a knowledge representation framework that is machine readable.
 It facilitates logical relationships between classes and allows us to standardise the formalised vocabulary within this domain.
 The metadata contained within an ontology is valuable for research having shown to address the challenge presented by unstructured text.
 
-Unstructured text can be processed, mined, and empowered by NLP tools, yet majority of tools aren't designed to consider ontologies.
+Unstructured text can be processed, mined, and empowered by NLP tools, yet majority of tools are not designed to consider ontologies.
 
 Jabberwocky allows users to easily manipulate ontologies with extraction and enhancements for conducting NLP tasks.
 Here provides an explanation - with a working example - for the Jabberwocky toolkit. 
@@ -35,7 +35,7 @@ large
 ##### Output
 `snatch_output.txt` will include all ontology classes (from words of interest) and their annotations.
 
-If users have no words of interest then the output will include **annotations of all ontology classes**.
+If users have no words of interest, then the output will include **annotations of all ontology classes**.
 
 ---
 
@@ -70,7 +70,7 @@ Users can request a word cloud figure from the corpus.
 ### bite
 Rank all words in a corpus in terms of importance (via TF-IDF statistical model).
 
-Users can provide a list words to remove from the text to avoid being weighted in the statistical algorithm - the `bandersnatch` output can be used here.
+Users can provide a list of words to remove from the text to avoid being weighted in the statistical algorithm - the `bandersnatch` output can be used here.
 
 ##### Output
 `bite_output.tsv` is a dataframe with Word and Score. Scores are average TF-IDF rankings across posts then normalised for readability.
@@ -84,7 +84,7 @@ evolve	0.4746729555593563
 ```
 
 ##### Plotting
-Users can request a bar plot of the top N ranked terms (defult 30).
+Users can request a bar plot of the top N ranked terms (default 30).
 
 ---
 
@@ -110,7 +110,7 @@ https://pokemon.fandom.com/wiki/Types	type	oboInOWL:DbXref
 You have curated unstructured text: blog posts from a social media platform (with permission of course, in this example I invented these fake conversations).
 
 Your aim is to text mine the corpus and only have posts covering a particular topic (or set of topics).
-But you realise, you know some words in this topic of yours but you may be missing related/broad synonyms.
+But you realise, although you know some words in this topic of yours, you may be missing related/broad synonyms.
 
 This is where **ontologies are useful**. Ontologies are a controlled set of vocabulary with annotations.
 

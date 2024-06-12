@@ -1,4 +1,4 @@
-# Contributing Guildelines / Issues for Jabberwocky :dragon_face:
+# Contributing Guidelines / Issues for Jabberwocky :dragon_face:
 
 * Users are welcome to contribute work to this project and encouraged to create an [`Issue`](https://github.com/sap218/jabberwocky/issues).
 * In either circumstance, please ensure titles/descriptions have as much information as possible, e.g. if creating a Bug Issue, try and trace your steps w/ details & error messages.
@@ -17,7 +17,7 @@ print("hello world") # example comment as a reference - @yourusername
 ## Issues
 * Please don't hesitate to create an **Issue**
 * Issues can relate to anything: error reporting, feature request, or questions for help, e.g.
-* if the `README` isn't clear, please do report this - I encourage suggestions!
+* If the `README` isn't clear, please do report this - I encourage suggestions!
 * Issues will be labelled accordingly - see below for [`label`](https://github.com/sap218/jabberwocky/labels) information:
 
 #### bug

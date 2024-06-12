@@ -29,6 +29,8 @@ from params_bite import *
 from highlevel import *
 
 ''' stopWords '''
+if filter_level == "light": stopWords = stopWords[0]
+elif filter_level == "heavy": stopWords = stopWords[1]
 stopWords = [cleantext(x.lower()) for x in stopWords]
 
 def remove_stop_words(text, stopWords):

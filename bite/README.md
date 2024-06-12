@@ -9,6 +9,11 @@
 - can be `snatch` output
 - users can leave blank to use all terms in corpus
 
+## `filter_level`
+- parameter for which stop words list to use
+- "light" is a smaller list consisting only of 179 stop words
+- "heavy" is much larger list consisting of 1160 stop words
+
 ## `graph`
 - plot TF-IDF rankings
 
