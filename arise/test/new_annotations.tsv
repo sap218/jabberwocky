@@ -1,0 +1,8 @@
+annotation	class	tag
+path	route	oboInOWL:hasExactSynonym
+evolve	generation	oboInOWL:hasRelatedSynonym
+flew	flying	oboInOWL:hasExactSynonym
+mega	large	oboInOWL:hasRelatedSynonym
+breed	type	oboInOWL:hasRelatedSynonym
+air	flying	oboInOWL:hasRelatedSynonym
+https://pokemon.fandom.com/wiki/Types	type	oboInOWL:DbXref

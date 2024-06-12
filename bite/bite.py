@@ -1,175 +1,172 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@date: May 2021
+@date: 2024
 @author: Samantha C Pendleton
-@description: to curate terms of interest via tf-idf
+@description: conducts TF-IDF
 @GitHub: github.com/sap218/jabberwocky
 
 @useful links:
-    # https://gist.github.com/sebleier/554280#gistcomment-2860409
-    # https://towardsdatascience.com/natural-language-processing-feature-engineering-using-tf-idf-e8b9d00e7e76
+    # https://python-charts.com/matplotlib/styles/
 """
 
-import click 
-import json
-import pandas as pd
+import sys
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
+import time
+import pandas as pd
 import matplotlib.pyplot as plt
 
-def tokenising(post):
-    post_tokens = post.split()
-    return post_tokens
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import MinMaxScaler
 
-def clean_text(post):
-    post = post.replace("-", "")
-    post = (re.sub("[^A-Za-z0-9']+", " ", post)) # keeping '
-    post = (re.sub("'", "", post))
-    return post.lower().strip()
+import spacy
+nlp = spacy.load("en_core_web_sm")
+
+from params_bite import *
 
 ####################################################
-####################################################
+
+from highlevel import *
+
+''' stopWords '''
+if filter_level == "light": stopWords = stopWords[0]
+elif filter_level == "heavy": stopWords = stopWords[1]
+stopWords = [cleantext(x.lower()) for x in stopWords]
+
+def remove_stop_words(text, stopWords):
+    return ' '.join(word for word in text.split() if word.lower() not in stopWords)
+
 ####################################################
 ####################################################
 
-@click.command()
-@click.option('-k', '--keywords', 'keywords', default='NULL', help='list of terms and synonyms you want to remove from tf-idf analysis.')
-@click.option('-t', '--textfile', 'textfile', required=True, help='JSON or TXT file of text you want annotate.')
-@click.option('-p', '--parameter', 'parameter', default='NULL', help='parameter of the the JSON text data.')
-@click.option('-i', '--innerparameter', 'innerparameter', default='NULL', help='inner parameter of the the JSON text data if expecting replies.')
-@click.option('-g', '--graph', 'graph', default=False, help='make True if you want a plot of top 30 terms.')
-@click.option('-l', '--limit', 'limit', default='NULL', help='change if want a different plot limit.')
-def main(keywords, textfile, parameter, innerparameter, graph, limit):
-    
-    #keywords = "../catch/input/word_of_interest_with_synonyms.json"
-    #keywords = "../ontology/output_ontology_label_synonyms.json"
-    #keywords = "NULL"
-    
-    if keywords == "NULL":
-        removing_concepts_of_interest_flat = [""]
-    else:
-        with open(keywords) as j: # if no ontology is given, use this json
-            removing_concepts_of_interest = json.load(j)
+if len(concepts_to_remove) > 0:
+
+    try:    
+
+        words_of_interest = []
         
-        removing_concepts_of_interest_flat = []
-        for concept,list_synonyms in removing_concepts_of_interest.items():
-            removing_concepts_of_interest_flat.append(concept)
-            for synonym in list_synonyms:
-                syn = tokenising(synonym)
-                for s in syn:
-                    removing_concepts_of_interest_flat.append(s)
-    
-    ####################################################
-    ####################################################
-    
-    #textfile = "../test_data/example_textfile.txt"
+        with open("%s.txt" % concepts_to_remove, "r") as t:
+            for word in t:
+                words_of_interest.append(word.strip("\n").strip(" "))
         
-    #textfile = "../test_data/example_textfile.json"
-    #parameter = "post"
-    #innerparameter = "reply"
-    
-    if textfile.endswith('.txt'):
-        with open(textfile) as t:
-            raw_posts = [clean_text(post.rstrip()) for post in t]
-            all_threads = [[]]
-            for post in raw_posts:
-                if not post: all_threads.append([])
-                else: all_threads[-1].append(post)
-    #elif textfile.endswith('.json'):
-    else:
-        parameter_comment = parameter
-        parameter_inner_comment = innerparameter
-        with open(textfile) as j:
-            raw_json_text = json.load(j)
-        all_threads = []
-        for item,thread in raw_json_text.items():
-            current_thread_posts = []
-            for user_info in thread:
-                current_thread_posts.append(clean_text(user_info[parameter_comment]))
-                if parameter_inner_comment:
-                    try:
-                        for inner_user in user_info[parameter_inner_comment]:
-                            current_thread_posts.append(clean_text(inner_user[parameter_comment]))
-                            for inner_inner_user in inner_user[parameter_inner_comment]:
-                                current_thread_posts.append(clean_text(inner_inner_user[parameter_comment]))
-                    except:
-                        pass
-            all_threads.append(current_thread_posts)
-    
-    ####################################################
-    ####################################################
-    
-    stop_words = ["0o", "0s", "3a", "3b", "3d", "6b", "6o", "a", "a1", "a2", "a3", "a4", "ab", "able", "about", "above", "abst", "ac", "accordance", "according", "accordingly", "across", "act", "actually", "ad", "added", "adj", "ae", "af", "affected", "affecting", "affects", "after", "afterwards", "ag", "again", "against", "ah", "ain", "ain't", "aj", "al", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", "am", "among", "amongst", "amoungst", "amount", "an", "and", "announce", "another", "any", "anybody", "anyhow", "anymore", "anyone", "anything", "anyway", "anyways", "anywhere", "ao", "ap", "apart", "apparently", "appear", "appreciate", "appropriate", "approximately", "ar", "are", "aren", "arent", "aren't", "arise", "around", "as", "a's", "aside", "ask", "asking", "associated", "at", "au", "auth", "av", "available", "aw", "away", "awfully", "ax", "ay", "az", "b", "b1", "b2", "b3", "ba", "back", "bc", "bd", "be", "became", "because", "become", "becomes", "becoming", "been", "before", "beforehand", "begin", "beginning", "beginnings", "begins", "behind", "being", "believe", "below", "beside", "besides", "best", "better", "between", "beyond", "bi", "bill", "biol", "bj", "bk", "bl", "bn", "both", "bottom", "bp", "br", "brief", "briefly", "bs", "bt", "bu", "but", "bx", "by", "c", "c1", "c2", "c3", "ca", "call", "came", "can", "cannot", "cant", "can't", "cause", "causes", "cc", "cd", "ce", "certain", "certainly", "cf", "cg", "ch", "changes", "ci", "cit", "cj", "cl", "clearly", "cm", "c'mon", "cn", "co", "com", "come", "comes", "con", "concerning", "consequently", "consider", "considering", "contain", "containing", "contains", "corresponding", "could", "couldn", "couldnt", "couldn't", "course", "cp", "cq", "cr", "cry", "cs", "c's", "ct", "cu", "currently", "cv", "cx", "cy", "cz", "d", "d2", "da", "date", "dc", "dd", "de", "definitely", "describe", "described", "despite", "detail", "df", "di", "did", "didn", "didn't", "different", "dj", "dk", "dl", "do", "does", "doesn", "doesn't", "doing", "don", "done", "don't", "down", "downwards", "dp", "dr", "ds", "dt", "du", "due", "during", "dx", "dy", "e", "e2", "e3", "ea", "each", "ec", "ed", "edu", "ee", "ef", "effect", "eg", "ei", "eight", "eighty", "either", "ej", "el", "eleven", "else", "elsewhere", "em", "empty", "en", "end", "ending", "enough", "entirely", "eo", "ep", "eq", "er", "es", "especially", "est", "et", "et-al", "etc", "eu", "ev", "even", "ever", "every", "everybody", "everyone", "everything", "everywhere", "ex", "exactly", "example", "except", "ey", "f", "f2", "fa", "far", "fc", "few", "ff", "fi", "fifteen", "fifth", "fify", "fill", "find", "fire", "first", "five", "fix", "fj", "fl", "fn", "fo", "followed", "following", "follows", "for", "former", "formerly", "forth", "forty", "found", "four", "fr", "from", "front", "fs", "ft", "fu", "full", "further", "furthermore", "fy", "g", "ga", "gave", "ge", "get", "gets", "getting", "gi", "give", "given", "gives", "giving", "gj", "gl", "go", "goes", "going", "gone", "got", "gotten", "gr", "greetings", "gs", "gy", "h", "h2", "h3", "had", "hadn", "hadn't", "happens", "hardly", "has", "hasn", "hasnt", "hasn't", "have", "haven", "haven't", "having", "he", "hed", "he'd", "he'll", "hello", "help", "hence", "her", "here", "hereafter", "hereby", "herein", "heres", "here's", "hereupon", "hers", "herself", "hes", "he's", "hh", "hi", "hid", "him", "himself", "his", "hither", "hj", "ho", "home", "hopefully", "how", "howbeit", "however", "how's", "hr", "hs", "http", "hu", "hundred", "hy", "i", "i2", "i3", "i4", "i6", "i7", "i8", "ia", "ib", "ibid", "ic", "id", "i'd", "ie", "if", "ig", "ignored", "ih", "ii", "ij", "il", "i'll", "im", "i'm", "immediate", "immediately", "importance", "important", "in", "inasmuch", "inc", "indeed", "index", "indicate", "indicated", "indicates", "information", "inner", "insofar", "instead", "interest", "into", "invention", "inward", "io", "ip", "iq", "ir", "is", "isn", "isn't", "it", "itd", "it'd", "it'll", "its", "it's", "itself", "iv", "i've", "ix", "iy", "iz", "j", "jj", "jr", "js", "jt", "ju", "just", "k", "ke", "keep", "keeps", "kept", "kg", "kj", "km", "know", "known", "knows", "ko", "l", "l2", "la", "largely", "last", "lately", "later", "latter", "latterly", "lb", "lc", "le", "least", "les", "less", "lest", "let", "lets", "let's", "lf", "like", "liked", "likely", "line", "little", "lj", "ll", "ll", "ln", "lo", "look", "looking", "looks", "los", "lr", "ls", "lt", "ltd", "m", "m2", "ma", "made", "mainly", "make", "makes", "many", "may", "maybe", "me", "mean", "means", "meantime", "meanwhile", "merely", "mg", "might", "mightn", "mightn't", "mill", "million", "mine", "miss", "ml", "mn", "mo", "more", "moreover", "most", "mostly", "move", "mr", "mrs", "ms", "mt", "mu", "much", "mug", "must", "mustn", "mustn't", "my", "myself", "n", "n2", "na", "name", "namely", "nay", "nc", "nd", "ne", "near", "nearly", "necessarily", "necessary", "need", "needn", "needn't", "needs", "neither", "never", "nevertheless", "new", "next", "ng", "ni", "nine", "ninety", "nj", "nl", "nn", "no", "nobody", "non", "none", "nonetheless", "noone", "nor", "normally", "nos", "not", "noted", "nothing", "novel", "now", "nowhere", "nr", "ns", "nt", "ny", "o", "oa", "ob", "obtain", "obtained", "obviously", "oc", "od", "of", "off", "often", "og", "oh", "oi", "oj", "ok", "okay", "ol", "old", "om", "omitted", "on", "once", "one", "ones", "only", "onto", "oo", "op", "oq", "or", "ord", "os", "ot", "other", "others", "otherwise", "ou", "ought", "our", "ours", "ourselves", "out", "outside", "over", "overall", "ow", "owing", "own", "ox", "oz", "p", "p1", "p2", "p3", "page", "pagecount", "pages", "par", "part", "particular", "particularly", "pas", "past", "pc", "pd", "pe", "per", "perhaps", "pf", "ph", "pi", "pj", "pk", "pl", "placed", "please", "plus", "pm", "pn", "po", "poorly", "possible", "possibly", "potentially", "pp", "pq", "pr", "predominantly", "present", "presumably", "previously", "primarily", "probably", "promptly", "proud", "provides", "ps", "pt", "pu", "put", "py", "q", "qj", "qu", "que", "quickly", "quite", "qv", "r", "r2", "ra", "ran", "rather", "rc", "rd", "re", "readily", "really", "reasonably", "recent", "recently", "ref", "refs", "regarding", "regardless", "regards", "related", "relatively", "research", "research-articl", "respectively", "resulted", "resulting", "results", "rf", "rh", "ri", "right", "rj", "rl", "rm", "rn", "ro", "rq", "rr", "rs", "rt", "ru", "run", "rv", "ry", "s", "s2", "sa", "said", "same", "saw", "say", "saying", "says", "sc", "sd", "se", "sec", "second", "secondly", "section", "see", "seeing", "seem", "seemed", "seeming", "seems", "seen", "self", "selves", "sensible", "sent", "serious", "seriously", "seven", "several", "sf", "shall", "shan", "shan't", "she", "shed", "she'd", "she'll", "shes", "she's", "should", "shouldn", "shouldn't", "should've", "show", "showed", "shown", "showns", "shows", "si", "side", "significant", "significantly", "similar", "similarly", "since", "sincere", "six", "sixty", "sj", "sl", "slightly", "sm", "sn", "so", "some", "somebody", "somehow", "someone", "somethan", "something", "sometime", "sometimes", "somewhat", "somewhere", "soon", "sorry", "sp", "specifically", "specified", "specify", "specifying", "sq", "sr", "ss", "st", "still", "stop", "strongly", "sub", "substantially", "successfully", "such", "sufficiently", "suggest", "sup", "sure", "sy", "system", "sz", "t", "t1", "t2", "t3", "take", "taken", "taking", "tb", "tc", "td", "te", "tell", "ten", "tends", "tf", "th", "than", "thank", "thanks", "thanx", "that", "that'll", "thats", "that's", "that've", "the", "their", "theirs", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "thered", "therefore", "therein", "there'll", "thereof", "therere", "theres", "there's", "thereto", "thereupon", "there've", "these", "they", "theyd", "they'd", "they'll", "theyre", "they're", "they've", "thickv", "thin", "think", "third", "this", "thorough", "thoroughly", "those", "thou", "though", "thoughh", "thousand", "three", "throug", "through", "throughout", "thru", "thus", "ti", "til", "tip", "tj", "tl", "tm", "tn", "to", "together", "too", "took", "top", "toward", "towards", "tp", "tq", "tr", "tried", "tries", "truly", "try", "trying", "ts", "t's", "tt", "tv", "twelve", "twenty", "twice", "two", "tx", "u", "u201d", "ue", "ui", "uj", "uk", "um", "un", "under", "unfortunately", "unless", "unlike", "unlikely", "until", "unto", "uo", "up", "upon", "ups", "ur", "us", "use", "used", "useful", "usefully", "usefulness", "uses", "using", "usually", "ut", "v", "va", "value", "various", "vd", "ve", "ve", "very", "via", "viz", "vj", "vo", "vol", "vols", "volumtype", "vq", "vs", "vt", "vu", "w", "wa", "want", "wants", "was", "wasn", "wasnt", "wasn't", "way", "we", "wed", "we'd", "welcome", "well", "we'll", "well-b", "went", "were", "we're", "weren", "werent", "weren't", "we've", "what", "whatever", "what'll", "whats", "what's", "when", "whence", "whenever", "when's", "where", "whereafter", "whereas", "whereby", "wherein", "wheres", "where's", "whereupon", "wherever", "whether", "which", "while", "whim", "whither", "who", "whod", "whoever", "whole", "who'll", "whom", "whomever", "whos", "who's", "whose", "why", "why's", "wi", "widely", "will", "willing", "wish", "with", "within", "without", "wo", "won", "wonder", "wont", "won't", "words", "world", "would", "wouldn", "wouldnt", "wouldn't", "www", "x", "x1", "x2", "x3", "xf", "xi", "xj", "xk", "xl", "xn", "xo", "xs", "xt", "xv", "xx", "y", "y2", "yes", "yet", "yj", "yl", "you", "youd", "you'd", "you'll", "your", "youre", "you're", "yours", "yourself", "yourselves", "you've", "yr", "ys", "yt", "z", "zero", "zi", "zz",]
-    # https://gist.github.com/sebleier/554280#gistcomment-3126707
-    
-    def stopwording_removingkeyterms(post):
-        token_stopworded = []
-        for token in tokenising(post):
-            if token in stop_words: # stop words
-                pass
-            elif token in removing_concepts_of_interest_flat: # the terms of interest from the ontology
-                pass
-            else:
-                token_stopworded.append(token)
-        return token_stopworded
-    
-    all_threads_stopworded_removedinterests = []
-    for thread in all_threads:
-        posts_stopworded = []
-        for post in thread:
-            joined_token_cleaned = stopwording_removingkeyterms(post)
-            if not " ".join(joined_token_cleaned): pass
-            else: posts_stopworded.append(joined_token_cleaned)
-        all_threads_stopworded_removedinterests.append(posts_stopworded)
-    
-    ####################################################
-    ####################################################
-    
-    all_posts_stopworded_removedinterests = []
-    for thread in all_threads_stopworded_removedinterests:
-        for post in thread:
-            all_posts_stopworded_removedinterests.append(" ".join(post))
-    
-    vectorizer = TfidfVectorizer() # https://towardsdatascience.com/natural-language-processing-feature-engineering-using-tf-idf-e8b9d00e7e76
-    vectors = vectorizer.fit_transform(all_posts_stopworded_removedinterests)
-    
-    feature_names = vectorizer.get_feature_names() # each word
-    dense = vectors.todense()
-    denselist = dense.tolist()
-    tfidf_density = pd.DataFrame(denselist, columns=feature_names) # word and word density
-    
-    tfidf_sums = tfidf_density.sum(axis = 0, skipna = True) # counting each word densities
-    tfidf_word_sums = tfidf_sums.to_dict() # zipping sum to the word
-    
-    tfidf = pd.DataFrame(tfidf_word_sums.items(), columns=['words', 'count']) # putting into dataframe
-    tfidf = tfidf.sort_values("count", ascending=False)
-    tfidf.to_csv('tfidf_results.tsv', index=False, sep="\t")
-    
-    ####################################################
-    ####################################################
-    
-    #graph = True
-    #limit = "NULL"
-    
-    if limit == "NULL":
-        limit = 30
-    
-    if graph:
-        fig = plt.figure()
-        ax = fig.add_axes([0,0,1,1])
-        ax.bar(tfidf["words"][:limit],tfidf["count"][:limit], color='steelblue')
-        plt.xticks(rotation=90)
-        ax.set_ylabel('Score')
-        ax.set_xlabel('Term')
-        ax.set_title('Bar plot of mean tf-idf for top %s terms' % limit)
-        #plt.show()
-        plt.savefig('tfidf_plot.pdf', bbox_inches='tight')
+        del t, word
         
-####################################################
-####################################################
+        words_of_interest_clean = [cleantext(x.lower()) for x in words_of_interest]
+        #words_of_interest_clean_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean]
+        
+        # preprocess concepts: Lemmatize
+        words_of_interest_clean_lemma = []
+        for concept in words_of_interest_clean:
+            doc = nlp(concept)
+            lemma_item = " ".join([token.lemma_ for token in doc])
+            words_of_interest_clean_lemma.append(lemma_item)
+        del doc, concept, lemma_item    
+        
+        words_of_interest_clean_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean_lemma]
+        
+        del words_of_interest_clean, words_of_interest_clean_lemma
+    
+        print("User has provided a list of concepts to remove from TF-IDF - success")
+        
+    except FileNotFoundError:
+        sys.exit("User attempted to provide a list of concepts to remove from TF-IDF - unsuccessful")
+
+else:
+    words_of_interest_clean_lemma_stpwrd = [""]
+    print("User not providing a list of concepts to remove from TF-IDF - all terms included for reference")
+
 ####################################################
 ####################################################
 
-if __name__ == "__main__":
-    main()
+list_of_posts = []
+
+with open("%s.txt" % corpus, "r") as t:
+    for post in t:
+        list_of_posts.append(post.strip("\n").strip(" "))
+del t, post
+list_of_posts = list(filter(None, list_of_posts))
+
+list_of_posts_clean = [cleantext(x.lower()) for x in list_of_posts]
+
+#list_of_posts_clean_stpwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean]
+#del list_of_posts_clean
+
+####################################################
+
+# preprocess sentences: Lemmatize
+list_of_posts_clean_lemma = []
+for post in list_of_posts_clean:
+    doc = nlp(post)
+    lemma_item = " ".join([token.lemma_ for token in doc])
+    list_of_posts_clean_lemma.append(lemma_item)
+del doc, post, lemma_item, list_of_posts_clean
+
+list_of_posts_clean_lemma_stopwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean_lemma]
+del list_of_posts_clean_lemma
+
+####################################################
+####################################################
+
+list_of_posts_clean_lemma_stpwrd_filtered = []
+for sentence in list_of_posts_clean_lemma_stopwrd:
+    sentence = sentence.split()
+    
+    for word in words_of_interest_clean_lemma_stpwrd:
+        word = word.split()
+        
+        sentence = [w for w in sentence if w not in word]
+        
+    list_of_posts_clean_lemma_stpwrd_filtered.append(" ".join(sentence))
+
+del sentence, word
+del list_of_posts_clean_lemma_stopwrd
+
+####################################################
+####################################################
+
+start_time = time.time()
+
+tfidf_vectorizer = TfidfVectorizer()
+tfidf_matrix = tfidf_vectorizer.fit_transform(list_of_posts_clean_lemma_stpwrd_filtered)
+feature_names = tfidf_vectorizer.get_feature_names_out()
+
+end_time = time.time() - start_time
+print( "Seconds taken to run tf-idf: %s" % str(round(end_time, 3)) )
+del start_time, end_time
+
+tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=feature_names)
+tfidf_df['Sentence'] = list_of_posts_clean_lemma_stpwrd_filtered # col to show original sentences
+tfidf_df = tfidf_df[['Sentence'] + [col for col in tfidf_df.columns if col != 'Sentence']] # sentence first col
+del tfidf_matrix, tfidf_vectorizer, feature_names
+
+
+summary_scores = tfidf_df.drop(columns=['Sentence']).agg('mean', axis=0)
+tfidf_df_sum = pd.DataFrame({'Word': summary_scores.index, 'Score': summary_scores.values})
+del summary_scores
+
+
+scaler = MinMaxScaler()
+tfidf_df_sum['Score'] = scaler.fit_transform(tfidf_df_sum[['Score']])
+tfidf_df_sum = tfidf_df_sum.sort_values("Score", ascending=False)
+del scaler
+
+tfidf_df_sum.to_csv('%s.tsv' % output_name, index=False, sep="\t")
+
+####################################################
+####################################################
+
+if graph:
+    plt.style.use("seaborn-poster")
+    fig = plt.figure()
+    ax = fig.add_axes([0,0,1,1])
+    ax.bar(tfidf_df_sum["Word"][:limit],tfidf_df_sum["Score"][:limit], color=cm)
+    plt.xticks(rotation=90)
+    ax.set_ylabel('Average score (normalised)')
+    ax.set_xlabel('Terms')
+    ax.set_title("Bar plot of top %s terms TF-IDF rankings" % limit)
+    plt.savefig('%s.png' % plot_output_name, bbox_inches='tight')
+del ax, fig
+
+####################################################
+
+# End of script

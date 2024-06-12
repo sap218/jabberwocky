@@ -1,81 +1,87 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-@date: May 2021
+@date: 2024
 @author: Samantha C Pendleton
-@description: to curate terms and their synonyms from an ontology file
+@description: curate classes (& synonyms) from an ontology
 @GitHub: github.com/sap218/jabberwocky
 
 @useful links:
     # https://stackoverflow.com/questions/35898699/why-is-beautifulsoup-altering-the-format-of-my-xml
 """
 
-import click 
+import sys
 from bs4 import BeautifulSoup
-import json
-import re
 
-def clean_text(post):
-    post = post.replace("-", "")
-    post = (re.sub("[^A-Za-z0-9']+", " ", post)) # keeping '
-    post = (re.sub("'", "", post))
-    return post.lower().strip()
+from params_snatch import *
 
 ####################################################
+
+with open("%s.owl" % ontology_name, "rt") as o:
+    ontology_file = o.read()  
+ontology_soup = BeautifulSoup(ontology_file,'xml') # BEAUTIFUL SOUP really is beautiful
+del o, ontology_file
+
+annotation_tags = []
+with open("%s.txt" % ontology_tags, "r") as t:
+    for tag in t:
+        annotation_tags.append(tag.strip("\n"))
+del tag, t
+
 ####################################################
 
-@click.command()
-@click.option('-o', '--ontology', 'ontology', required=True, help='file of ontology.')
-@click.option('-s', '--synonymtags', 'synonymtags', required=True, help='list of XML tags for synonym curation.')
-@click.option('-k', '--keywords', 'keywords', required=True, help='list of class labels you want to use to search.')
-def main(ontology, synonymtags, keywords):
+find_all_concepts = ontology_soup.find_all('owl:Class') # this finds all concepts in the ontology
+classes_and_annotations = {}
+for concept in find_all_concepts:
+    label = concept.find("rdfs:label").get_text() # gets label for concept
+    list_annotations = []
+    for tag_format in annotation_tags: 
+        finding_tags = concept.find_all(tag_format) # a concept could have multiple "exact synonyms" 
+        flatten = [x.get_text() for x in finding_tags] 
+        list_annotations.extend(flatten)
+    classes_and_annotations[label] = list_annotations
+del find_all_concepts, flatten, label, list_annotations, finding_tags, tag_format, annotation_tags
 
-    #with open("../test_data/pocketmonsters.owl", "rt") as o:
-    with open(ontology, "rt") as o:
-        ontology_file = o.read()  
-    ontology_soup = BeautifulSoup(ontology_file,'xml') # BEAUTIFUL SOUP really is beautiful
-    
-    
-    synonym_tags = [] #synonym_tags = ["oboInOWL:hasExactSynonym", "oboInOWL:hasRelatedSynonym"] # an example
-    #with open("input/ontology_synonym_tags.txt", "r") as t:
-    with open(synonymtags, "r") as t:
-        for tag in t:
-            synonym_tags.append(tag.strip("\n"))
-    
-    ####################################################
-    
-    find_all_concepts = ontology_soup.find_all('owl:Class') # this finds all concepts in the ontology
-    concept_all_synonyms = {}
-    for concept in find_all_concepts:
-        label = concept.find("rdfs:label").get_text().lower() # gets label for concept
-        list_synonyms = []
-        for synonym_format in synonym_tags: 
-            synonym_finding = concept.find_all(synonym_format) # a concept could have multiple "exact synonyms" 
-            flatten = [clean_text(x.get_text().lower()) for x in synonym_finding] 
-            list_synonyms.append(flatten)
-        flatten = [item for sublist in list_synonyms for item in sublist]
-        concept_all_synonyms[clean_text(label)] = flatten
-    
-    ####################################################
-    
-    words_of_interest = []
-    #with open("input/words_of_interest.txt", "r") as t:
-    with open(keywords, "r") as t:
-        for word in t:
-            words_of_interest.append(word.strip("\n").strip(" ").lower()) # words of interest
-    
-    searching_concepts_of_interest = {}
-    for label,synonyms in concept_all_synonyms.items(): # matches the terms together!
-        if label in words_of_interest:
-            searching_concepts_of_interest[label] = synonyms
-    
-    ####################################################
-    
-    with open('output_ontology_label_synonyms.json', 'w') as j:
-        json.dump(searching_concepts_of_interest, j, indent=4)
-    
-####################################################
 ####################################################
 
-if __name__ == "__main__":
-    main()
+if len(classes_of_interest) > 0:
+    try:
+        words_of_interest = []
+        with open("%s.txt" % classes_of_interest, "r") as t:
+            for word in t:
+                words_of_interest.append(word.strip("\n").strip(" ")) # words of interest
+        print("User has provided a list of ontology classes of interest - success")
+        del t, word
+        
+    except FileNotFoundError:
+        sys.exit("User attempted to provide a list with ontology classes of interest - unsuccessful")
+
+else:
+    words_of_interest = None
+    print("User not providing a list of ontology classes of interest - using all classes for annotations")
+
+####################################################
+
+if words_of_interest: 
+    search_concepts = {key: classes_and_annotations[key] for key in words_of_interest}
+else:
+    search_concepts = classes_and_annotations.copy()
+
+####################################################
+
+#with open('test/snatch_output.json', 'w') as j:
+#    json.dump(search_concepts, j, indent=4)
+#del j
+
+####################################################
+
+search_concepts = [key_val for key, value in search_concepts.items() for key_val in [key] + value]
+
+with open('%s.txt' % output_name, 'w') as t:
+    for word in search_concepts:
+        t.write(word + '\n')
+del t, word
+
+####################################################
+
+# End of script
