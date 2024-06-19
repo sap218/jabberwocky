@@ -12,6 +12,8 @@
     - high-level script to import text cleaning & stop words
     - updated annotation script for stop words and lemma
     - plotting wordcloud
+* **v3.1.0** [19/06/2024]
+    - plotting feature for ontologies
 
 ***
 

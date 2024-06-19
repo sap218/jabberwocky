@@ -38,8 +38,11 @@ print("spaCy version ",spacy.__version__)
 import wordcloud 
 print("wordcloud version ",wordcloud.__version__)
 
-import pytest
-print("pytest version ",pytest.__version__)
+#import pytest
+#print("pytest version ",pytest.__version__)
+
+import networkx
+print("networkx version ",networkx.__version__)
 
 '''
 Python version  3.9.12
@@ -51,7 +54,8 @@ Matplotlib version  3.7.1
 scikit-learn version  1.2.2
 spaCy version  3.5.3
 wordcloud version  1.9.2
-pytest version  7.4.0
+
+networkx version  2.8.4
 '''
 
 ####################################################
