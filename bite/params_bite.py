@@ -24,6 +24,7 @@ if is_this_a_test:
     cm = "mediumseagreen"
     limit = 30 # default is top 30 words
     output_name = "../bite/test/bite_output"
+    stats_output_name = "../bite/test/bite_output_stats"
     plot_output_name = "../bite/test/bite_output_plot"
     
 else:
@@ -36,6 +37,7 @@ else:
     limit = 30
     
     output_name = "bite_output"
+    stats_output_name = "bite_output_stats"
     plot_output_name = "bite_output_plot"
 
 ####################################################

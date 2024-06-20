@@ -20,10 +20,10 @@ if is_this_a_test:
     corpus = "../catch/test/social_media_posts"
     annotation_file = "../bandersnatch/test/snatch_output"
     filter_level = "light" # "heavy"
-    graph = True
-    cm = "Set3"
     grep_format = True # if False, posts with have tags
     not_annotated = False # if True, posts will be the inverted grep
+    graph = True
+    cm = "Set3"
     output_name = "../catch/test/catch_output"
     stats_output_name = "../catch/test/catch_output_stats"
     plot_output_name = "../catch/test/catch_output_wordcloud"

@@ -10,39 +10,36 @@ Read the [documentation](https://sap218.github.io/jabberwocky/) for more detail.
 
 script | description
 ------- | -----------
-`bandersnatch` | extract annotations from an ontology (`OWL` RDF/XML syntax)
-`catch` | text mining (grep) a corpus using key words/phrases
-`bite`  | TF-IDF for ranking important terms from corpus
-`arise` | adding / updating ontology concepts with new annotations
+`bandersnatch` | extract metadata from ontology classes
+`catch` | annotate corpus with key terms & generate wordcloud
+`bite`  | rank terms in order of importance & bar plot
+`arise` | update ontology with new metadata
+`eyes` | plot an ontology
 
 ## Running
-
 Within each directory, there is a file `params_*.py` which users can edit.
 This means users shouldn't need to edit the main/primary script.
 
 Check the individual `READMEs` for parameter information.
 
 ## Workflow
-
 When combining these Jabberwocky functions, users can create an NLP workflow.
 
 ![workflow](/docs/workflow.png)
 
 #### Prerequisites
-
 Check [`requirements.py`](https://github.com/sap218/jabberwocky/blob/master/requirements.py) for a list of packages and versions.
 
-#### AOB
-
-- Check the [**Changelog**](https://github.com/sap218/jabberwocky/blob/master/changelog.md) for version information
-- [License](https://github.com/sap218/jabberwocky/blob/master/LICENSE) is **MIT**
-- The poem, Jabberwocky, written by Lewis Carrol, is described as a "nonsense" poem :dragon:
+## Changelog
+Information on versions, see the [**Changelog**](https://github.com/sap218/jabberwocky/blob/master/changelog.md) (ordered by newest first).
 
 ## Contributing
-
 Please read the [**Contributing Guidelines**](https://github.com/sap218/jabberwocky/blob/master/contributing.md).
 
 - [@majensen](https://github.com/majensen) set up automated testing w/ `pytest` in v1.0 - see [pull request #13](https://github.com/sap218/jabberwocky/pull/13) for more details
+
+## License 
+The [license](https://github.com/sap218/jabberwocky/blob/master/LICENSE) is **MIT** and so users only need to cite (below) if using.
 
 ## Citing
 
@@ -60,6 +57,8 @@ Please read the [**Contributing Guidelines**](https://github.com/sap218/jabberwo
   journal = {Journal of Open Source Software}
 }
 ```
+
+The poem, Jabberwocky, written by Lewis Carrol, is described as a "nonsense" poem :dragon:
 
 ***
 

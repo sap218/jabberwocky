@@ -1,0 +1,3 @@
+time taken to run tf-idf: 0.002
+tf-idf raw df length: 71
+tf-idf adj. df length: 61
