@@ -104,8 +104,8 @@ for concept in words_of_interest:
     doc_lemma_stpwrd = list(filter(None, doc_lemma_stpwrd))
     
     if doc_lemma_stpwrd:
-        concept_patterns.append(nlp(" ".join(doc_lemma_stpwrd)))
-        words_of_interest_clean_lemma_stpwrd.append(" ".join(doc_lemma_stpwrd))
+        concept_patterns.append(nlp(" ".join(doc_lemma_stpwrd).lower()))
+        words_of_interest_clean_lemma_stpwrd.append(" ".join(doc_lemma_stpwrd).lower())
     
 del concept, doc, doc_lemma, doc_lemma_stpwrd
 
@@ -146,9 +146,9 @@ for post in list_of_posts:
     doc_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in doc_lemma]
     doc_lemma_stpwrd = list(filter(None, doc_lemma_stpwrd))
         
-    list_of_posts_clean_lemma_stpwrd.append(" ".join(doc_lemma_stpwrd))
+    list_of_posts_clean_lemma_stpwrd.append(" ".join(doc_lemma_stpwrd).lower())
     
-    doc = nlp(" ".join(doc_lemma_stpwrd))
+    doc = nlp(" ".join(doc_lemma_stpwrd).lower())
     matches = matcher(doc)
     
     if matches:

@@ -14,18 +14,17 @@ script | description
 `catch` | annotate corpus with key terms & generate wordcloud
 `bite`  | rank terms in order of importance & bar plot
 `arise` | update ontology with new metadata
-`eyes` | plot an ontology
+`eyes` | plot an ontology via hierarchical or tree format
+
+When combining these Jabberwocky functions, users can create an NLP workflow.
+
+![workflow](/docs/workflow.png)
 
 ## Running
 Within each directory, there is a file `params_*.py` which users can edit.
 This means users shouldn't need to edit the main/primary script.
 
 Check the individual `READMEs` for parameter information.
-
-## Workflow
-When combining these Jabberwocky functions, users can create an NLP workflow.
-
-![workflow](/docs/workflow.png)
 
 #### Prerequisites
 Check [`requirements.py`](https://github.com/sap218/jabberwocky/blob/master/requirements.py) for a list of packages and versions.

@@ -7,9 +7,7 @@
 @GitHub: github.com/sap218/jabberwocky
 """
 
-"""
-Versions
-"""
+# Modules used in Jabberwocky
 
 import sys # this includes: import time
 print("Python version ",sys.version.split(" ")[0])
@@ -38,11 +36,13 @@ print("spaCy version ",spacy.__version__)
 import wordcloud 
 print("wordcloud version ",wordcloud.__version__)
 
+import nltk
+print("nltk version ",nltk.__version__)
+
 import networkx
 print("networkx version ",networkx.__version__)
 
-#import pytest
-#print("pytest version ",pytest.__version__)
+# When running Jabberwocky, users need these versions minimum
 
 '''
 Python version  3.9.12
@@ -54,6 +54,7 @@ Matplotlib version  3.7.1
 scikit-learn version  1.2.2
 spaCy version  3.5.3
 wordcloud version  1.9.2
+nltk version  3.8.1
 networkx version  2.8.4
 '''
 

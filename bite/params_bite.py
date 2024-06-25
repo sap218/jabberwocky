@@ -20,6 +20,7 @@ if is_this_a_test:
     corpus = "../catch/test/catch_output_invert"
     concepts_to_remove = "../bandersnatch/test/snatch_output"
     filter_level = "light" # "heavy"
+    ngram_count = [1,3]
     graph = True   
     cm = "mediumseagreen"
     limit = 30 # default is top 30 words
@@ -31,6 +32,8 @@ else:
     corpus = ""
     concepts_to_remove = ""
     filter_level = "light"
+    
+    ngram_count = [1,3]
     
     graph = True
     cm = "mediumseagreen"
