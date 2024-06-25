@@ -76,6 +76,9 @@ Users can generate a wordcloud figure from the corpus.
 ### bite
 Rank all words in a corpus in terms of importance (via the TF-IDF statistical technique).
 
+One valuable parameter is being able to adjust input for TF-IDF so the technique measures multiple n-grams.
+Users can request more than unigrams: bigrams, trigrams, and more.
+
 Users can provide a list of words to remove from the corpus to avoid being weighted/measured - the `bandersnatch` output can be used here.
 
 ##### Output
@@ -111,8 +114,7 @@ This can be derived from the `bite` output (e.g. synonyms).
 ---
 
 ### eyes
-Plot an ontology in web or tree style.
-
+Plot an ontology in web or tree style. 
 By default, superclasses will have overlay text but users can choose whether to include for subclasses.
 
 ##### Output

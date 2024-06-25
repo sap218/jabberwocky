@@ -14,7 +14,7 @@ script | description
 `catch` | annotate corpus with key terms & generate wordcloud
 `bite`  | rank terms in order of importance & bar plot
 `arise` | update ontology with new metadata
-`eyes` | plot an ontology via hierarchical or tree format
+`eyes` | plot an ontology via web or tree format
 
 When combining these Jabberwocky functions, users can create an NLP workflow.
 
