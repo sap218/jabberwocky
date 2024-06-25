@@ -14,6 +14,10 @@
 - "light" is a smaller list consisting only of 179 stop words
 - "heavy" is much larger list consisting of 1160 stop words
 
+## `ngram_count`
+- a list of n-grams for TF-IDF
+- can modify for unigram only `[1]` or for bi-grams & tri-grams `[2,3]`
+
 ## `graph`
 - plot TF-IDF rankings
 

@@ -20,10 +20,12 @@ if is_this_a_test:
     corpus = "../catch/test/catch_output_invert"
     concepts_to_remove = "../bandersnatch/test/snatch_output"
     filter_level = "light" # "heavy"
+    ngram_count = [1,3]
     graph = True   
     cm = "mediumseagreen"
     limit = 30 # default is top 30 words
     output_name = "../bite/test/bite_output"
+    stats_output_name = "../bite/test/bite_output_stats"
     plot_output_name = "../bite/test/bite_output_plot"
     
 else:
@@ -31,11 +33,14 @@ else:
     concepts_to_remove = ""
     filter_level = "light"
     
+    ngram_count = [1,3]
+    
     graph = True
     cm = "mediumseagreen"
     limit = 30
     
     output_name = "bite_output"
+    stats_output_name = "bite_output_stats"
     plot_output_name = "bite_output_plot"
 
 ####################################################

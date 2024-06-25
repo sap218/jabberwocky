@@ -1,52 +1,116 @@
-Word	Score
-evolve	1.0000000000000002
-path	0.5887236531790696
-mega	0.5566783991958804
-fly	0.4702009516099766
-hear	0.419183027674671
-heal	0.419183027674671
-ekan	0.3967830663744201
-team	0.320482857928238
-rocket	0.320482857928238
-air	0.2685471328190297
-guy	0.23395297950222166
-meet	0.23395297950222166
-pokedex	0.21347436043274515
-chance	0.20638708573285902
-drat	0.18602800599547903
-magikarp	0.18602800599547903
-slow	0.1847657577242791
-pokemon	0.15189302241189756
-cat	0.15189302241189756
-breed	0.15189302241189756
-choice	0.12437648576212718
-good	0.12437648576212718
-school	0.12437648576212718
-late	0.10762932930232721
-hurry	0.10762932930232721
-training	0.0845951686546847
-brock	0.0845951686546847
-gym	0.0845951686546847
-opposite	0.0845951686546847
-pop	0.06959264538646553
-rest	0.06959264538646553
-feel	0.06959264538646553
-centre	0.06959264538646553
-free	0.06959264538646553
-practice	0.0657604483904678
-join	0.0657604483904678
-nice	0.0657604483904678
-minute	0.06221573077979703
-luckily	0.06221573077979703
-long	0.06221573077979703
-win	0.06221573077979703
-mountatin	0.05952662623406246
-clear	0.05952662623406246
-catch	0.05952662623406246
-type	0.05952662623406246
-notify	0.0
-remember	0.0
-alert	0.0
-grunt	0.0
-careful	0.0
-assistance	0.0
+Word	Raw score	Normalised score
+mega	0.071	1.0
+hear	0.056	0.74
+sure	0.056	0.74
+path	0.044	0.542
+one	0.043	0.536
+take	0.04	0.475
+guy	0.039	0.469
+meet	0.039	0.469
+fly	0.038	0.44
+soon	0.037	0.43
+need	0.037	0.424
+ekan	0.031	0.333
+away	0.027	0.268
+air	0.026	0.251
+always	0.026	0.243
+take_slow_one	0.024	0.213
+yet	0.024	0.213
+slow	0.024	0.213
+yet_take_slow	0.024	0.213
+breed	0.023	0.192
+cat	0.023	0.192
+mean	0.023	0.192
+mean_cat_breed	0.023	0.192
+cat_breed_pokemon	0.023	0.192
+pokemon	0.023	0.192
+i_soon_need	0.022	0.18
+soon_need_heal	0.022	0.18
+first	0.022	0.18
+heal	0.022	0.18
+need_heal_first	0.022	0.18
+pokedex	0.021	0.172
+know_take_magikarp	0.021	0.17
+know	0.021	0.17
+drat_i_know	0.021	0.17
+drat	0.021	0.17
+i_know_take	0.021	0.17
+magikarp	0.021	0.17
+really_still_ekan	0.02	0.151
+chance	0.02	0.151
+really	0.02	0.151
+still	0.02	0.151
+still_ekan_chance	0.02	0.151
+ekan_chance_soon	0.02	0.151
+school_always_good	0.018	0.118
+choice	0.018	0.118
+near	0.018	0.118
+near_school_always	0.018	0.118
+good	0.018	0.118
+path_near_school	0.018	0.118
+always_good_choice	0.018	0.118
+school	0.018	0.118
+currently	0.018	0.114
+currently_opposite_path	0.018	0.114
+training_brock_gym	0.018	0.114
+brock	0.018	0.114
+path_training_brock	0.018	0.114
+gym	0.018	0.114
+opposite	0.018	0.114
+opposite_path_training	0.018	0.114
+training	0.018	0.114
+hurry_mega_one	0.018	0.11
+hurry	0.018	0.11
+one_fly_away	0.018	0.11
+fly_away_i	0.018	0.11
+late	0.018	0.11
+away_i_late	0.018	0.11
+mega_one_fly	0.018	0.11
+rest	0.018	0.107
+pop_centre_want	0.018	0.107
+pop	0.018	0.107
+want	0.018	0.107
+centre	0.018	0.107
+centre_want_rest	0.018	0.107
+free_pop_centre	0.018	0.107
+feel	0.018	0.107
+feel_free_pop	0.018	0.107
+free	0.018	0.107
+ekan_get_practice	0.015	0.069
+nice	0.015	0.069
+get	0.015	0.069
+i_fly_air	0.015	0.069
+i_join_nice	0.015	0.069
+nice_ekan_get	0.015	0.069
+get_practice_i	0.015	0.069
+join	0.015	0.069
+join_nice_ekan	0.015	0.069
+practice	0.015	0.069
+practice_i_fly	0.015	0.069
+type	0.015	0.058
+type_mountatin_clear	0.015	0.058
+try_catch_fly	0.015	0.058
+thank	0.015	0.058
+thank_i_try	0.015	0.058
+try	0.015	0.058
+mountatin_clear_air	0.015	0.058
+clear	0.015	0.058
+catch_fly_type	0.015	0.058
+fly_type_mountatin	0.015	0.058
+catch	0.015	0.058
+mountatin	0.015	0.058
+i_try_catch	0.015	0.058
+away_i_long	0.013	0.036
+luckily	0.013	0.036
+come	0.013	0.036
+i_long_come	0.013	0.036
+i_minute_away	0.013	0.036
+i_need_one	0.013	0.036
+long	0.013	0.036
+one_pokedex_luckily	0.013	0.036
+long_come_path	0.013	0.036
+luckily_i_minute	0.013	0.036
+pokedex_luckily_i	0.013	0.036
+minute	0.013	0.036
+minute_away_i	0.013	0.036
+need_one_pokedex	0.013	0.036

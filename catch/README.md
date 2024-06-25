@@ -6,6 +6,7 @@
 ## `annotation_file`
 - annotation file with concepts on a new line
 - can be `snatch` output
+- if left empty, script will still run
 
 ## `filter_level`
 - parameter for which stop words list to use
@@ -20,6 +21,7 @@
 
 ## `graph`
 - plot wordcloud
+- make `annotation_file` empty to only plot
 
 ### `cm`
 - plotting colour - users can provide [any of interest](https://matplotlib.org/stable/users/explain/colors/colormaps.html)

@@ -37,34 +37,31 @@ from highlevel import *
 ''' stopWords '''
 if filter_level == "light": stopWords = stopWords[0]
 elif filter_level == "heavy": stopWords = stopWords[1]
-stopWords = [cleantext(x.lower()) for x in stopWords]
 
-def remove_stop_words(text, stopWords):
-    return ' '.join(word for word in text.split() if word.lower() not in stopWords)
+stopWords_lemma = []
+for word in stopWords:
+    word = cleantext(word.lower())
+    doc = nlp(word)
+    doc_lemma = " ".join([token.lemma_ for token in doc])
+    stopWords_lemma.append(doc_lemma)
+stopWords_lemma_filt = list(filter(None, stopWords_lemma))
+stopWords_lemma_filt_flat = [word for phrase in stopWords_lemma_filt for word in phrase.split()]
 
-####################################################
-####################################################
-
-words_of_interest = []
-
-with open("%s.txt" % annotation_file, "r") as t:
-    for word in t:
-        words_of_interest.append(word.strip("\n").strip(" "))
-del t, word
-
-words_of_interest_clean = [cleantext(x.lower()) for x in words_of_interest]
-#words_of_interest_clean_stpwrd = [remove_stop_words(text, stopWords) for text in words_of_interest_clean]
-
-#del words_of_interest_clean
+stopWords = list(set(stopWords_lemma_filt_flat))
+del word, doc, doc_lemma, stopWords_lemma, stopWords_lemma_filt, stopWords_lemma_filt_flat
 
 ####################################################
+####################################################
 
-list_of_posts = []
+try:
+    list_of_posts = []
+    with open("%s.txt" % corpus, "r") as t:
+        for post in t:
+            list_of_posts.append(post.strip("\n").strip(" "))
+    del t, post
+except FileNotFoundError:
+    sys.exit("Cannot find text file")
 
-with open("%s.txt" % corpus, "r") as t:
-    for post in t:
-        list_of_posts.append(post.strip("\n").strip(" "))
-del t, post
 list_of_posts = list(filter(None, list_of_posts))
 
 post_stats = []
@@ -73,16 +70,55 @@ for post in list_of_posts:
     post_stats.append(len(post))
 del post
 
-list_of_posts_clean = [cleantext(x.lower()) for x in list_of_posts]
-#list_of_posts_clean_stpwrd = [remove_stop_words(text, stopWords) for text in list_of_posts_clean]
+####################################################
+####################################################
 
-#del list_of_posts_clean
+if len(annotation_file) > 0:
+    try:
+        words_of_interest = []
+        with open("%s.txt" % annotation_file, "r") as t:
+            for word in t:
+                words_of_interest.append(word.strip("\n").strip(" "))
+        del t, word
+    except FileNotFoundError:
+        sys.exit("User attempted to provide a list of terms for annotation - unsuccessful")
+else: words_of_interest = ["nowordstofilter"]
+
+words_of_interest = list(filter(None, words_of_interest))
 
 ####################################################
 
+words_of_interest_clean_lemma_stpwrd = [] 
+concept_patterns = [] # for matcher
+
+# preprocess concepts: Lemmatize & stopWords
+for concept in words_of_interest: 
+    concept = cleantext(concept.lower())
+    
+    doc = nlp(concept)
+    
+    ## lemma
+    doc_lemma = [token.lemma_ for token in doc]
+    ## stopwords
+    doc_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in doc_lemma]
+    doc_lemma_stpwrd = list(filter(None, doc_lemma_stpwrd))
+    
+    if doc_lemma_stpwrd:
+        concept_patterns.append(nlp(" ".join(doc_lemma_stpwrd).lower()))
+        words_of_interest_clean_lemma_stpwrd.append(" ".join(doc_lemma_stpwrd).lower())
+    
+del concept, doc, doc_lemma, doc_lemma_stpwrd
+
+matcher = PhraseMatcher(nlp.vocab) # initialize phrase matcher
+matcher.add("Concepts", None, *concept_patterns) # convert concepts into patterns
+del concept_patterns
+
+####################################################
+####################################################
+
 statistics = [
-    "concepts count: %s" % len(words_of_interest_clean),
-    "post count: %s" % len(list_of_posts_clean),
+    "concepts count: %s" % len(words_of_interest),
+    "post count: %s" % len(list_of_posts),
     "average word count: %s" % (sum(post_stats)/len(post_stats)),
     ]
 del post_stats
@@ -90,121 +126,90 @@ del post_stats
 ####################################################
 ####################################################
 
-words_of_interest_clean_lemma_stpwrd = [] 
-
-# preprocess concepts: Lemmatize & stopWords
-concept_patterns = [] # for matcher
-for concept in words_of_interest_clean:
-        
-    doc = nlp(concept)
-    
-    ''' lemma '''
-    lemma_item = [token.lemma_ for token in doc]
-    
-    ''' stopWords '''
-    lemma_item = [remove_stop_words(text, stopWords) for text in lemma_item]
-    lemma_item = list(filter(None, lemma_item))
-    
-    concept_patterns.append(nlp(" ".join(lemma_item)))
-    
-    word_item = " ".join([token.lemma_ for token in doc])
-    words_of_interest_clean_lemma_stpwrd.append(word_item)
-    
-del concept, doc, lemma_item, word_item
-del words_of_interest, words_of_interest_clean
-
-matcher = PhraseMatcher(nlp.vocab) # initialize phrase matcher
-matcher.add("Concepts", None, *concept_patterns) # convert concepts into patterns
-
-del concept_patterns
-
-####################################################
-####################################################
-
 start_time = time.time()
 
-
 matched_output_list = []
-#matched_output_dictionary = {}
-
 list_of_posts_clean_lemma_stpwrd = []
 
 x = 0
-#for response in list_of_posts_clean_stpwrd_lemma:
-for post in list_of_posts_clean:
-    print("Sentence iteration ", x, " out of ", len(list_of_posts_clean))
+y = 0
+for post in list_of_posts:
+    x = x + 1
+    print("Sentence iteration ", x, " out of ", len(list_of_posts))
+    post = cleantext(post.lower())
     
     doc = nlp(post)
     
-    ''' lemma '''
-    doc = [token.lemma_ for token in doc]
+    ## lemma
+    doc_lemma = [token.lemma_ for token in doc]
+    ## stopwords
+    doc_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in doc_lemma]
+    doc_lemma_stpwrd = list(filter(None, doc_lemma_stpwrd))
+        
+    list_of_posts_clean_lemma_stpwrd.append(" ".join(doc_lemma_stpwrd).lower())
     
-    ''' stopWords '''
-    doc = [remove_stop_words(text, stopWords) for text in doc]
-    doc = list(filter(None, doc))
-    
-    doc = nlp(" ".join(doc))
-    
-    
-    post_item = " ".join([token.lemma_ for token in doc])
-    list_of_posts_clean_lemma_stpwrd.append(post_item)
-    
-
+    doc = nlp(" ".join(doc_lemma_stpwrd).lower())
     matches = matcher(doc)
     
     if matches:
-    
         matched_concepts = set()
         for match_id, start, end in matches:
             matched_span = doc[start:end]
             matched_concepts.add(matched_span.text)
             
-        matched_output_list.append([ list(matched_concepts), list_of_posts[x] ])
-        #matched_output_dictionary[list_of_posts[x]] = list(matched_concepts)
+        matched_output_list.append([ list(matched_concepts), list_of_posts[y] ])
+        
+        del matched_concepts, match_id, start, end, matched_span
         
     else: 
-        matched_output_list.append([ "NO ANNOTATION", list_of_posts[x] ])
-        #matched_output_dictionary[list_of_posts[x]] = "NO ANNOTATION"
-
-    x = x + 1
-
+        matched_output_list.append([ "NO ANNOTATION", list_of_posts[y] ])
+    
+    y = y + 1
 
 end_time = time.time() - start_time
-print( "Seconds taken to annotate: %s" % str(round(end_time, 2)) )
-del start_time, end_time
+end_time = str(round(end_time, 2))
+print("Seconds taken to annotate: %s" % end_time)
+del start_time
 
-del doc, post, x, post_item
-del matched_concepts, matches, matched_span, match_id, start, end
+statistics.append("time taken to annotate (seconds): %s" % end_time)
+
+del x, y, post, doc, doc_lemma, doc_lemma_stpwrd, matches
 
 ####################################################
 ####################################################
 
-to_output = []
+matched_output_list_output = []
 
-for x in matched_output_list:
+for x,content in enumerate(matched_output_list):
     if not_annotated:
-        if x[0] == "NO ANNOTATION": to_output.append(x[1])
+        if content[0] == "NO ANNOTATION": matched_output_list_output.append(content[1])
     else:
         if grep_format:
-            if x[0] != "NO ANNOTATION": to_output.append(x[1])
+            if content[0] != "NO ANNOTATION": matched_output_list_output.append(content[1])
             
         else:
-            if x[0] != "NO ANNOTATION": to_output.append( "%s # %s" % ( x[0] ,x[1]) )
+            if content[0] != "NO ANNOTATION": matched_output_list_output.append( "%s # %s" % (content[0],content[1]) )
+del x, content
 
+if not matched_output_list_output: matched_output_list_output.append("NO ANNOTATIONS") 
+
+####################################################
 
 with open('%s.txt' % output_name, 'w') as t:
-    for word in to_output:
+    for word in matched_output_list_output:
         t.write(word + '\n')
+del t,word
 
 #with open('test/catch_output.json', 'w') as j:
-#    json.dump(matched_output_dictionary, j, indent=4)
+#    json.dump(matched_output_dict_output, j, indent=4)
 #del j
+
+####################################################
 
 with open('%s.txt' % stats_output_name, 'w') as t:
     for word in statistics:
         t.write(word + '\n')
-
-del t, word
+del t,word
 
 ####################################################
 ####################################################
