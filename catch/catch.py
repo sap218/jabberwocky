@@ -25,10 +25,12 @@ from params_catch import *
 
 ####################################################
 
-if not_annotated: output_name = output_name + "_invert"
-else:
-    if grep_format: output_name = output_name + "_grep"
-    else: output_name = output_name + "_tags"
+if output_format == "wtags":
+    output_name = output_name + "_wtags"
+elif output_format == "grep":
+    output_name = output_name + "_grep"
+elif output_format == "invertedgrep":
+    output_name = output_name + "_invertgrep"
 
 ####################################################
 
@@ -131,6 +133,12 @@ start_time = time.time()
 matched_output_list = []
 list_of_posts_clean_lemma_stpwrd = []
 
+# cyan with soft glow for highlighting, can use :cyan for original
+if not highlightcolour: highlightcolour = "#00bcd4"
+colours = ["<span style='color: %s; text-shadow: 0 0 10px rgba(0, 188, 212, 0.5);'>" % highlightcolour,
+           "</span>"]  # plain
+cyannotator = []
+
 x = 0
 y = 0
 for post in list_of_posts:
@@ -153,13 +161,19 @@ for post in list_of_posts:
     
     if matches:
         matched_concepts = set()
+        highlighting = " ".join(doc_lemma_stpwrd).lower()
+        
         for match_id, start, end in matches:
             matched_span = doc[start:end]
             matched_concepts.add(matched_span.text)
             
+            highlighting = re.sub(r'\b%s\b' % re.escape(matched_span.text),
+                                      (colours[0] + matched_span.text + colours[1]), highlighting)
+            cyannotator.append(highlighting)
+            
         matched_output_list.append([ list(matched_concepts), list_of_posts[y] ])
         
-        del matched_concepts, match_id, start, end, matched_span
+        del matched_concepts, match_id, start, end, matched_span, highlighting
         
     else: 
         matched_output_list.append([ "NO ANNOTATION", list_of_posts[y] ])
@@ -181,14 +195,14 @@ del x, y, post, doc, doc_lemma, doc_lemma_stpwrd, matches
 matched_output_list_output = []
 
 for x,content in enumerate(matched_output_list):
-    if not_annotated:
+    
+    if output_format == "wtags":
+        if content[0] != "NO ANNOTATION": matched_output_list_output.append( "%s # %s" % (content[0],content[1]) )
+    elif output_format == "grep":
+        if content[0] != "NO ANNOTATION": matched_output_list_output.append(content[1])
+    elif output_format == "invertedgrep":
         if content[0] == "NO ANNOTATION": matched_output_list_output.append(content[1])
-    else:
-        if grep_format:
-            if content[0] != "NO ANNOTATION": matched_output_list_output.append(content[1])
-            
-        else:
-            if content[0] != "NO ANNOTATION": matched_output_list_output.append( "%s # %s" % (content[0],content[1]) )
+
 del x, content
 
 if not matched_output_list_output: matched_output_list_output.append("NO ANNOTATIONS") 
@@ -199,10 +213,6 @@ with open('%s.txt' % output_name, 'w') as t:
     for word in matched_output_list_output:
         t.write(word + '\n')
 del t,word
-
-#with open('test/catch_output.json', 'w') as j:
-#    json.dump(matched_output_dict_output, j, indent=4)
-#del j
 
 ####################################################
 
@@ -215,6 +225,8 @@ del t,word
 ####################################################
 
 if graph:
+    if not cm: cm = "Set3"
+    
     wc = WordCloud(
         width = 2048, height = 1080,
         
@@ -236,6 +248,17 @@ if graph:
     plt.tight_layout(pad = 0)
     plt.imshow(wc, interpolation="bilinear")
     plt.savefig('%s.png' % plot_output_name)
+
+####################################################
+
+if cyannotator:
+    html_content = "<html><body>"
+    html_content += "<br>".join(cyannotator)
+    html_content += "</body></html>"
+    
+    with open('%s.html' % cyannotator_output_name, 'w') as f:
+        f.write(html_content)
+    del f
 
 ####################################################
 

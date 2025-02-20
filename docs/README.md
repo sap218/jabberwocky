@@ -1,10 +1,10 @@
 An ontology is a knowledge representation framework that is machine readable.
-It facilitates logical relationships between classes and allows us to standardise the formalised vocabulary within this domain.
-The metadata contained within an ontology is valuable for research having shown to address the challenge presented by unstructured text.
+It facilitates logical relationships between classes and allows us to standardise the formalised vocabulary within a domain.
+The metadata contained within an ontology is valuable - research has shown to address the challenges presented by unstructured text.
 
 Unstructured text can be processed, mined, and empowered by NLP tools, yet majority of tools are not designed to consider ontologies.
 
-Jabberwocky allows users to easily manipulate ontologies with extraction and enhancements for conducting NLP tasks.
+Jabberwocky allows users to conduct various NLP tasks whilst easily manipulating tologies.
 Here provides an explanation - with a working example - for the Jabberwocky toolkit. 
 
 See the [Jabberwocky](https://github.com/sap218/jabberwocky) repository for code.
@@ -18,7 +18,7 @@ See the [Jabberwocky](https://github.com/sap218/jabberwocky) repository for code
 Extract metadata from ontology classes based on a list of tags.
 
 Users should use ontologies that are in the `OWL` RDF/XML syntax.
-(if not in this format, users can open ontology in [Protégé](https://protege.stanford.edu/) and export in correct format)
+(if not in this format, users can open their ontology in [Protégé](https://protege.stanford.edu/) and export in correct format)
 
 Metadata in ontologies are in various formats, below shows a list of tags as an example:
 ```
@@ -58,18 +58,21 @@ The corpus should be a `txt` with sentences/posts separated in new lines:
 This is post 1 in a corpus
 This is post 2
 
-This is post 3 - as you can see there is a gap between post 2 and 3
-This is post 4 - don't worry about extra whitespace as the code will drop "empty lines"
+This is post 3 - as you can see there is a gap between post 2 and 3, this is fine
+This is post 4 > users also don't need to worry about formatting, Jabberwocky will handle this'
 ```
 
 ##### Output
 `catch_output.txt` will include the posts that were annotated.
-Users can choose output type: `grep` format or w/ corresponding tags.
+Users can choose output types: perhaps only the posts annotated or w/ corresponding tags.
 
-Moreover, users can choose to export the posts that **weren't** annotated.
+Moreover, users can choose to export the posts that were **NOT** annotated.
 
 ##### Plotting
 Users can generate a wordcloud figure from the corpus.
+
+##### Highlighting
+Inspired by an old project - [cyannotator](https://github.com/sap218/cyannotator) - users can request an HTML output of posts with the annotations highlighted.
 
 ---
 
@@ -140,11 +143,14 @@ The other you decided to investigate if there is anything valuable in the posts 
 
 You can proceed to use `bite` - investigating if there are any "important" terms.
 The statistical TF-IDF method[^tfidf] is applied and all words are ranked in terms of importance.
+Here we can use the whole corpus, or perhaps use the `catch` output with the non-annotated posts.
 
-With this `bite` output, you may have noticed new synonyms...
+With whatever data we us, with the `bite` output, you may have noticed new terms/synonyms...
 You can use `arise` to update your ontology classes with these new synonyms.
 
-Finally, you may want to rerun `bandersnatch` to extract an updated list of key terms and then rerun `catch`.
+Finally, you may want to rerun `bandersnatch` to extract an updated list of key terms.
+Then we can rerun `catch` for a more fruitful output for our investigations.
+
 This concludes the NLP workflow: you noticed the 2nd round of `catch` provides more data and so a more fruitful downstream analysis.
 
 ---

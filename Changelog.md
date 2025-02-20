@@ -1,5 +1,7 @@
 # Changelog
 
+* **v3.1.1** [20/02/2025]
+    - highlighting script: HTML output of annotated posts with highlighted key terms
 * **v3.1.0** [19/06/2024]
     - plotting script for ontologies
 	- users can plot wordcloud without the need for annotations
