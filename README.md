@@ -22,18 +22,18 @@ When combining these Jabberwocky functions, users can create an NLP workflow.
 
 ## Running
 Within each directory, there is a file `params_*.py` which users can edit.
-This means users shouldn't need to edit the main/primary script.
+Meaning users shouldn't need to edit the main/primary script.
 
-Check the individual `READMEs` for parameter information.
+Check the individual directory `READMEs` for parameter information.
 
 #### Prerequisites
 Check [`requirements.py`](https://github.com/sap218/jabberwocky/blob/master/requirements.py) for a list of packages and versions.
 
-## Changelog
-Information on versions, see the [**Changelog**](https://github.com/sap218/jabberwocky/blob/master/changelog.md) (ordered by newest first).
+## Changelog / Version
+See the [**Changelog**](https://github.com/sap218/jabberwocky/blob/master/Changelog.md) (ordered by newest first).
 
-## Contributing
-Please read the [**Contributing Guidelines**](https://github.com/sap218/jabberwocky/blob/master/contributing.md).
+## Contributing / Issues
+Please read the [**Contributing Guidelines**](https://github.com/sap218/jabberwocky/blob/master/Contributing.md).
 
 - [@majensen](https://github.com/majensen) set up automated testing w/ `pytest` in v1.0 - see [pull request #13](https://github.com/sap218/jabberwocky/pull/13) for more details
 

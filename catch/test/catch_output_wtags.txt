@@ -5,5 +5,5 @@
 ['route'] # Anyone want a battle? I'm on route 13.
 ['route'] # I'll join but we should move to the meadow area near that route.
 ['route'] # Hey guys! Lake near route 7 I saw a Gyarados!
-['route', 'small'] # What route is best for small normal pokemon? My Skitty needs a friend.
+['small', 'route'] # What route is best for small normal pokemon? My Skitty needs a friend.
 ['route'] # Go to route 4, we're totally not on that path and we don't plan on catching your Skitty away from you.
