@@ -30,10 +30,10 @@ Check the individual directory `READMEs` for parameter information.
 Check [`requirements.py`](https://github.com/sap218/jabberwocky/blob/master/requirements.py) for a list of packages and versions.
 
 ## Changelog / Version
-See the [**Changelog**](https://github.com/sap218/jabberwocky/blob/master/changelog.md) (ordered by newest first).
+See the [**Changelog**](https://github.com/sap218/jabberwocky/blob/master/Changelog.md) (ordered by newest first).
 
 ## Contributing / Issues
-Please read the [**Contributing Guidelines**](https://github.com/sap218/jabberwocky/blob/master/contributing.md).
+Please read the [**Contributing Guidelines**](https://github.com/sap218/jabberwocky/blob/master/Contributing.md).
 
 - [@majensen](https://github.com/majensen) set up automated testing w/ `pytest` in v1.0 - see [pull request #13](https://github.com/sap218/jabberwocky/pull/13) for more details
 
