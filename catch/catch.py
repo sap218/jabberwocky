@@ -162,18 +162,20 @@ for post in list_of_posts:
     if matches:
         matched_concepts = set()
         highlighting = " ".join(doc_lemma_stpwrd).lower()
-        
+
+        cyaned = []
         for match_id, start, end in matches:
             matched_span = doc[start:end]
             matched_concepts.add(matched_span.text)
             
             highlighting = re.sub(r'\b%s\b' % re.escape(matched_span.text),
                                       (colours[0] + matched_span.text + colours[1]), highlighting)
-            cyannotator.append(highlighting)
+            cyaned.append(highlighting)
+        cyannotator.append(cyaned[-1])
             
         matched_output_list.append([ list(matched_concepts), list_of_posts[y] ])
         
-        del matched_concepts, match_id, start, end, matched_span, highlighting
+        del matched_concepts, match_id, start, end, matched_span, highlighting, cyaned
         
     else: 
         matched_output_list.append([ "NO ANNOTATION", list_of_posts[y] ])
