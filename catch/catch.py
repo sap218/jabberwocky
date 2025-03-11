@@ -199,7 +199,7 @@ matched_output_list_output = []
 for x,content in enumerate(matched_output_list):
     
     if output_format == "wtags":
-        if content[0] != "NO ANNOTATION": matched_output_list_output.append( "%s # %s" % (content[0],content[1]) )
+        if content[0] != "NO ANNOTATION": matched_output_list_output.append( "%s # %s" % (sorted(content[0]),content[1]) )
     elif output_format == "grep":
         if content[0] != "NO ANNOTATION": matched_output_list_output.append(content[1])
     elif output_format == "invertedgrep":
