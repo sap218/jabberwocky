@@ -1,24 +1,32 @@
 # UI ---------
 
-library(shinythemes)
+library(shinythemes) # theme
+library(colourpicker) # cyan
 
 ui <- fluidPage(
-  theme = shinytheme("paper"), # list of nice themes: cosmo, flatly, paper, yeti
+  theme = shinytheme("cosmo"), # list of nice themes: cosmo, flatly, paper, yeti
   
   titlePanel("Jabberwocky"),
   
   fluidRow(
-    column(2,
+    column(3,
            helpText("Data"),
+      
+           #textInput("corpus", "Corpus"),
+           fileInput("corpus", "Upload corpus", accept = ".txt"),
            
-           # Data filtering parameters ----
-           sliderInput(inputId="rangeage", label="Age range:",
-                       value=c(0,100),
-                       min=0, max=100)
+           #textInput("annotation_file", "Annotation file"),
+           #fileInput("corpus", "Upload corpus", accept = ".txt"),
            
-    ), # end of col2 (left panel)
+           # selectInput("filter_level", "Stopword filtering", c("light","heavy")),
+           radioButtons("filter_level", "Stopword filtering", c("light","heavy")),
+           radioButtons("output_format", "Output format", c("wtags","grep","invertedgrep")),
+
+           #output_name, stats_output_name, plot_output_name, cyannotator_output_name
+           
+    ), # end of left panel
     
-    column(10,
+    column(9,
 
            navbarPage("Navigation",
                       
@@ -27,20 +35,23 @@ ui <- fluidPage(
                                  position = "right",
                                  sidebarPanel(
                                    helpText("Features"),
-                                   textInput(inputId="xaxis", label="Feature (x):", placeholder="AGE"),    
-                                   textInput(inputId="yaxis", label="Feature (y):", placeholder="HEIGHT"), 
-                                 ),
+                                   radioButtons("cm", "Wordcloud scheme", c("Set3","viridis")),
+                                   colourInput("highlightcolour", "Highlighter", value="#00bcd4")
+                                 ), # end of right panel
+                                 
                                  mainPanel(
-                                   plotOutput("exampleplot")
+                                   
+                                   #textOutput("whatFile")
+                                   verbatimTextOutput("fileContent")
+                                   
                                  ) # end of main panel
                                ) # end of panel layout
-                      ), # end of numeric panel
+                      )#, # end of numeric panel
                       
-                      
-                      tabPanel("Other panel",
-                      ) # end of other tab panel
+                      # tabPanel("Other panel",
+                      # ) # end of other tab panel
                       
            ) # end of navbar
-    ) # end of col10 (centre panel)
+    ) # end of centre panel
   ) # end of fluid rows
 ) # end of fluid page
