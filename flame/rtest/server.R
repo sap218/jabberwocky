@@ -1,4 +1,4 @@
-# SERVER ---------
+# Server ------------------------------------------------------------------
 
 server <- function(input, output) {
 
@@ -8,7 +8,7 @@ server <- function(input, output) {
   testcorpus <- "../../catch/test/social_media_posts.txt"
   
   reactiveFile <- reactive({
-    if (is.null(input$corpus)) {
+    if (is.null(input$corpus)) { # if NULL, use test data
       return(testcorpus)
     } else {
       return(input$corpus$datapath)
@@ -17,15 +17,18 @@ server <- function(input, output) {
   
   # output$whatFile <- renderText({
   #   reactiveFile()
-  # })
-  
-  # Render data for user to see
-  output$fileContent <- renderPrint({
+  # }) # this was the script to show filepath
+
+  output$fileContent <- renderText({
     corpus <- reactiveFile()
-    file_lines <- readLines(corpus, n=3)
-    file_lines # print
+    file_content <- readLines(corpus)
+    paste(file_content, collapse="\n")
   })
 
 # Next Section ------------------------------------------------------------
-  
-} # end of server
+ 
+#
+
+# End ---------------------------------------------------------------------
+
+}

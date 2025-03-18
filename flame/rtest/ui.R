@@ -1,4 +1,4 @@
-# UI ---------
+# UI ----------------------------------------------------------------------
 
 library(shinythemes) # theme
 library(colourpicker) # cyan
@@ -30,7 +30,7 @@ ui <- fluidPage(
 
            navbarPage("Navigation",
                       
-                      tabPanel("Numerical",
+                      tabPanel("Corpus",
                                sidebarLayout(
                                  position = "right",
                                  sidebarPanel(
@@ -42,16 +42,26 @@ ui <- fluidPage(
                                  mainPanel(
                                    
                                    #textOutput("whatFile")
-                                   verbatimTextOutput("fileContent")
+                                   #verbatimTextOutput("fileContent")
+                                   
+                                   tags$div(
+                                     style="max-height:200px; overflow-y:scroll; border:0.5px solid #ccc; padding:0px;",
+                                     verbatimTextOutput("fileContent")
+                                   )
                                    
                                  ) # end of main panel
                                ) # end of panel layout
-                      )#, # end of numeric panel
+                      )#, # end panel
                       
+# Next Section ------------------------------------------------------------
+
                       # tabPanel("Other panel",
-                      # ) # end of other tab panel
+                      # ) # end panel
                       
            ) # end of navbar
     ) # end of centre panel
   ) # end of fluid rows
-) # end of fluid page
+  
+# End ---------------------------------------------------------------------
+
+)
