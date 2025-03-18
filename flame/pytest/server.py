@@ -1,42 +1,36 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Mar 11 22:43:20 2025
+@date: 2025
+@author: Samantha C Pendleton
+@description: shiny dashboard
+@GitHub: github.com/sap218/jabberwocky
 
-@author: Sam
+@useful links:
+    # https://shiny.posit.co/py/docs/overview.html
 """
 
-'''
-from shiny import App, ui, render_text
+# server.py
+import shiny
+from shiny import reactive, render
 
-# Define server logic
 def server(input, output, session):
-    # Define what text should be rendered in the output
+    
+    # Default test file
+    testcorpus = "../../catch/test/social_media_posts.txt"
+    
+    # Reactive file input
+    @reactive.Calc
+    def reactiveFile():
+        if input.corpus() is None:  # if NULL, use test data
+            return testcorpus
+        else:
+            return input.corpus().datapath
+    
+    # Render file content
     @output
-    @render_text
-    def text_output():
-        return "Welcome to your first Shiny dashboard in Python!"
-'''
-
-'''
-from shiny import render_text
-
-# Define server logic
-def server(input, output, session):
-    # Render text in the UI
-    @output
-    @render_text
-    def text_output():
-        return "Welcome to your first Shiny dashboard in Python!"
-'''
-
-from shiny import render_text
-
-# Define server logic
-def server(input, output, session):
-    # The @output decorator links the function to the UI component
-    # The @render_text decorator makes the function return text output dynamically
-    @output
-    @render_text
-    def text_output():
-        return "Welcome to your first Shiny dashboard in Python!"
-
+    @render.text
+    def fileContent():
+        corpus = reactiveFile()
+        with open(corpus, 'r') as file:
+            file_content = file.readlines()
+        return ''.join(file_content)

@@ -10,30 +10,18 @@
     # https://shiny.posit.co/py/docs/overview.html
 """
 
-import threading
+# app.py
+import shiny
+from ui import ui  # Import the ui function from ui.py
+from server import server  # Import the server function from server.py
 
-from shiny import App, ui, render_text
+# Create the app by passing the imported ui and server functions
+app = shiny.App(ui=ui, server=server)
 
-from ui import app_ui
-
-from server import server
-
-####################################################
-
-
-# Create the Shiny app
-app = App(app_ui, server)
-
-####################################################
-
-# Function to run the app in a separate thread
-def run_app():
-    app.run(port=8050)
-
-# Run the app in a separate thread
+# Run the app
 if __name__ == "__main__":
-    threading.Thread(target=run_app).start()
-
+    app.run()
+    #shiny.jupyter.run(app) 
 
 ####################################################
 

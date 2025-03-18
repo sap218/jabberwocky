@@ -12,11 +12,8 @@ ui <- fluidPage(
     column(3,
            helpText("Data"),
       
-           #textInput("corpus", "Corpus"),
            fileInput("corpus", "Upload corpus", accept = ".txt"),
-           
-           #textInput("annotation_file", "Annotation file"),
-           #fileInput("corpus", "Upload corpus", accept = ".txt"),
+           fileInput("concepts", "Upload words of interest", accept = ".txt"),
            
            # selectInput("filter_level", "Stopword filtering", c("light","heavy")),
            radioButtons("filter_level", "Stopword filtering", c("light","heavy")),
@@ -30,7 +27,7 @@ ui <- fluidPage(
 
            navbarPage("Navigation",
                       
-                      tabPanel("Corpus",
+                      tabPanel("Data",
                                sidebarLayout(
                                  position = "right",
                                  sidebarPanel(
@@ -42,11 +39,19 @@ ui <- fluidPage(
                                  mainPanel(
                                    
                                    #textOutput("whatFile")
-                                   #verbatimTextOutput("fileContent")
                                    
+                                   h4("Corpus"),
                                    tags$div(
                                      style="max-height:200px; overflow-y:scroll; border:0.5px solid #ccc; padding:0px;",
-                                     verbatimTextOutput("fileContent")
+                                     verbatimTextOutput("corpusContent")
+                                   ),
+                                   
+                                   br(),
+                                   
+                                   h4("Words of interest"),
+                                   tags$div(
+                                     style="max-height:200px; overflow-y:scroll; border:0.5px solid #ccc; padding:0px;",
+                                     verbatimTextOutput("conceptsContent")
                                    )
                                    
                                  ) # end of main panel
