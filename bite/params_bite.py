@@ -19,7 +19,7 @@ is_this_a_test = True
 if is_this_a_test:
     corpus = "../catch/test/catch_output_invert"
     concepts_to_remove = "../bandersnatch/test/snatch_output"
-    filter_level = "light" # "heavy"
+    filter_level = "light" # or "none" or "heavy"
     ngram_count = [1,3]
     graph = True   
     cm = "mediumseagreen"

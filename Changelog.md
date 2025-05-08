@@ -1,5 +1,7 @@
 # Changelog
 
+* **v3.2.0** [08/05/2025]
+    - cleaning up code, no longer required to use a list of stop words, log files included
 * **v3.1.1** [20/02/2025]
     - highlighting script: HTML output of annotated posts with highlighted key terms
 * **v3.1.0** [19/06/2024]
