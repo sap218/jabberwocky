@@ -1,45 +1,43 @@
 # Contributing Guidelines / Issues for Jabberwocky :dragon_face:
 
-* Users are welcome to contribute work to this project and encouraged to create an [`Issue`](https://github.com/sap218/jabberwocky/issues).
-* In either circumstance, please ensure titles/descriptions have as much information as possible, e.g. if creating a Bug Issue, try and trace your steps w/ details & error messages.
+* Users are welcome to contribute to this project via pull requests or bug reporting.
+* In either circumstance, please ensure titles/descriptions have as much information as possible, e.g. if creating a Bug/Issue, try and trace your steps w/ details & error messages.
 * The primary maintainer(s) - currently [@sap218](https://github.com/sap218) - will address the request!
-* Maintainers will always try their best to meet the needs of the user but also considering what is best for **Jabberwocky**
+* Maintainers will always try their best to meet the needs of the user but also considering what is best for **Jabberwocky**.
 
 ## Contributing Code
-* Users intending to contribute to this repository can open a **Pull request**
-* Frequent contributors will be added to a contributors list for thanks and acknowledgement
-* **Note**: as much information as possible is desired including code having comments (w/ username to acknowledge contribution), e.g.
+* Users intending to contribute to this repository can open a **Pull request**.
+* Frequent contributors will be added to a contributors list for thanks and acknowledgement.
+* **Note**: please provide information (e.g. decisions) and plenty of comments (w/ username to acknowledge contribution), e.g.
 
 ```
-print("hello world") # example comment as a reference - @yourusername
+print(f"Error message: {errmsg}") # print error message (example comment) for reference - @yourusername
 ``` 
 
 ## Issues
-* Please don't hesitate to create an **Issue**
-* Issues can relate to anything: error reporting, feature request, or questions for help, e.g.
-* If the `README` isn't clear, please do report this - I encourage suggestions!
+* Users are encouraged to create an [`Issue`](https://github.com/sap218/jabberwocky/issues).
+* Issues can relate to anything: bug/error reporting, feature requests, help questions, to improve documentation, etc.
 * Issues will be labelled accordingly - see below for [`label`](https://github.com/sap218/jabberwocky/labels) information:
 
 #### bug
-* error reporting - any user problems will be tagged with `bug`
+* if any errors arrise
 
 #### documentation
-* pertains to Issues that relate to documentation, e.g. a request to expand/clarify a point in the `README`
+* if the guides need more information
 
 #### duplicate
-* although a question may have been asked before, don't hesitate to ask anyway - this Issue will be labelled as `duplicate` and reference the solved/closed Issue
+* if the ticket already exists
 
 #### help
-* can cover a wide range of Issues - from generic or specific code-related Qs
+* if the user is asking for help (not relating to other tags)
 
 #### request
-* this label highlights a user's request
+* if a new feature is being requested
 
 #### wontfix
-* there may be circumstances that an Issue *shouldn't* be fixed
-* for example, a user might run into a particular bug but a fix wouldn't make sense for Jabberwocky's scope
-* the maintainer(s) will comment why this label is applied, giving users some time (perhaps to rebuttal) before closing the Issue
-* any other help will be provided (e.g. linking to a different tool)
+* there may be circumstances that an Issue *won't* or *shouldn't* be fixed
+* for example, some behaviours may be intentional, or a fix isn't in scope
+* the maintainer will help as much as possible and comment why this label is applied, giving users time to respond
 
 ***
 
