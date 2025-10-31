@@ -11,15 +11,15 @@
 """
 
 import re
+import contractions
 
 import spacy
 nlp = spacy.load("en_core_web_sm")
 
 def cleantext(post):
+    post = contractions.fix(post)
     post = re.sub(' +', ' ', post) # double spaces
-    post = re.sub("[^A-Za-z0-9']+", " ", post).replace("'", " ").strip() # ""?
-    ##post = re.sub("[^A-Za-z0-9']+", " ", post).replace("'", "").strip()
-    #post = post.replace(" ", "")
+    post = re.sub("[^A-Za-z0-9']+", " ", post).replace("'", " ").strip() # consider "
     return post
 
 ####################################################

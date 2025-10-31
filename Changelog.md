@@ -1,5 +1,7 @@
 # Changelog
 
+* **v3.3.0** [31/10/2025]
+    - now includes word contractions
 * **v3.2.0** [08/05/2025]
     - cleaning up code, no longer required to use a list of stop words, log files included
 * **v3.1.1** [20/02/2025]
