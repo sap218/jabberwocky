@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 @date: 2024
-@author: Samantha C Pendleton
+@author: Samantha Pendleton
 @description: high-level variables
 @GitHub: github.com/sap218/jabberwocky
 
@@ -16,10 +16,14 @@ import contractions
 import spacy
 nlp = spacy.load("en_core_web_sm")
 
-def cleantext(post):
+from spacy.tokens import Token
+Token.set_extension("force_lemma", getter=lambda token: token._.inflect("VB") or token.text)
+
+def cleantext(post):   
     post = contractions.fix(post)
-    post = re.sub(' +', ' ', post) # double spaces
-    post = re.sub("[^A-Za-z0-9']+", " ", post).replace("'", " ").strip() # consider "
+    post = post.replace("'", "")
+    post = re.sub("[^a-z0-9]+", " ", post)  # keep letters/numbers only
+    post = re.sub(' +', ' ', post).strip()
     return post
 
 ####################################################
@@ -38,11 +42,20 @@ def remove_stop_words(text, stopWordsList):
 
 def clean_lower_lemma(iteration, itype, stopWordsList):
     iteration = cleantext(iteration.lower())
-    doc = nlp(iteration)
+    #doc = nlp(iteration, disable=["tagger", "parser", "ner"])
+    doc = nlp(iteration, disable=["parser", "ner"])
+    with doc.retokenize() as retokenizer:
+        for token in doc: token.tag_ = "NN"
     
     if itype == "stopwords":
         doc_lemma = " ".join([token.lemma_.lower() for token in doc])
-    elif itype == "text":
+    elif itype == "corpus":
+        doc_lemma = [token.lemma_.lower() for token in doc]
+        doc_lemma_stopwords = [remove_stop_words(text, stopWordsList) for text in doc_lemma]
+        doc_lemma_stopwords_filter = list(filter(None, doc_lemma_stopwords))
+        doc_lemma = doc_lemma_stopwords_filter.copy()
+    elif itype == "wordsInterest":
+        doc_lemma = [token.text.lower() for token in doc]
         doc_lemma = [token.lemma_.lower() for token in doc]
         doc_lemma_stopwords = [remove_stop_words(text, stopWordsList) for text in doc_lemma]
         doc_lemma_stopwords_filter = list(filter(None, doc_lemma_stopwords))

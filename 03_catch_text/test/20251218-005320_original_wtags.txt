@@ -1,0 +1,12 @@
+['sun'] | The Sun is extra bright today!
+['sun'] | NO NO even if you forgot sunglasses you shouldn't look at the sun directly!
+['saturn'] | anyone got a telescope spare? I want to check out Saturn
+['mar', 'red planet'] | is it venus or mars that is known as the red planet?
+['orion belt'] | on a good night - or without light pollution - you could try looking at orions belt
+['sun'] | Still crazy that the sun orbits our world.
+['sun'] | Actually the earth orbits the sun!
+['sol', 'sun'] | I did! the sun is also called Sol!
+['sun'] | Is the sun yelling or are those flares crazy today? #joke
+['saturn'] | Saturn has more rings than i do
+['mar'] | Well I did just watch the movie, Mars attack
+['star'] | stars are pretty tonight!

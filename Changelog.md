@@ -1,5 +1,7 @@
 # Changelog
 
+* **v4** [XX/12/2025]
+    - logging, can convert `excel` to `owl`, new testing files
 * **v3.3.0** [31/10/2025]
     - now includes word contractions
 * **v3.2.0** [08/05/2025]

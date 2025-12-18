@@ -1,7 +1,0 @@
-is this a test: True
-stopword filter level: light
-concepts count: 13
-post count: 26
-average word count: 12.076923076923077
-time taken to annotate (seconds): 0.09
-time taken to run script (seconds): 4.55

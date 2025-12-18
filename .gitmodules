@@ -1,0 +1,3 @@
+[submodule "test/CelestialObject"]
+	path = test/CelestialObject
+	url = https://github.com/sap218/CelestialObject.git
