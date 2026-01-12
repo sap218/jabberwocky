@@ -25,13 +25,16 @@ from params_gimble import *
 
 if is_this_a_test:
     dir_output = "test/"
-    excel_file_location = "../test/CelestialObject/excel/"
+    #excel_file_location = "../test/CelestialObject/excel/"
+    excel_file = "../test/CelestialObject/excel/space.xlsx"
 
     the_name = "space"
    
-    git_uid = "sap218"
-    git_repo = "CelestialObject"
-    namespace = f"https://github.com/{git_uid}/{git_repo}/blob/master/{the_name}.owl"
+    #git_uid = "sap218"
+    #git_repo = "CelestialObject"
+    #namespace = f"https://github.com/{git_uid}/{git_repo}/blob/master/{the_name}.owl"
+    git_uid_repo = "sap218/CelestialObject"
+    namespace = f"https://raw.githubusercontent.com/{git_uid_repo}/main/{the_name}.owl"
     
     iri_prefix = "UFO"
     ontology_description = "A brief ontology capturing concepts in our solar system."
@@ -54,13 +57,12 @@ else:
     cols_for_metadata = list(defined_annotations)
     cols_to_subset.extend(cols_for_metadata)
 
-
 ####################################################
 
 # Logging
 
 logging.basicConfig(
-    filename=f"{dir_output}{start_timestamp}_{the_name}.log",
+    filename=f"{dir_output}{start_timestamp}.log",
     encoding="utf-8",
     filemode="a",
     format="{asctime} - {levelname} - {message}",
@@ -83,10 +85,12 @@ if is_this_a_test: logging.warning("THIS IS A TEST")
 # Excel
 
 try:
-    xls = pd.ExcelFile(f"{excel_file_location}{the_name}.xlsx")
+    xls = pd.ExcelFile(excel_file)
     logging.info("Sucessfully imported excel file")
 except:
-    logging.critical("Cannot find excel file")
+    logging.critical(f"Cannot find excel file - check this:\t{excel_file}")
+    if not excel_file.endswith(".xlsx"):
+        logging.critical("Seems like the the excel file does not end with .xlsx")
     sys.exit(1)
     
 
@@ -113,7 +117,8 @@ o.bind(f"{iri_prefix}", ufo) # binding to prefixes (so they show up in the RDF o
 o.add((URIRef(namespace), RDF.type, OWL.Ontology))
 o.add((URIRef(namespace), RDFS.label, Literal("%s ontology (%s)" % (the_name.capitalize(), iri_prefix.upper()) )))
 o.add((URIRef(namespace), RDFS.comment, Literal(f"{ontology_description}")))
-o.add((URIRef(namespace), RDFS.seeAlso, URIRef(f"https://github.com/{git_uid}/{git_repo}")))
+#o.add((URIRef(namespace), RDFS.seeAlso, URIRef(f"https://github.com/{git_uid}/{git_repo}")))
+o.add((URIRef(namespace), RDFS.seeAlso, URIRef(f"https://github.com/{git_uid_repo}")))
 
 #o.add((URIRef(namespace), URIRef(namespace+"#version"), Literal(f"{version}")))
 #o.add((URIRef(namespace), URIRef(w3+"version"), Literal(f"{version}")))
@@ -157,6 +162,7 @@ iri = 0
 
 #superclass = domains[0]
 #superclass = domains[1]
+#superclass = domains[3]
 
 for superclass in domains:
 
@@ -181,7 +187,6 @@ for superclass in domains:
     
     classes = list(set(df["class"]))
     
-    
     for classs in classes:
         
         class_iri = get_next_iri()
@@ -193,7 +198,6 @@ for superclass in domains:
         df_filtered = df[df["class"] == classs]
         
         if len(df_filtered) == 1: # for classes only
-        
             
             if "subclass" in list(df_filtered): # if class exists but no subclass
                 
@@ -229,8 +233,8 @@ for superclass in domains:
                                     o.add((subclass_defined, defined_annotations[col], Literal(item) ))
                             else:
                                 o.add((class_defined, defined_annotations[col], Literal(list(df_filtered[col])[0]) ))
-
-
+    
+    
             else: # for tabs with only class 
                 
                 for col in cols_for_metadata:
@@ -244,17 +248,22 @@ for superclass in domains:
                                 o.add((class_defined, defined_annotations[col], Literal(item) ))
                         else:
                             o.add((class_defined, defined_annotations[col], Literal(list(df_filtered[col])[0]) ))
-
-            
-        else: # for multiple subclasses per class
+    
         
+        else: # for multiple subclasses per class
+            
             for index, row in df_filtered.iterrows():
                 row = dict(row)
                 
+                #print(classs, class_iri)
+                subclasss = row["subclass"]
+                
                 subclass_iri = get_next_iri()
+                #print(subclasss, subclass_iri)
                 subclass_defined = ufo[subclass_iri]
                 o.add((subclass_defined, RDF.type, OWL.Class))
-                o.add((subclass_defined, RDFS.label, Literal(row["subclass"], lang="en")))
+                #o.add((subclass_defined, RDFS.label, Literal(row["subclass"], lang="en")))
+                o.add((subclass_defined, RDFS.label, Literal(subclasss, lang="en")))
                 o.add((subclass_defined, RDFS.subClassOf, class_defined))
                 
                 for col in cols_for_metadata:
@@ -267,8 +276,8 @@ for superclass in domains:
                             for item in items:
                                 o.add((subclass_defined, defined_annotations[col], Literal(item) ))
                         else:
-                            o.add((class_defined, defined_annotations[col], Literal(row[col]) ))
-        
+                            o.add((subclass_defined, defined_annotations[col], Literal(row[col]) ))
+    
     #
     # end tab here
     # 
@@ -291,7 +300,7 @@ logging.info(f"A total of {iri} concepts created")
 logging.info(f"Exported: {dir_output}{the_name}.owl")
 
 del xls, start_timestamp
-del git_uid, git_repo
+del git_uid_repo#, git_uid, git_repo
 del ontology_description, developers, contributors, version, licensed
 
 ####################################################

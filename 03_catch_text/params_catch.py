@@ -22,27 +22,26 @@ dir_output = "output/"
 
 files_location = "input/"
 
-stopWord_filter_level = "" # "light" or "heavy" or "none"
+#########################
+
+stopWord_filter_level = "" 
 
 file_corpus = ""
 
 plotWORDCLOUD = True
-if plotWORDCLOUD:
-    plotWORDCLOUDcolormap = ""
+if plotWORDCLOUD:  plotWORDCLOUDcolormap = ""
 
-stop_here = True # If True, user does not need to proceed with the rest of this
-stop_here = False # If False, user should provide the rest of the parameters
+stop_here = False 
 
 #########################
 
 file_words_of_interest = ""
 
-output_format = "" # ["wtags","grep","invertedgrep"]
-output_style = "" # original formatted
+output_format = "" 
+output_style = "" 
 
 plotCYANNOTATOR = True
-if plotCYANNOTATOR:
-    plotCYANNOTATORhighlightcolour = "" 
+if plotCYANNOTATOR:  plotCYANNOTATORhighlightcolour = "" 
 
 ####################################################
 

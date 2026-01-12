@@ -1,4 +1,24 @@
-# README - `bite` 
+# `rank terms` - `bite`
+
+
+
+### `is_this_a_test`
++ set to `True` to run the test, see `test/` for results
+
+***
+
+### `dir_output`
++ any outputs will be stored here (including logs)
++ suggested to use `output/` but users are welcome to create their own dir
+
+### `files_location`
++ location of your input files, e.g. `input/`
+
+***
+
+
+
+
 
 ## `corpus`
 - file with each post/sentence on a new line

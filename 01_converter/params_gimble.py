@@ -20,22 +20,25 @@ is_this_a_test = True
 
 dir_output = "output/"
 
-excel_file_location = "input/" # example
+#########################
 
-the_name = "" # the name of the excel file/your ontology
+excel_file = ""
 
-git_uid = "" # username where repository is stored
-git_repo = "" # repo where ontology is stored
+the_name = "" 
 
-# no need to edit this
-namespace = f"https://github.com/{git_uid}/{git_repo}/blob/master/{the_name}.owl"
+git_uid_repo = ""
 
-iri_prefix = "" # IRI of ontology, e.g. for space we used UFO
+# DO NOT EDIT NAMESPACE
+namespace = f"https://raw.githubusercontent.com/{git_uid_repo}/main/{the_name}.owl"
+
+iri_prefix = "" 
 ontology_description = ""
 developers = []
 contributors = []
-version = "" # e.g. v1.0
-licensed = "https://creativecommons.org/licenses/by-nc/4.0/" # a common license
+version = "" 
+licensed = "https://creativecommons.org/licenses/by-nc/4.0/" 
+
+#########################
 
 defined_annotations = {
     "synonym": f"{namespace}#hasSynonym",

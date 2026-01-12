@@ -16,15 +16,15 @@
 
 is_this_a_test = True
 
-####################################################
+#########################
 
 dir_output = "output/"
 
-files_location = "input/"
+#########################
 
-ontology_name = ""
+ontology_file = ""
 
-ontology_tags_name = "ontology_tags"
+ontology_tags_file = ""
 
 classes_of_interest = ""
 

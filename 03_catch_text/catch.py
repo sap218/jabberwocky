@@ -283,6 +283,7 @@ for post in list_of_posts_lemma_stpwrd:
             "NO ANNOTATION", list_of_posts[y],
             " ".join(list_of_posts_lemma_stpwrd[y]) if list_of_posts_lemma_stpwrd[y] else "",
             ])
+        cyannotator_text.append(post)
     
     y = y + 1
 

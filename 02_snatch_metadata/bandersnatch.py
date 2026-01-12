@@ -22,11 +22,11 @@ from params_snatch import *
 
 if is_this_a_test:
     dir_output = "test/"
-    files_location = "../test/CelestialObject/"
-    ontology_name = "space"
-    ontology_tags_name = "../../02_snatch_metadata/test/ontology_tags"
+    ontology_filepath = "../test/CelestialObject/space.owl"
     
-    classes_of_interest = "../../02_snatch_metadata/test/classes_of_interest"
+    ontology_tags_file = "../test/CelestialObject/corpus/ontology_tags.txt"
+    
+    classes_of_interest = "../test/CelestialObject/corpus/classes_of_interest.txt"
     #classes_of_interest = ""
 
 #########################
@@ -34,7 +34,7 @@ if is_this_a_test:
 # Logging
 
 logging.basicConfig(
-    filename=f"{dir_output}{start_timestamp}_{ontology_name}.log",
+    filename=f"{dir_output}{start_timestamp}.log",
     encoding="utf-8",
     filemode="a",
     format="{asctime} - {levelname} - {message}",
@@ -43,7 +43,7 @@ logging.basicConfig(
     level=logging.INFO,
     force=True
     )
-logging.info(f"Starting script for snatching metadata from the {ontology_name} ontology")
+logging.info(f"Starting script for snatching metadata from {ontology_file}")
 
 if is_this_a_test: logging.warning("THIS IS A TEST")
 
@@ -52,24 +52,28 @@ if is_this_a_test: logging.warning("THIS IS A TEST")
 # Ontology files
 
 try:
-    with open(f"{files_location}{ontology_name}.owl", "rt") as o:
+    with open(ontology_filepath, "rt") as o:
         ontology_file = o.read()  
     ontology_soup = BeautifulSoup(ontology_file,'xml') # BEAUTIFUL SOUP really is beautiful
     del o, ontology_file
     logging.info("Sucessfully imported ontology file")
 except:
-    logging.critical("Cannot find ontology file")
+    logging.critical(f"Cannot find ontology file - check this:\t{ontology_filepath}")
+    if not ontology_filepath.endswith(".owl"):
+        logging.critical("Seems like the the ontology file does not end with .owl")
     sys.exit(1)
 
 try:
     annotation_tags = []
-    with open(f"{files_location}{ontology_tags_name}.txt", "r") as t:
+    with open(ontology_tags_file, "r") as t:
         for tag in t:
             annotation_tags.append(tag.strip("\n"))
     del tag, t
     logging.info("Sucessfully imported ontology tags file")
 except:
-    logging.critical("Cannot find ontology tags file")
+    logging.critical(f"Cannot find ontology tags file - check this:\t{ontology_tags_file}")
+    if not ontology_tags_file.endswith(".txt"):
+        logging.critical("Seems like the the ontology tags file does not end with .txt")
     sys.exit(1)    
 if len(annotation_tags) == 0:
     logging.critical("Ontology tags file has no entries")
@@ -81,6 +85,7 @@ if len(annotation_tags) == 0:
 
 find_all_concepts = ontology_soup.find_all('owl:Class') # this finds all concepts in the ontology
 classes_and_annotations = {}
+
 for concept in find_all_concepts:
     label = concept.find("rdfs:label").get_text() # gets label for concept
     list_annotations = []
@@ -98,7 +103,7 @@ del find_all_concepts, flatten, label, list_annotations, finding_tags, tag_forma
 if len(classes_of_interest) > 0:
     try:
         words_of_interest = []
-        with open(f"{files_location}{classes_of_interest}.txt", "r") as t:
+        with open(classes_of_interest, "r") as t:
             for word in t:
                 words_of_interest.append(word.strip("\n").strip(" "))
         del t, word
@@ -109,7 +114,9 @@ if len(classes_of_interest) > 0:
             logging.warning("Classes of interest is an empty file")
         
     except FileNotFoundError:
-        logging.critical("Cannot find classes of interest file")
+        logging.critical(f"Cannot find classes of interest file - check this:\t{classes_of_interest}")
+        if not classes_of_interest.endswith(".txt"):
+            logging.critical("Seems like the the classes of interest file does not end with .txt")
         sys.exit(1)  
 
 else:

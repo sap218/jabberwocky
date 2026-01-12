@@ -3,21 +3,19 @@
 ### `is_this_a_test`
 + set to `True` to run the test, see `test/` for results
 
+***
+
 ### `dir_output`
 + any outputs will be stored here (including logs)
 + suggested to use `output/` but users are welcome to create their own dir
 
-### `files_location`
-+ location of your input files, e.g. `input/`
-
 ***
 
-### `ontology_name`
-+ the name of the ontology
-+ users don't need to include `xlsx / owl`
+### `ontology_file`
++ the name of the `.owl` ontology, users should include filepath
 
-### `ontology_tags`
-+ newline delimited (`.txt`) file of ontology tags to determine the metadata to `snatch`, e.g. `ufo:hasSynonym`:
+### `ontology_tags_file`
++ newline delimited (`.txt`) file of ontology tags to determine which metadata to `snatch`, e.g. `UFO:hasSynonym`:
 
 ```
   <owl:Class rdf:about="https://github.com/sap218/CelestialObject/blob/master/space.owl#UFO_0013">
