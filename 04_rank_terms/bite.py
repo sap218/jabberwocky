@@ -10,175 +10,215 @@
     # https://python-charts.com/matplotlib/styles/
 """
 
-import sys
-import re
-import time
-import pandas as pd
-import matplotlib.pyplot as plt
+from datetime import datetime
+start_timestamp = datetime.today().strftime('%Y%m%d-%H%M%S')
 
+import logging
+import sys
+import time
+
+from nltk import ngrams
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import MinMaxScaler
 
-import spacy
-nlp = spacy.load("en_core_web_sm")
+import pandas as pd
+import matplotlib.pyplot as plt
 
-from nltk import ngrams
+#########################
 
 from params_bite import *
 
-####################################################
+if is_this_a_test:
+    dir_output = "test/"
+    stopWord_filter_level = "heavy"
+    file_concepts_to_remove = "../02_snatch_metadata/test/20260114-230425_allClasses.txt"
+    file_corpus = "../03_catch_text/test/20260114-231442_original_invertedgrep.txt"    
+    ngram_count = [1,3]
+    plotTFIDF = True
+    plotTFIDFlimit = 30
+    plotTFIDFcolormap = "mediumseagreen"
+
+#########################
+
+# Logging
+
+logging.basicConfig(
+    filename=f"{dir_output}{start_timestamp}.log",
+    encoding="utf-8",
+    filemode="a",
+    format="{asctime} - {levelname} - {message}",
+    style="{",
+    datefmt="%Y-%m-%d %H:%M",
+    level=logging.INFO,
+    force=True
+    )
+logging.info("Starting script for ranking terms (TF-IDF)")
+
+if is_this_a_test: logging.warning("THIS IS A TEST")
+
+#########################
 
 from highlevel import *
 
-''' stopWords '''
-if filter_level == "none": stopWords = stopWords[0]
-elif filter_level == "light": stopWords = stopWords[1]
-elif filter_level == "heavy": stopWords = stopWords[2]
-
-#stopWords = [cleantext(x.lower()) for x in stopWords]
+# stopWords 
+if stopWord_filter_level == "none": stopWords = stopWords[0]
+elif stopWord_filter_level == "light": stopWords = stopWords[1]
+elif stopWord_filter_level == "heavy": stopWords = stopWords[2]
+else:
+    logging.critical(f"Input for stopWord_filter_level:\t[{stopWord_filter_level}],\tplease choose a valid option")
+    sys.exit(1)
 
 stopWords_lemma = []
+stopWordsList = []
+
 for word in stopWords:
-    word = cleantext(word.lower())
-    doc = nlp(word)
-    doc_lemma = " ".join([token.lemma_ for token in doc])
-    stopWords_lemma.append(doc_lemma)
-stopWords_lemma_filt = list(filter(None, stopWords_lemma))
-stopWords_lemma_filt_flat = [word for phrase in stopWords_lemma_filt for word in phrase.split()]
+    stopWords_lemma.append(clean_lower_lemma(word, "stopwords", stopWordsList))
 
-stopWords = list(set(stopWords_lemma_filt_flat))
-del word, doc, doc_lemma, stopWords_lemma, stopWords_lemma_filt, stopWords_lemma_filt_flat
+stopWords_lemma_flat = [word for phrase in stopWords_lemma for word in phrase.split()]
+stopWordsList = list(set(filter(None, stopWords_lemma_flat)))
+
+del word, stopWords, stopWords_lemma, stopWords_lemma_flat#, doc
+
+logging.info(f"Chosen stopWord filter level\t[{stopWord_filter_level}],\tcount:\t{len(stopWordsList)}")
 
 ####################################################
 ####################################################
 
-if len(concepts_to_remove) > 0:
+# Concepts to remove
+
+if file_concepts_to_remove:
     try:
-        words_of_interest = []
-        with open("%s.txt" % concepts_to_remove, "r") as t:
-            for word in t:
-                words_of_interest.append(word.strip("\n").strip(" "))
-        del t, word
-    except FileNotFoundError:
-        sys.exit("User attempted to provide a list of concepts to remove from TF-IDF - unsuccessful")
-else: words_of_interest = ["nowordstofilter"]
+        concepts_to_remove = []
+        with open(file_concepts_to_remove, "r") as t:
+            for line in t:
+                concepts_to_remove.append(line.strip("\n").strip(" "))
+        del t, line
+        concepts_to_remove = list(filter(None, concepts_to_remove))
+        logging.info("Sucessfully imported concepts to remove")
+    except:
+        logging.critical(f"Cannot find file of concepts to remove, recheck:\t{file_concepts_to_remove}")
+        if not file_concepts_to_remove.endswith(".txt"):
+            logging.critical("Seems like the the file of concepts to remove does not end with .txt")
+        sys.exit(1)
+else: concepts_to_remove = []
 
-words_of_interest = list(filter(None, words_of_interest))
+logging.info(f"Concepts to remove count:\t{len(file_concepts_to_remove)}")
+if len(concepts_to_remove) == 0:
+    logging.warning(f"If the above is not expected, recheck:\t{file_concepts_to_remove}")
 
-####################################################
+#########################
 
-words_of_interest_clean_lemma_stpwrd = [] 
+concepts_to_remove_formatted = [] 
 
 # preprocess concepts: Lemmatize & stopWords
-for concept in words_of_interest: 
-    concept = cleantext(concept.lower())
-    
-    doc = nlp(concept)
-    
-    ## lemma
-    doc_lemma = [token.lemma_ for token in doc]
-    ## stopwords
-    doc_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in doc_lemma]
-    doc_lemma_stpwrd = list(filter(None, doc_lemma_stpwrd))
-    
-    if doc_lemma_stpwrd:
-        words_of_interest_clean_lemma_stpwrd.append(" ".join(doc_lemma_stpwrd).lower())
-    
-del concept, doc, doc_lemma, doc_lemma_stpwrd
+for concept in concepts_to_remove: 
+    doc_lemma_stpwrd_filter = clean_lower_lemma(concept, "wordsInterest", stopWordsList)
+    if doc_lemma_stpwrd_filter:
+        concepts_to_remove_formatted.append(" ".join(doc_lemma_stpwrd_filter).lower())
+del concept, doc_lemma_stpwrd_filter
 
 ####################################################
 ####################################################
 
-list_of_posts = []
+# Corpus
 
-with open("%s.txt" % corpus, "r") as t:
-    for post in t:
-        list_of_posts.append(post.strip("\n").strip(" "))
-del t, post
-list_of_posts = list(filter(None, list_of_posts))
+try:
+    list_of_posts = []
+    with open(file_corpus, "r") as t:
+        for line in t:
+            list_of_posts.append(line.strip("\n").strip(" "))
+    del t, line
+    list_of_posts = list(filter(None, list_of_posts))
+    logging.info("Sucessfully imported corpus")
+except:
+    logging.critical(f"Cannot find corpus, recheck:\t{file_corpus}")
+    if not file_corpus.endswith(".txt"):
+        logging.critical("Seems like the the corpus file does not end with .txt")
+    sys.exit(1)
 
-####################################################
+logging.info(f"Corpus line count:\t{len(list_of_posts)}")
 
-list_of_posts_clean_lemma_stpwrd = []
+word_count_average = [len(x.split()) for x in list_of_posts]
+word_count_average = (sum(word_count_average)/len(word_count_average))
+
+logging.info(f"Average word count in corpus:\t{round(word_count_average, 1)}")
+del word_count_average
+
+#########################
+
+# Clean corpus
+
+list_of_posts_lemma_stpwrd = []
+#list_of_posts_lemma_stpwrd_joined = []
 
 for post in list_of_posts:
-    post = cleantext(post.lower())
+    doc_lemma_stpwrd_filter = clean_lower_lemma(post, "corpus", stopWordsList)
     
-    doc = nlp(post)
+    #list_of_posts_lemma_stpwrd_joined.append(" ".join(doc_lemma_stpwrd_filter).lower())
+    list_of_posts_lemma_stpwrd.append(doc_lemma_stpwrd_filter)
     
-    ## lemma
-    doc_lemma = [token.lemma_ for token in doc]
-    ## stopwords
-    doc_lemma_stpwrd = [remove_stop_words(text, stopWords) for text in doc_lemma]
-    doc_lemma_stpwrd = list(filter(None, doc_lemma_stpwrd))
-        
-    list_of_posts_clean_lemma_stpwrd.append(" ".join(doc_lemma_stpwrd).lower())
-    
-del post,doc,doc_lemma,doc_lemma_stpwrd
+del post, doc_lemma_stpwrd_filter
+
+list_of_posts_lemma_stpwrd = list(filter(None, list_of_posts_lemma_stpwrd))
 
 ####################################################
 ####################################################
 
-words_of_interest_clean_lemma_stpwrd.append("evolve")
-words_of_interest_clean_lemma_stpwrd.append("team rocket")
+# Remove concepts from corpus
 
-list_of_posts_clean_lemma_stpwrd.append("evolve")
-list_of_posts.append("evolve")
-
-####################################################
-####################################################
-
-def remove_phrases(sentences, phrases):
-    cleaned_sentences = []
-    for sentence in sentences:
-        for phrase in phrases:
-            sentence = sentence.replace(phrase, '')
-        sentence = re.sub(' +', ' ', sentence).strip() # remove double whitespace
-        cleaned_sentences.append(sentence)
-    return cleaned_sentences
-
-list_of_posts_clean_lemma_stpwrd_filtered = remove_phrases(list_of_posts_clean_lemma_stpwrd, words_of_interest_clean_lemma_stpwrd)
+list_of_posts_lemma_stpwrd_concepts = []
+for post in list_of_posts_lemma_stpwrd:
+    words = []
+    for word in post:
+        if word not in concepts_to_remove_formatted:
+            words.append(word)
+    if len(words) > 0:
+        list_of_posts_lemma_stpwrd_concepts.append(" ".join(words))
+del post, word, words
 
 ####################################################
 ####################################################
 
-gram_limit = ngram_count.copy()
-#gram_limit = [x+1 for x in range(ngram_count)]
+# Sorting n-grams
 
-posts_cln_lmm_stpwrd_flt_ngrm = {}
+list_of_posts_lemma_stpwrd_concepts_grams = {}
 
 x = 0
-for post in list_of_posts_clean_lemma_stpwrd_filtered:    
+for post in list_of_posts_lemma_stpwrd_concepts:    
     ngram_list = []
-    for n in gram_limit:
+    for n in ngram_count:
         ngrammed = ngrams(post.split(), n)
         for gram in ngrammed:
             ngram_list.append( "_".join(gram) )
-    posts_cln_lmm_stpwrd_flt_ngrm[x] = [ngram_list, post, list_of_posts[x]]
+    list_of_posts_lemma_stpwrd_concepts_grams[x] = [ngram_list, post, list_of_posts[x]]
     x = x + 1
-del x, post, ngram_list, ngrammed
+del x, post, ngram_list, ngrammed, n, gram
 
-first_index_values = [" ".join(values[0]) for values in posts_cln_lmm_stpwrd_flt_ngrm.values()]
+first_index_values = [" ".join(values[0]) for values in list_of_posts_lemma_stpwrd_concepts_grams.values()]
 
 ####################################################
+####################################################
 
-start_time = time.time()
+# TF-IDF
+
+start_tfidf = time.time()
 
 tfidf_vectorizer = TfidfVectorizer()
 tfidf_matrix = tfidf_vectorizer.fit_transform(first_index_values)
 tfidf_df = pd.DataFrame(data=tfidf_matrix.toarray(), columns=tfidf_vectorizer.get_feature_names_out())
+del tfidf_matrix, tfidf_vectorizer, first_index_values
 
-end_time = time.time() - start_time
-end_time = str(round(end_time, 3))
-print( "Seconds taken to run tf-idf: %s" % end_time)
-del start_time, tfidf_matrix, tfidf_vectorizer, first_index_values
+end_tfidf = time.time() - start_tfidf
+end_tfidf = str(round(end_tfidf, 2))
+logging.info(f"Time taken to run TF-IDF (seconds):\t{end_tfidf}")
+del start_tfidf, end_tfidf
 
-####################################################
+#########################
 
-tfidf_df['Sentence'] = list_of_posts_clean_lemma_stpwrd_filtered # col to show original sentences
+tfidf_df['Sentence'] = list_of_posts_lemma_stpwrd_concepts # col to show original sentences
 tfidf_df = tfidf_df[['Sentence'] + [col for col in tfidf_df.columns if col != 'Sentence']] # sentence first col
 
-####################################################
+#########################
 
 summary_scores = tfidf_df.drop(columns=['Sentence']).agg('mean', axis=0)
 tfidf_df_sum = pd.DataFrame({'Word': summary_scores.index, 'Raw score': summary_scores.values})
@@ -186,19 +226,23 @@ del summary_scores, tfidf_df
 
 ####################################################
 
+# Scaling
+
 scaler = MinMaxScaler()
 tfidf_df_sum['Normalised score'] = scaler.fit_transform(tfidf_df_sum[['Raw score']])
 tfidf_df_sum = tfidf_df_sum.sort_values("Normalised score", ascending=False)
 del scaler
 
-####################################################
+#########################
 
 df = tfidf_df_sum.copy()
 df = df[df['Normalised score'] != 0]
+del tfidf_df_sum
 
 df['Raw score'] = df['Raw score'].round(decimals=3)
 df['Normalised score'] = df['Normalised score'].round(decimals=3)
 
+####################################################
 ####################################################
 
 # IDEA add post for users to extrapolate/add context
@@ -208,38 +252,34 @@ df['Normalised score'] = df['Normalised score'].round(decimals=3)
 #dfexplode = df.explode('Post')
 
 ####################################################
+####################################################
 
-df.to_csv('%s.tsv' % output_name, index=False, sep="\t")
+# Output
+
+df.to_csv(f"{dir_output}{start_timestamp}_ranked.tsv", index=False, sep="\t")
 
 ####################################################
 ####################################################
 
-statistics = [
-    "time taken to run tf-idf: %s" % end_time,
-    "tf-idf raw df length: %s" % str(len(tfidf_df_sum)),
-    "tf-idf adj. df length: %s" % str(len(df))
-    ]
-del end_time, tfidf_df_sum
-
-with open('%s.txt' % stats_output_name, 'w') as t:
-    for word in statistics:
-        t.write(word + '\n')
-del t,word
-
-####################################################
-
-if graph:
-    plt.style.use("seaborn-poster")
-    fig = plt.figure()
-    ax = fig.add_axes([0,0,1,1])
-    ax.bar(df["Word"][:limit],df["Normalised score"][:limit], color=cm)
-    plt.xticks(rotation=90)
-    ax.set_ylabel('Average score (normalised)')
-    ax.set_xlabel('Terms')
-    ax.set_title("Bar plot of top %s TF-IDF ranked terms" % limit)
-    plt.savefig('%s.png' % plot_output_name, bbox_inches='tight')
-del ax, fig
-
+if plotTFIDF:
+    if not plotTFIDFlimit: plotTFIDFlimit = 30
+    if not plotTFIDFcolormap: plotTFIDFcolormap = "mediumseagreen"
+    
+    #if plotWORDCLOUDcolormap not in list(plt.colormaps()):
+    #    plotWORDCLOUDcolormap = "Set3"
+    
+    plt.figure(figsize=(10, 5))
+    plt.style.use("seaborn-v0_8-poster")
+    plt.bar(df["Word"][:plotTFIDFlimit],df["Normalised score"][:plotTFIDFlimit], color=plotTFIDFcolormap)
+    plt.xticks(rotation=90, fontsize=8)
+    plt.xlabel('Terms', fontsize=10)
+    plt.yticks(fontsize=8)
+    plt.ylabel('Average score (normalised)', fontsize=10)
+    plt.title(f"Bar plot of top {plotTFIDFlimit} TF-IDF ranked terms", fontsize=12)
+    plt.savefig(f"{dir_output}{start_timestamp}_ranked_plot.png", bbox_inches="tight")
+    
+    del plotTFIDF, plotTFIDFlimit, plotTFIDFcolormap
+    
 ####################################################
 
 # End of script

@@ -43,7 +43,7 @@ logging.basicConfig(
     level=logging.INFO,
     force=True
     )
-logging.info(f"Starting script for snatching metadata from {ontology_file}")
+logging.info("Starting script for snatching metadata")
 
 if is_this_a_test: logging.warning("THIS IS A TEST")
 
@@ -127,11 +127,11 @@ else:
 
 if words_of_interest: 
     search_concepts = {key: classes_and_annotations[key] for key in words_of_interest}
-    output_name = "bandersnatch_output_requested"
+    output_name = f"{start_timestamp}_requested"
     logging.info("Requested classes exported")
 else:
     search_concepts = classes_and_annotations.copy()
-    output_name = "bandersnatch_output_allClasses"
+    output_name = f"{start_timestamp}_allClasses"
     logging.info("All classes and metadata exported")
 
 ##################################################

@@ -57,12 +57,14 @@ else:
     cols_for_metadata = list(defined_annotations)
     cols_to_subset.extend(cols_for_metadata)
 
+the_name = the_name.strip().replace(" ", "-")
+
 ####################################################
 
 # Logging
 
 logging.basicConfig(
-    filename=f"{dir_output}{start_timestamp}.log",
+    filename=f"{dir_output}{start_timestamp}_{the_name}.log",
     encoding="utf-8",
     filemode="a",
     format="{asctime} - {levelname} - {message}",

@@ -9,9 +9,6 @@
 + any outputs will be stored here (including logs)
 + suggested to use `output/` but users are welcome to create their own dir
 
-### `files_location`
-+ location of your input files, e.g. `input/`
-
 ***
 
 ### `stopWord_filter_level`

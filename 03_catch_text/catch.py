@@ -34,15 +34,15 @@ from params_catch import *
 
 if is_this_a_test:
     dir_output = "test/"
-    files_location = "../test/CelestialObject/corpus/"
     stopWord_filter_level = "heavy"
-    file_corpus = "social_media_posts"
+    file_corpus = "../test/CelestialObject/corpus/social_media_posts.txt"
     plotWORDCLOUDcolormap = "plasma"
     stop_here = False
-    file_words_of_interest = "../../../02_snatch_metadata/test/bandersnatch_output_requested"
+    file_words_of_interest = "../02_snatch_metadata/test/20260114-230509_requested.txt"
     plotCYANNOTATORhighlightcolour = "#00bcd4"
-    output_format = "wtags"
     output_style = "original"
+    output_format = "wtags"
+    #output_format = "invertedgrep"
 
 #########################
 
@@ -93,14 +93,16 @@ logging.info(f"Chosen stopWord filter level\t[{stopWord_filter_level}],\tcount:\
 
 try:
     list_of_posts = []
-    with open(f"{files_location}{file_corpus}.txt", "r") as t:
+    with open(file_corpus, "r") as t:
         for line in t:
             list_of_posts.append(line.strip("\n").strip(" "))
     del t, line
     list_of_posts = list(filter(None, list_of_posts))
-    logging.info(f"Sucessfully imported corpus:\t{file_corpus}.txt")
+    logging.info("Sucessfully imported corpus")
 except:
-    logging.critical(f"Cannot find corpus, recheck:\t{files_location}{file_corpus}.txt")
+    logging.critical(f"Cannot find corpus, recheck:\t{file_corpus}")
+    if not file_corpus.endswith(".txt"):
+        logging.critical("Seems like the the corpus file does not end with .txt")
     sys.exit(1)
 
 
@@ -163,9 +165,9 @@ if plotWORDCLOUD:
     plt.tight_layout(pad = 0)
     plt.imshow(wc, interpolation="bilinear")
     plt.savefig(f"{dir_output}{start_timestamp}_wordcloud.png")
-    del wc
+    del wc, plotWORDCLOUD, plotWORDCLOUDcolormap
 
-del plotWORDCLOUD, plotWORDCLOUDcolormap, list_of_posts_lemma_stpwrd_joined
+del list_of_posts_lemma_stpwrd_joined
 
 ##################################################
 ##################################################
@@ -183,20 +185,22 @@ words_of_interest = []
 
 try:
     words_of_interest = []
-    with open(f"{files_location}{file_words_of_interest}.txt", "r") as t:
+    with open(file_words_of_interest, "r") as t:
         for line in t:
             words_of_interest.append(line.strip("\n").strip(" "))
     del t, line
     words_of_interest = list(filter(None, words_of_interest))
-    logging.info(f"Sucessfully imported words of interest:\t{file_words_of_interest}.txt")
+    logging.info("Sucessfully imported words of interest")
 except:
-    logging.critical(f"Cannot find words of interest, recheck:\t{files_location}{file_words_of_interest}.txt")
+    logging.critical(f"Cannot find words of interest, recheck:\t{file_words_of_interest}")
+    if not file_words_of_interest.endswith(".txt"):
+        logging.critical("Seems like the the words of interest file does not end with .txt")
     sys.exit(1)
     
 if len(words_of_interest) == 0:
     #logging.warning("Words of interest is empty file, if not expected, recheck this, otherise able to proceed...")
     #words_of_interest = ["PlaceholderAsThereAreNoWordsToFilter"]
-    logging.critical(f"No words of interest found, recheck:\t{files_location}{file_words_of_interest}.txt")
+    logging.critical(f"No words of interest found, recheck:\t{file_words_of_interest}")
     sys.exit(1)
 else:
     logging.info(f"Words of interest count:\t{len(words_of_interest)}")
@@ -368,12 +372,13 @@ if plotCYANNOTATOR:
     with open(f"{dir_output}{start_timestamp}_cyannotator.html", 'w') as f:
         f.write(html_content)
     del f, cyannotator_text, html_content
+    
+    del plotCYANNOTATOR, plotCYANNOTATORhighlightcolour, cyancolour
 
 ####################################################
 
 logging.info(f"Completed - caught!")
 
-del dir_output, file_corpus, file_words_of_interest, files_location
-del plotCYANNOTATOR, plotCYANNOTATORhighlightcolour, cyancolour
+del dir_output, file_corpus, file_words_of_interest
 
 # End of script

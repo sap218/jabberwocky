@@ -10,38 +10,31 @@
 #
 # PARAMETERS FOR BITE
 #
+# Any completed fields below are recommendations or examples
+#
 ####################################################
 
 is_this_a_test = True
 
-####################################################
+#########################
 
-if is_this_a_test:
-    corpus = "../catch/test/catch_output_invert"
-    concepts_to_remove = "../bandersnatch/test/snatch_output"
-    filter_level = "light" # or "none" or "heavy"
-    ngram_count = [1,3]
-    graph = True   
-    cm = "mediumseagreen"
-    limit = 30 # default is top 30 words
-    output_name = "../bite/test/bite_output"
-    stats_output_name = "../bite/test/bite_output_stats"
-    plot_output_name = "../bite/test/bite_output_plot"
-    
-else:
-    corpus = ""
-    concepts_to_remove = ""
-    filter_level = "light"
-    
-    ngram_count = [1,3]
-    
-    graph = True
-    cm = "mediumseagreen"
-    limit = 30
-    
-    output_name = "bite_output"
-    stats_output_name = "bite_output_stats"
-    plot_output_name = "bite_output_plot"
+dir_output = "output/"
+
+#########################
+
+stopWord_filter_level = ""
+
+file_concepts_to_remove = ""
+
+file_corpus = ""
+
+ngram_count = [1]
+
+#########################
+
+plotTFIDF = True
+if plotTFIDF: plotTFIDFlimit = 30 # default
+if plotTFIDF: plotTFIDFcolormap = "mediumseagreen"
 
 ####################################################
 

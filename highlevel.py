@@ -17,7 +17,8 @@ import spacy
 nlp = spacy.load("en_core_web_sm")
 
 from spacy.tokens import Token
-Token.set_extension("force_lemma", getter=lambda token: token._.inflect("VB") or token.text)
+#Token.set_extension("force_lemma", getter=lambda token: token._.inflect("VB") or token.text)
+Token.set_extension("force_lemma", getter=lambda token: token._.inflect("VB") or token.text, force=True)
 
 def cleantext(post):   
     post = contractions.fix(post)
