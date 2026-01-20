@@ -24,7 +24,7 @@ dir_output = "output/"
 
 ontology_file = ""
 
-ontology_tags_file = ""
+metadata_tags_file = ""
 
 classes_of_interest = ""
 

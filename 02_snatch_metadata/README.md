@@ -14,21 +14,21 @@
 ### `ontology_file`
 + the name of the `.owl` ontology, users should include filepath
 
-### `ontology_tags_file`
-+ newline delimited (`.txt`) file of ontology tags to determine which metadata to `snatch`, e.g. `UFO:hasSynonym`:
+### `metadata_tags_file`
++ newline delimited (`.txt`) file of the ontology tags to determine which metadata to `snatch`, e.g. `UFO:hasSynonym`:
 
 ```
-  <owl:Class rdf:about="https://github.com/sap218/CelestialObject/blob/master/space.owl#UFO_0013">
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0006">
     <rdfs:label xml:lang="en">mars</rdfs:label>
-    <rdfs:subClassOf rdf:resource="https://github.com/sap218/CelestialObject/blob/master/space.owl#UFO_0009"/>
-    <ufo:hasSynonym>red planet</ufo:hasSynonym>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0002"/>
+    <UFO:hasSynonym>red planet</UFO:hasSynonym>
   </owl:Class>
 ```
 
 ### `classes_of_interest`
 + newline delimited (`.txt`) file with ontology classes of interest
-+ if users don't provide a file, script will extract metadata from **all** classes
 + ensure classes are extact matches to the literal ontology classes
++ if users don't provide a file, script will extract metadata from **all** classes using ontology tags from the provided metadata tags file
 
 ***
 

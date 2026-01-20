@@ -44,18 +44,20 @@ if is_this_a_test:
     licensed = "https://creativecommons.org/licenses/by-nc/4.0/"
 
     defined_annotations = {
-        #"dbXref": "http://www.geneontology.org/formats/oboInOwl#DbXref",
+        "dbXref": "http://www.geneontology.org/formats/oboInOwl#DbXref",
         "synonym": f"{namespace}#hasSynonym",
         "definition": "http://www.w3.org/2000/01/rdf-schema#comment"
         }
     
-    cols_to_subset = ["class","subclass"]
-    cols_for_metadata = list(defined_annotations)
-    cols_to_subset.extend(cols_for_metadata)
+    #cols_to_subset = ["class","subclass"]
+    #cols_for_metadata = list(defined_annotations)
+    #cols_to_subset.extend(cols_for_metadata)
     
-else:
-    cols_for_metadata = list(defined_annotations)
-    cols_to_subset.extend(cols_for_metadata)
+#else:
+#    cols_for_metadata = list(defined_annotations)
+#    cols_to_subset.extend(cols_for_metadata)
+
+cols_for_metadata = list(defined_annotations)
 
 the_name = the_name.strip().replace(" ", "-")
 

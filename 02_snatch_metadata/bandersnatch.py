@@ -24,7 +24,7 @@ if is_this_a_test:
     dir_output = "test/"
     ontology_filepath = "../test/CelestialObject/space.owl"
     
-    ontology_tags_file = "../test/CelestialObject/corpus/ontology_tags.txt"
+    metadata_tags_file = "../test/CelestialObject/corpus/ontology_tags.txt"
     
     classes_of_interest = "../test/CelestialObject/corpus/classes_of_interest.txt"
     #classes_of_interest = ""
@@ -63,16 +63,18 @@ except:
         logging.critical("Seems like the the ontology file does not end with .owl")
     sys.exit(1)
 
+# Metadata tags
+
 try:
     annotation_tags = []
-    with open(ontology_tags_file, "r") as t:
+    with open(metadata_tags_file, "r") as t:
         for tag in t:
             annotation_tags.append(tag.strip("\n"))
     del tag, t
     logging.info("Sucessfully imported ontology tags file")
 except:
-    logging.critical(f"Cannot find ontology tags file - check this:\t{ontology_tags_file}")
-    if not ontology_tags_file.endswith(".txt"):
+    logging.critical(f"Cannot find ontology tags file - check this:\t{metadata_tags_file}")
+    if not metadata_tags_file.endswith(".txt"):
         logging.critical("Seems like the the ontology tags file does not end with .txt")
     sys.exit(1)    
 if len(annotation_tags) == 0:
@@ -131,7 +133,7 @@ if words_of_interest:
     logging.info("Requested classes exported")
 else:
     search_concepts = classes_and_annotations.copy()
-    output_name = f"{start_timestamp}_allClasses"
+    output_name = f"{start_timestamp}_allEntities"
     logging.info("All classes and metadata exported")
 
 ##################################################

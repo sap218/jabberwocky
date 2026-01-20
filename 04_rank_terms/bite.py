@@ -31,7 +31,7 @@ from params_bite import *
 if is_this_a_test:
     dir_output = "test/"
     stopWord_filter_level = "heavy"
-    file_concepts_to_remove = "../02_snatch_metadata/test/20260114-230425_allClasses.txt"
+    file_concepts_to_remove = "../02_snatch_metadata/test/20260119-183830_allEntities.txt"
     file_corpus = "../03_catch_text/test/20260114-231442_original_invertedgrep.txt"    
     ngram_count = [1,3]
     plotTFIDF = True

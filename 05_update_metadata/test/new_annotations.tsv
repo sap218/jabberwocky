@@ -1,8 +1,6 @@
-annotation	class	tag
-path	route	oboInOWL:hasExactSynonym
-evolve	generation	oboInOWL:hasRelatedSynonym
-flew	flying	oboInOWL:hasExactSynonym
-mega	large	oboInOWL:hasRelatedSynonym
-breed	type	oboInOWL:hasRelatedSynonym
-air	flying	oboInOWL:hasRelatedSynonym
-https://pokemon.fandom.com/wiki/Types	type	oboInOWL:DbXref
+class	annotation	tag
+eclipse	
+eclipse	https://science.nasa.gov/eclipses/	oboInOWL:DbXref
+
+
+telescope? etc need to ensure phrases in tf-idf split

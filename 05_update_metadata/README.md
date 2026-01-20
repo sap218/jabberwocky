@@ -1,11 +1,24 @@
 # README - `arise` 
 
-## `ontology_name`
-- ontology file (+path)
+### `is_this_a_test`
++ set to `True` to run the test, see `test/` for results
 
-## `annotation_file`
-- file of annotations
+***
+
+### `dir_output`
++ any outputs will be stored here (including logs)
++ suggested to use `output/` but users are welcome to create their own dir
+
+***
+
+### `ontology_file`
++ the name of the `.owl` ontology, users should include filepath
+
+### `update_entities`
+- file of entities to update ontology, the order is important: new classes should be defined before metadata
 - can be either `.tsv` or `.csv`
+
+EXAMPLE:
 
 ***
 
