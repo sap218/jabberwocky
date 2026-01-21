@@ -48,8 +48,9 @@ namespace = f"https://github.com/{git_uid_repo}/blob/master/{the_name}.owl"
 
 ```
 defined_annotations = {
+    "definition": "http://www.w3.org/2000/01/rdf-schema#comment",
+    "dbXref": "http://www.geneontology.org/formats/oboInOwl#DbXref",
     "synonym": f"{namespace}#hasSynonym",
-    "definition": "http://www.w3.org/2000/01/rdf-schema#comment"
     "externalResource": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
     }
 ```

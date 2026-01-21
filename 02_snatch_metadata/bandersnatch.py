@@ -22,12 +22,12 @@ from params_snatch import *
 
 if is_this_a_test:
     dir_output = "test/"
-    ontology_filepath = "../test/CelestialObject/space.owl"
+    ontology_filepath = "../01_converter/test/space.owl"
     
     metadata_tags_file = "../test/CelestialObject/corpus/ontology_tags.txt"
     
     classes_of_interest = "../test/CelestialObject/corpus/classes_of_interest.txt"
-    #classes_of_interest = ""
+    classes_of_interest = ""
 
 #########################
 

@@ -38,7 +38,7 @@ if is_this_a_test:
     file_corpus = "../test/CelestialObject/corpus/social_media_posts.txt"
     plotWORDCLOUDcolormap = "plasma"
     stop_here = False
-    file_words_of_interest = "../02_snatch_metadata/test/20260114-230509_requested.txt"
+    file_words_of_interest = "../02_snatch_metadata/test/20260121-183616_requested.txt"
     plotCYANNOTATORhighlightcolour = "#00bcd4"
     output_style = "original"
     output_format = "wtags"

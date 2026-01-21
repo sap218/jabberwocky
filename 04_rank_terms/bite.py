@@ -31,8 +31,8 @@ from params_bite import *
 if is_this_a_test:
     dir_output = "test/"
     stopWord_filter_level = "heavy"
-    file_concepts_to_remove = "../02_snatch_metadata/test/20260119-183830_allEntities.txt"
-    file_corpus = "../03_catch_text/test/20260114-231442_original_invertedgrep.txt"    
+    file_concepts_to_remove = "../02_snatch_metadata/test/20260121-183627_allEntities.txt"
+    file_corpus = "../03_catch_text/test/20260121-183721_original_invertedgrep.txt"    
     ngram_count = [1,3]
     plotTFIDF = True
     plotTFIDFlimit = 30
@@ -114,7 +114,9 @@ concepts_to_remove_formatted = []
 for concept in concepts_to_remove: 
     doc_lemma_stpwrd_filter = clean_lower_lemma(concept, "wordsInterest", stopWordsList)
     if doc_lemma_stpwrd_filter:
-        concepts_to_remove_formatted.append(" ".join(doc_lemma_stpwrd_filter).lower())
+        #concepts_to_remove_formatted.append(" ".join(doc_lemma_stpwrd_filter).lower())
+        for t in doc_lemma_stpwrd_filter:
+            concepts_to_remove_formatted.append(t.lower())
 del concept, doc_lemma_stpwrd_filter
 
 ####################################################
@@ -279,7 +281,7 @@ if plotTFIDF:
     plt.savefig(f"{dir_output}{start_timestamp}_ranked_plot.png", bbox_inches="tight")
     
     del plotTFIDF, plotTFIDFlimit, plotTFIDFcolormap
-    
+
 ####################################################
 
 # End of script

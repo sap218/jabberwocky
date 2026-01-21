@@ -26,6 +26,8 @@ ontology_file = ""
 
 update_entities = ""
 
+new_version = ""
+
 ####################################################
 
 # End of script

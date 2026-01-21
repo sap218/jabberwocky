@@ -44,9 +44,10 @@ if is_this_a_test:
     licensed = "https://creativecommons.org/licenses/by-nc/4.0/"
 
     defined_annotations = {
+        "definition": "http://www.w3.org/2000/01/rdf-schema#comment",
         "dbXref": "http://www.geneontology.org/formats/oboInOwl#DbXref",
         "synonym": f"{namespace}#hasSynonym",
-        "definition": "http://www.w3.org/2000/01/rdf-schema#comment"
+        "externalResource": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
         }
     
     #cols_to_subset = ["class","subclass"]
@@ -78,11 +79,6 @@ logging.basicConfig(
 logging.info(f"Starting script for gimbles' {the_name} ontology")
 
 if is_this_a_test: logging.warning("THIS IS A TEST")
-
-# logging.info(
-# logging.warning(
-# logging.error(
-# logging.critical(
 
 ####################################################
 

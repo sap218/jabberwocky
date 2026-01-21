@@ -41,8 +41,7 @@ licensed = "https://creativecommons.org/licenses/by-nc/4.0/"
 #########################
 
 defined_annotations = {
-    "synonym": f"{namespace}#hasSynonym",
-    "definition": "http://www.w3.org/2000/01/rdf-schema#comment"
+
     }
 
 ####################################################

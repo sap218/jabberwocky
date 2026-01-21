@@ -15,10 +15,13 @@
 + the name of the `.owl` ontology, users should include filepath
 
 ### `update_entities`
-- file of entities to update ontology, the order is important: new classes should be defined before metadata
-- can be either `.tsv` or `.csv`
++ file of entities to update ontology, the order is important: new classes should be defined before metadata
++ can be either `.tsv` or `.csv`
 
 EXAMPLE:
+
+### `new_version`
++ update version of ontology, e.g. "v2.0" (can leave empty)
 
 ***
 
