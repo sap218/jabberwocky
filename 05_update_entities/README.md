@@ -1,4 +1,4 @@
-# README - `arise` 
+# `update entities` - `arise`
 
 ### `is_this_a_test`
 + set to `True` to run the test, see `test/` for results

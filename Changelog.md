@@ -1,7 +1,11 @@
 # Changelog
 
-* **v4** [XX/12/2025]
-    - logging, can convert `excel` to `owl`, new testing files
+* **v4** [XX/01/2026]
+    - logging & new testing files
+    - can convert `excel` to `owl`
+    - catch now includes POS fixing to avoid single terms/phrases being forced to verb/noun
+    - TF-IDF improved
+    - now expanded to adding new classes and metadata improved
 * **v3.3.0** [31/10/2025]
     - now includes word contractions
 * **v3.2.0** [08/05/2025]

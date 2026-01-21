@@ -12,7 +12,7 @@ Read the [documentation](https://sap218.github.io/jabberwocky/) for more detail.
 | 2. | `snatch metadata` | extract metadata from classes
 | 3. | `catch text` | annotate corpus with key terms/phrases
 | 4. | `rank terms` | rank terms in order of importance
-| 5. | `update metadata` | update ontology with new metadata
+| 5. | `update entities` | update ontology with new classes and metadata
 | 6. | `ontology plotting` | plot an ontology via web or tree format
 
 When combining these Jabberwocky functions, users can create an NLP workflow.
