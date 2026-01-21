@@ -103,12 +103,11 @@ logging.info(f"A total of {len(domains)} superclasses found")
 
 # Defining ontology
 
-ufo = Namespace(namespace+"#")
+uri = Namespace(namespace+"#")
 
 o = Graph()
 
-o.bind(f"{iri_prefix}", ufo) # binding to prefixes (so they show up in the RDF output)
-#o.bind("ufo", ufo)
+o.bind(f"{iri_prefix}", uri) # binding to prefixes (so they show up in the RDF output)
 
 ####################################################
 
@@ -177,7 +176,7 @@ for superclass in domains:
     
     
     superclass_iri = get_next_iri()
-    superclass_defined = ufo[superclass_iri]
+    superclass_defined = uri[superclass_iri]
     o.add((superclass_defined, RDF.type, OWL.Class))
     o.add((superclass_defined, RDFS.label, Literal(superclass, lang="en")))
     
@@ -190,7 +189,7 @@ for superclass in domains:
     for classs in classes:
         
         class_iri = get_next_iri()
-        class_defined = ufo[class_iri]
+        class_defined = uri[class_iri]
         o.add((class_defined, RDF.type, OWL.Class))
         o.add((class_defined, RDFS.label, Literal(classs, lang="en")))
         o.add((class_defined, RDFS.subClassOf, superclass_defined))
@@ -217,7 +216,7 @@ for superclass in domains:
                 
                 else:
                     subclass_iri = get_next_iri()
-                    subclass_defined = ufo[subclass_iri]
+                    subclass_defined = uri[subclass_iri]
                     o.add((subclass_defined, RDF.type, OWL.Class))
                     o.add((subclass_defined, RDFS.label, Literal(list(df_filtered["subclass"])[0], lang="en")))
                     o.add((subclass_defined, RDFS.subClassOf, class_defined))
@@ -260,7 +259,7 @@ for superclass in domains:
                 
                 subclass_iri = get_next_iri()
                 #print(subclasss, subclass_iri)
-                subclass_defined = ufo[subclass_iri]
+                subclass_defined = uri[subclass_iri]
                 o.add((subclass_defined, RDF.type, OWL.Class))
                 #o.add((subclass_defined, RDFS.label, Literal(row["subclass"], lang="en")))
                 o.add((subclass_defined, RDFS.label, Literal(subclasss, lang="en")))
@@ -296,7 +295,7 @@ del subclass_iri, subclass_defined
 o.serialize(f"{dir_output}{the_name}.owl", format="pretty-xml") # RDF/XML
 del o
 
-logging.info(f"A total of {iri} concepts created")
+#logging.info(f"A total of {iri} concepts created")
 logging.info(f"Exported: {dir_output}{the_name}.owl")
 
 del xls, start_timestamp
