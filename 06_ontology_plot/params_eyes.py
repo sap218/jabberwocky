@@ -10,40 +10,26 @@
 #
 # PARAMETERS FOR EYES
 #
+# Any completed fields below are an example for running the test data
+#
 ####################################################
 
 is_this_a_test = True
 
-####################################################
+#########################
 
-if is_this_a_test:
-    ontology = "../bandersnatch/test/pocketmonsters"
-    #ontology = "test/other_ontologies/space"
-    
-    ontology_name = ontology.split("/")[-1]
-    
-    plot_type = "tree"
-    plot_type = "web"
-    
-    superclass_colour = "orange"
-    subclass_colour = "skyblue"
-    
-    to_annotate_subclasses = True # False
-    
-    output_name = "test/%s" % ontology_name
-    
-else:
-    ont = ""
-    ontology_name = ontology.split("/")[-1]
-    
-    plot_type = "web"
-    
-    superclass_colour = "orange"
-    subclass_colour = "skyblue"
-    
-    to_annotate_subclasses = False
-    
-    output_name = "%s" % ontology_name
+dir_output = "output/"
+
+#########################
+
+ontology_file = ""
+
+plot_type = "web"
+
+superclass_colour = "orange"
+subclass_colour = "skyblue"
+
+to_annotate_subclasses = False
 
 ####################################################
 

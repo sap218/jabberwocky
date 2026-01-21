@@ -1,17 +1,28 @@
-# README - `eyes`
+# `plot ontology` - `eyes`
 
-## `ontology`
-- ontology file (+path)
+### `is_this_a_test`
++ set to `True` to run the test, see `test/` for results
 
-## `plot_type`
-- choose `web` or `tree`
+***
 
-## `*_colour`
-- colours for `superclass` (default orange) and `subclass` (default skyblue)
+### `dir_output`
++ any outputs will be stored here (including logs)
++ suggested to use `output/` but users are welcome to create their own dir
 
-## `to_annotate_subclasses`
-- choose `True` or `False` to overlay text for subclasses in plots
-- recommended to use `False` if ontologies are large
+***
+
+### `ontology_file`
++ the name of the `.owl` ontology, users should include filepath
+
+### `plot_type`
++ choose `web` or `tree` (`web` is recommended)
+
+#### `*_colour`
++ colours for `superclass` (default: orange) and `subclass` (default: skyblue)
+
+#### `to_annotate_subclasses`
++ choose `True` or `False` to overlay text for subclasses in plots
++ recommended to use `False` if ontologies are large
 
 ***
 
