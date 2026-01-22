@@ -11,7 +11,7 @@
 * **Note**: please provide information (e.g. decisions) and plenty of comments (w/ username to acknowledge contribution), e.g.
 
 ```
-print(f"Error message: {errmsg}") # print error message (example comment) for reference - @yourusername
+def newFunction(n): # new function to do [a cool thing] - @yourUsername
 ``` 
 
 ## Issues
@@ -20,7 +20,7 @@ print(f"Error message: {errmsg}") # print error message (example comment) for re
 * Issues will be labelled accordingly - see below for [`label`](https://github.com/sap218/jabberwocky/labels) information:
 
 #### bug
-* if any errors arrise
+* if any errors arise
 
 #### documentation
 * if the guides need more information
@@ -38,6 +38,11 @@ print(f"Error message: {errmsg}") # print error message (example comment) for re
 * there may be circumstances that an Issue *won't* or *shouldn't* be fixed
 * for example, some behaviours may be intentional, or a fix isn't in scope
 * the maintainer will help as much as possible and comment why this label is applied, giving users time to respond
+
+
+## Past Contributors
+
+* [@majensen](https://github.com/majensen) set up automated testing w/ `pytest` in v1.0 - see [pull request #13](https://github.com/sap218/jabberwocky/pull/13) for more details
 
 ***
 

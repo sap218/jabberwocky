@@ -2,7 +2,7 @@
 # Files not needed to be uploaded
 
 eyes/test/other_ontologies/
-
+flame/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

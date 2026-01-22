@@ -1,163 +1,57 @@
 An ontology is a knowledge representation framework that is machine readable.
-It facilitates logical relationships between classes and allows us to standardise the formalised vocabulary within a domain.
-The metadata contained within an ontology is valuable - research has shown to address the challenges presented by unstructured text.
+It facilitates logical relationships between classes and allows us to standardise - and formalise - vocabulary within a domain.
+The metadata contained within an ontology is valuable with research showing can address the challenges presented by unstructured text.
 
-Unstructured text can be processed, mined, and empowered by NLP tools, yet majority of tools are not designed to consider ontologies.
+Unstructured text can be processed, mined, and empowered by Natural Language Processing (NLP) tools, yet majority of tools are not designed to consider ontologies.
 
-Jabberwocky allows users to conduct various NLP tasks whilst easily manipulating tologies.
+**Jabberwocky** allows users to conduct various NLP tasks whilst easily manipulating ontologies.
 Here provides an explanation - with a working example - for the Jabberwocky toolkit. 
 
-See the [Jabberwocky](https://github.com/sap218/jabberwocky) repository for code.
+**Documentation** is linked in the table below:
 
----
+|  | function | description | documentation
+| --- | --- | --- | --- |
+| 1. | `converter` | convert an excel to an ontology | [docs](https://github.com/sap218/jabberwocky/tree/master/01_converter)
+| 2. | `snatch metadata` | extract metadata from classes | [docs](https://github.com/sap218/jabberwocky/tree/master/02_snatch_metadata)
+| 3. | `catch text` | annotate corpus with key terms/phrases | [docs](https://github.com/sap218/jabberwocky/tree/master/03_catch_text)
+| 4. | `rank terms` | rank terms in order of importance | [docs](https://github.com/sap218/jabberwocky/tree/master/04_rank_terms)
+| 5. | `update entities` | update ontology with new classes and metadata | [docs](https://github.com/sap218/jabberwocky/tree/master/05_update_entities)
+| 6. | `ontology plotting` | plot an ontology via web or tree format | [docs](https://github.com/sap218/jabberwocky/tree/master/06_ontology_plot)
 
-## Functionality
+When combining these Jabberwocky functions, users can create an **NLP** workflow:
 
+![workflow](/docs/workflow.png)
 
-### bandersnatch
-Extract metadata from ontology classes based on a list of tags.
+**Scenario**
 
-Users should use ontologies that are in the `OWL` RDF/XML syntax.
-(if not in this format, users can open their ontology in [Protégé](https://protege.stanford.edu/) and export in correct format)
-
-Metadata in ontologies are in various formats, below shows a list of tags as an example:
-```
-oboInOWL:hasExactSynonym
-oboInOWL:hasRelatedSynonym
-```
-
-Words of interest (recommended to match ontology)
-```
-dragon
-water
-large
-```
-
-##### Output
-`snatch_output.txt` will include the ontology classes and corresponding metadata based on chosen classes & tags.
-
-If users have no words of interest, then the output will include **all ontology classes** but users will still need to include a list of tags.
-
----
-
-### catch
-Annotation of a corpus (unstructured text).
-
-Words of interest - the `bandersnatch` output can be used here:
-```
-dragon
-water
-ocean
-large
-big
-```
-It is **important to note**: phrases work in Jabberwocky.
-
-The corpus should be a `txt` with sentences/posts separated in new lines:
-```
-This is post 1 in a corpus
-This is post 2
-
-This is post 3 - as you can see there is a gap between post 2 and 3, this is fine
-This is post 4 > users also don't need to worry about formatting, Jabberwocky will handle this'
-```
-
-##### Output
-`catch_output.txt` will include the posts that were annotated.
-Users can choose output types: perhaps only the posts annotated or w/ corresponding tags.
-
-Moreover, users can choose to export the posts that were **NOT** annotated.
-
-##### Plotting
-Users can generate a wordcloud figure from the corpus.
-
-##### Highlighting
-Inspired by an old project - [cyannotator](https://github.com/sap218/cyannotator) - users can request an HTML output of posts with the annotations highlighted.
-
----
-
-### bite
-Rank all words in a corpus in terms of importance (via the TF-IDF statistical technique).
-
-One valuable parameter is being able to adjust input for TF-IDF so the technique measures multiple n-grams.
-Users can request more than unigrams: bigrams, trigrams, and more.
-
-Users can provide a list of words to remove from the corpus to avoid being weighted/measured - the `bandersnatch` output can be used here.
-
-##### Output
-`bite_output.tsv` is a dataframe with Word and Score.
-Scores are the average TF-IDF values across posts, normalised for readability.
-Moreover, normalised scores that are 0 are dropped.
-
-Word | Raw score | Normalised score
-------- | -----------
-mega | 0.078 | 1.0
-path | 0.06 | 0.719
-
-##### Plotting
-Users can export a bar plot of the top N ranked terms (default 30).
-
----
-
-### arise
-Updating ontology classes with new metadata. 
-
-Users will provide a dataframe with three columns: the annotation, class (exact ontology match), and tag:
-```
-annotation	class	tag
-sea	water	oboInOWL:hasExactSynonym
-mega	large	oboInOWL:hasRelatedSynonym
-https://pokemon.fandom.com/wiki/Types	type	oboInOWL:DbXref
-```
-This can be derived from the `bite` output (e.g. synonyms).
-
-##### Output
-`[ontology]_updated.owl` is the updated ontology.
-
----
-
-### eyes
-Plot an ontology in web or tree style. 
-By default, superclasses will have overlay text but users can choose whether to include for subclasses.
-
-##### Output
-`[ontology]_[plottype].png` is the updated ontology.
-
----
-
-## Scenario
-
-You have curated unstructured text: blog posts from a social media platform (with permission of course, in this example I invented these fake conversations).
+You have curated unstructured text: user-generated posts from a social media platform (with permission of course, in this example I invented these fake conversations).
 
 Your aim is to text mine the corpus and only have posts covering a particular topic (or set of topics).
-But you realise, although you know some words in this topic of yours, you may be missing related/broad synonyms.
+But you realise, although you know some words in this topic of yours, you may be missing some important semantics.
 
-This is where **ontologies are useful**. Ontologies are a controlled set of vocabulary with annotations.
+This is where **ontologies are useful**. Ontologies are a controlled set of vocabularies with metadata, for example: synonyms.
 
-With your words of interest (ontology classes) you can run `bandersnatch` to extract all synonyms.
+1. You decide to design an ontology in excel and then use `converter` to make it into an ontology.
 
-With these classes and corresponding synonyms, you can annotate the corpus using `catch` - the `PhraseMatcher()` function[^spacy] tags each post in the corpus.
+2. Of all the words in the ontology, some are vital to your research, you can `snatch the metadata` from the ontology to extract concepts of interest and their synonyms.
 
-You've chosen to have two outputs: one with the annotated posts for downstream analysis.
-The other you decided to investigate if there is anything valuable in the posts that weren't annotated.
+3. With these concepts and synonyms, you can annotate your corpus (social media data) to `catch` the posts that had these terms - this is great for downstream analysis! BUT...you also output a version of the corpus without annotations as you are curious if anything of interest was here...
 
-You can proceed to use `bite` - investigating if there are any "important" terms.
-The statistical TF-IDF method[^tfidf] is applied and all words are ranked in terms of importance.
-Here we can use the whole corpus, or perhaps use the `catch` output with the non-annotated posts.
+4. With the version of "nothing annotated", you proceed to investigate with `ranking terms`, this statistical techique highlights "important" terms in context of frequency in the corpus. With this output, you've found new synonyms and perhaps even terms that highlight a new class for your ontology.
 
-With whatever data we us, with the `bite` output, you may have noticed new terms/synonyms...
-You can use `arise` to update your ontology classes with these new synonyms.
+5. Organising these new entities (classes or metadata), we can `update` the ontology.
 
-Finally, you may want to rerun `bandersnatch` to extract an updated list of key terms.
-Then we can rerun `catch` for a more fruitful output for our investigations.
-
-This concludes the NLP workflow: you noticed the 2nd round of `catch` provides more data and so a more fruitful downstream analysis.
+6. Finally, you rerun (2) `snatch` to update your concepts list, and rerun (3) `catch` for more annotations: meaning a more fruitful output for your investigations.
 
 ---
 
-## Conclusion
-
-This work was published in [JOSS](https://doi.org/10.21105/joss.02168), you can cite here:
+**Useful links**
++ GitHub repository for [Jabberwocky](https://github.com/sap218/jabberwocky)
++ GitHub repository for the test files, [CelestialObject](https://github.com/sap218/CelestialObject)
++ Software for ontology editing, [Protégé](https://protege.stanford.edu/)
++ Annotation was developed based on spaCy's [PhraseMatcher](https://spacy.io/api/phrasematcher)
++ Wikipedia article for [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
++ Jabberwocky was published in [JOSS](https://doi.org/10.21105/joss.02168), you can cite here:
 
 ```
 @article{Pendleton2020,
@@ -174,11 +68,6 @@ This work was published in [JOSS](https://doi.org/10.21105/joss.02168), you can 
 }
 ```
 
-This repository was inspired by (and the inspiration of) the [OcIMIDo](https://doi.org/10.1016/j.compbiomed.2021.104542) project.
-
-[^spacy]: using [spaCy](https://spacy.io/api/phrasematcher)
-[^tfidf]: Term frequency inverse document frequency (TF-IDF)
-
 ***
 
-End of page
+End of document

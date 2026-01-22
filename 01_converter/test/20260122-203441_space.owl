@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:ns1="http://www.geneontology.org/formats/oboInOwl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:UFO="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0007">
+    <rdfs:label xml:lang="en">pluto</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0002"/>
+    <rdfs:comment>furthest planet to the sun</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0024">
+    <rdfs:label xml:lang="en">ring system</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0023"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0013">
+    <rdfs:label xml:lang="en">sol</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0001"/>
+    <rdfs:comment>the centre of the solar system</rdfs:comment>
+    <ns1:DbXref>WD:Q525</ns1:DbXref>
+    <UFO:hasSynonym>star</UFO:hasSynonym>
+    <UFO:hasSynonym>the sun</UFO:hasSynonym>
+    <rdfs:seeAlso>https://science.nasa.gov/sun/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0040">
+    <rdfs:label xml:lang="en">asteroid belt</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0037"/>
+    <ns1:DbXref>WD:Q2179</ns1:DbXref>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0036">
+    <rdfs:label xml:lang="en">europa</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0034"/>
+    <rdfs:comment>an icy moon of jupiter</rdfs:comment>
+  </owl:Class>
+  <owl:AnnotationProperty rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#hasSynonym"/>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0044">
+    <rdfs:label xml:lang="en">comet</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0041"/>
+    <rdfs:comment>formed of ice and dust with tails</rdfs:comment>
+    <rdfs:seeAlso>https://science.nasa.gov/solar-system/comets/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0057">
+    <rdfs:label xml:lang="en">virgo</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0042">
+    <rdfs:label xml:lang="en">meteoroid</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0041"/>
+    <rdfs:comment>rocky objects that orbit stars (&lt;1metre)</rdfs:comment>
+    <UFO:hasSynonym>space rock</UFO:hasSynonym>
+    <rdfs:seeAlso>https://science.nasa.gov/solar-system/meteors-meteorites/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0066">
+    <rdfs:label xml:lang="en">orion's belt</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0064"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0022">
+    <rdfs:label xml:lang="en">dust storm</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0020"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0058">
+    <rdfs:label xml:lang="en">libra</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0054">
+    <rdfs:label xml:lang="en">gemini</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0068">
+    <rdfs:label xml:lang="en">hercules</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0067"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0016">
+    <rdfs:label xml:lang="en">terrestrial</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0014"/>
+    <rdfs:comment>solid planet with a surface of rocks and/or metals</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0011">
+    <rdfs:label xml:lang="en">earth</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0008"/>
+    <ns1:DbXref>WD:Q2</ns1:DbXref>
+    <UFO:hasSynonym>the world</UFO:hasSynonym>
+    <rdfs:seeAlso>https://science.nasa.gov/earth/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0033">
+    <rdfs:label xml:lang="en">mars reconnaissance orbiter</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0028"/>
+    <UFO:hasSynonym>MRO</UFO:hasSynonym>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0017">
+    <rdfs:label xml:lang="en">dwarf</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0014"/>
+    <rdfs:comment>small yet big enough to be rounded by its own gravity</rdfs:comment>
+  </owl:Class>
+  <owl:Ontology rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl">
+    <rdfs:label>Space ontology (UFO)</rdfs:label>
+    <rdfs:comment>A brief ontology capturing concepts in our solar system.</rdfs:comment>
+    <rdfs:seeAlso rdf:resource="https://github.com/sap218/CelestialObject"/>
+    <owl:versionInfo>v0.1</owl:versionInfo>
+    <dcterms:license rdf:resource="https://creativecommons.org/licenses/by-nc/4.0/"/>
+    <UFO:Developer>Samantha Pendleton</UFO:Developer>
+  </owl:Ontology>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0061">
+    <rdfs:label xml:lang="en">capricornus</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0046">
+    <rdfs:label xml:lang="en">meteor</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0045"/>
+    <rdfs:comment>when a meteoroid enters the atmosphere</rdfs:comment>
+    <UFO:hasSynonym>shooting star</UFO:hasSynonym>
+    <UFO:hasSynonym>falling star</UFO:hasSynonym>
+    <rdfs:seeAlso>https://science.nasa.gov/solar-system/meteors-meteorites/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0059">
+    <rdfs:label xml:lang="en">scorpius</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0021">
+    <rdfs:label xml:lang="en">storm system</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0020"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0065">
+    <rdfs:label xml:lang="en">big dipper</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0064"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0030">
+    <rdfs:label xml:lang="en">hubble space telescope</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0028"/>
+    <rdfs:seeAlso>https://science.nasa.gov/mission/hubble/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0055">
+    <rdfs:label xml:lang="en">cancer</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0015">
+    <rdfs:label xml:lang="en">ice giant</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0014"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0029">
+    <rdfs:label xml:lang="en">global positioning systems</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0028"/>
+    <UFO:hasSynonym>GPS</UFO:hasSynonym>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0052">
+    <rdfs:label xml:lang="en">aries</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0031">
+    <rdfs:label xml:lang="en">international space station</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0028"/>
+    <UFO:hasSynonym>ISS</UFO:hasSynonym>
+    <rdfs:seeAlso>https://www.nasa.gov/international-space-station/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0035">
+    <rdfs:label xml:lang="en">luna</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0034"/>
+    <ns1:DbXref>WD:Q405</ns1:DbXref>
+    <UFO:hasSynonym>the moon</UFO:hasSynonym>
+    <rdfs:seeAlso>https://science.nasa.gov/moon/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0006">
+    <rdfs:label xml:lang="en">neptune</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0002"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0012">
+    <rdfs:label xml:lang="en">mars</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0008"/>
+    <ns1:DbXref>WD:Q111</ns1:DbXref>
+    <UFO:hasSynonym>red planet</UFO:hasSynonym>
+    <rdfs:seeAlso>https://science.nasa.gov/mars/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0038">
+    <rdfs:label xml:lang="en">star</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0037"/>
+    <rdfs:comment>a bright, giant, hot balls of gas</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0048">
+    <rdfs:label xml:lang="en">black hole</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0045"/>
+    <rdfs:seeAlso>https://science.nasa.gov/universe/black-holes/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0039">
+    <rdfs:label xml:lang="en">planet</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0037"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0049">
+    <rdfs:label xml:lang="en">solar flare</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0045"/>
+    <UFO:hasSynonym>sunburst</UFO:hasSynonym>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0026">
+    <rdfs:label xml:lang="en">aurora</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0025"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0047">
+    <rdfs:label xml:lang="en">nebula</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0045"/>
+    <UFO:hasSynonym>cloud</UFO:hasSynonym>
+    <UFO:hasSynonym>cloud objects</UFO:hasSynonym>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0003">
+    <rdfs:label xml:lang="en">jupiter</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0002"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0071">
+    <rdfs:label xml:lang="en">orion's belt</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0070"/>
+  </owl:Class>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#comment"/>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0062">
+    <rdfs:label xml:lang="en">aquarius</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0005">
+    <rdfs:label xml:lang="en">uranus</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0002"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0032">
+    <rdfs:label xml:lang="en">lunar reconnaissance orbiter</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0028"/>
+    <UFO:hasSynonym>LRO</UFO:hasSynonym>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0043">
+    <rdfs:label xml:lang="en">asteroid</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0041"/>
+    <rdfs:comment>rocky objects that orbit stars (&gt;1metre)</rdfs:comment>
+    <UFO:hasSynonym>planetoid</UFO:hasSynonym>
+    <rdfs:seeAlso>https://science.nasa.gov/solar-system/asteroids/</rdfs:seeAlso>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0063">
+    <rdfs:label xml:lang="en">pisces</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0010">
+    <rdfs:label xml:lang="en">venus</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0008"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0060">
+    <rdfs:label xml:lang="en">sagittarius</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0009">
+    <rdfs:label xml:lang="en">mercury</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0008"/>
+    <rdfs:comment>closest planet to the sun</rdfs:comment>
+  </owl:Class>
+  <owl:AnnotationProperty rdf:about="http://www.w3.org/2000/01/rdf-schema#seeAlso"/>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0004">
+    <rdfs:label xml:lang="en">saturn</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0002"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0053">
+    <rdfs:label xml:lang="en">taurus</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:AnnotationProperty rdf:about="http://www.geneontology.org/formats/oboInOwl#DbXref"/>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0018">
+    <rdfs:label xml:lang="en">gas giant</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0014"/>
+    <rdfs:comment>large planet of gases and no surface</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0056">
+    <rdfs:label xml:lang="en">leo</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0069">
+    <rdfs:label xml:lang="en">pegasus</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0067"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0001">
+    <rdfs:label xml:lang="en">solar system</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0028">
+    <rdfs:label xml:lang="en">artificial</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0027"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0050">
+    <rdfs:label xml:lang="en">constellation</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0051">
+    <rdfs:label xml:lang="en">zodiac</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0050"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0027">
+    <rdfs:label xml:lang="en">satellite</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0067">
+    <rdfs:label xml:lang="en">mythological</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0050"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0064">
+    <rdfs:label xml:lang="en">northern hemisphere</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0050"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0034">
+    <rdfs:label xml:lang="en">natural</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0027"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0025">
+    <rdfs:label xml:lang="en">magnetospheric</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0019"/>
+    <UFO:hasSynonym>green lights</UFO:hasSynonym>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0045">
+    <rdfs:label xml:lang="en">space phenomena</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0037">
+    <rdfs:label xml:lang="en">large body object</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0019">
+    <rdfs:label xml:lang="en">planetary feature</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0041">
+    <rdfs:label xml:lang="en">small body object</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0002">
+    <rdfs:label xml:lang="en">outer system</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0001"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0008">
+    <rdfs:label xml:lang="en">inner system</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0001"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0014">
+    <rdfs:label xml:lang="en">planet type</rdfs:label>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0070">
+    <rdfs:label xml:lang="en">southern hemisphere</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0050"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0023">
+    <rdfs:label xml:lang="en">orbital</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0019"/>
+  </owl:Class>
+  <owl:Class rdf:about="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0020">
+    <rdfs:label xml:lang="en">atmospheric</rdfs:label>
+    <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/sap218/CelestialObject/main/space.owl#UFO_0019"/>
+  </owl:Class>
+</rdf:RDF>
