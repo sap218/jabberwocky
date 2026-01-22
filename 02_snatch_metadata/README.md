@@ -13,6 +13,7 @@
 
 ### `ontology_file`
 + the name of the `.owl` ontology, users should include filepath
++ ontologies should be in the `OWL` RDF/XML syntax
 
 ### `metadata_tags_file`
 + newline delimited (`.txt`) file of the ontology tags to determine which metadata to `snatch`

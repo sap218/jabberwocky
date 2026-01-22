@@ -1,6 +1,6 @@
 # Changelog
 
-* **v4** [22/01/2026]
+* **v4.0.0** [22/01/2026]
     - logging & new testing files
     - can convert `excel` to `owl`
     - catch now includes POS fixing to avoid single terms/phrases being forced to verb/noun

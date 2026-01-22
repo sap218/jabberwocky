@@ -3,10 +3,10 @@
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02168/status.svg)](https://doi.org/10.21105/joss.02168) 
 
 ## Functionality
-Jabberwocky is a toolkit for NLP and **ontologies**. 
-Read the [documentation](https://sap218.github.io/jabberwocky/) for more detail.
+Jabberwocky is a toolkit for Natural Language Processing (NLP) and **ontologies**. 
+Read the [**documentation**](https://sap218.github.io/jabberwocky/) for more detail.
 
-|  | script | description
+|  | function | description
 | --- | --- | ---
 | 1. | `converter` | convert an excel to an ontology
 | 2. | `snatch metadata` | extract metadata from classes
@@ -15,15 +15,14 @@ Read the [documentation](https://sap218.github.io/jabberwocky/) for more detail.
 | 5. | `update entities` | update ontology with new classes and metadata
 | 6. | `ontology plotting` | plot an ontology via web or tree format
 
-When combining these Jabberwocky functions, users can create an NLP workflow.
+When combining these Jabberwocky functions, users can create an **NLP** workflow:
 
 ![workflow](/docs/workflow.png)
 
 ## Running
-Within each directory, there is a file `params_*.py` which users can edit.
-Meaning users shouldn't need to edit the main/primary script.
-
-Check the individual directory `READMEs` for parameter information.
++ Within each directory, there is a file `params_*.py` which users can edit, meaning users shouldn't need to edit the main/primary scripts.
++ Check the individual directory `READMEs` for parameter information.
++ Tests are done via the `test/` submodule which is the [`CelestialObject`](https://github.com/sap218/CelestialObject) repository, here users can see examples of files.
 
 ## Resources
 
@@ -33,7 +32,7 @@ Check the individual directory `READMEs` for parameter information.
 
 + **Contributing / Issues** - please read the [**Contributing Guidelines**](https://github.com/sap218/jabberwocky/blob/master/Contributing.md) also to see past contributors.
 
-+ **License** - this [license](https://github.com/sap218/jabberwocky/blob/master/LICENSE) is **MIT** so users only need to cite if using (see citation below).
++ **License** - this repo is using the [**MIT**](https://github.com/sap218/jabberwocky/blob/master/LICENSE) license so users only need to cite if using (see citation below).
 
 ## Citing
 

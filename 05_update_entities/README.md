@@ -13,6 +13,7 @@
 
 ### `ontology_file`
 + the name of the `.owl` ontology, users should include filepath
++ ontologies should be in the `OWL` RDF/XML syntax
 
 ### `update_entities`
 + file of entities to update ontology, the order is important: new classes should be defined before metadata

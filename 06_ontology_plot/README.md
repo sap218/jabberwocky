@@ -13,6 +13,7 @@
 
 ### `ontology_file`
 + the name of the `.owl` ontology, users should include filepath
++ ontologies should be in the `OWL` RDF/XML syntax
 
 ### `plot_type`
 + choose `web` or `tree` (`web` is recommended)
