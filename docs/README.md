@@ -20,7 +20,7 @@ Here provides an explanation - with a working example - for the Jabberwocky tool
 
 When combining these Jabberwocky functions, users can create an **NLP** workflow:
 
-![workflow](/docs/workflow.png)
+![workflow](workflow.png)
 
 **Scenario**
 
