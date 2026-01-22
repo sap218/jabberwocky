@@ -17,11 +17,16 @@
 ### `update_entities`
 + file of entities to update ontology, the order is important: new classes should be defined before metadata
 + can be either `.tsv` or `.csv`
++ users should open their ontology in a text editor to see how the tags are defined, e.g.
 
-EXAMPLE:
+```
+class	annotation	tag
+eclipse	UFO_0045	rdfs:subClassOf
+eclipse	darkening	UFO:hasSynonym
+```
 
 ### `new_version`
-+ update version of ontology, e.g. "v2.0" (can leave empty)
++ update version of ontology, e.g. `new_version="v2.0"` (can leave empty if you don't wish to update')
 
 ***
 

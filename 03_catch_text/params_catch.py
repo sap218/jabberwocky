@@ -27,7 +27,7 @@ stopWord_filter_level = ""
 file_corpus = ""
 
 plotWORDCLOUD = True
-if plotWORDCLOUD:  plotWORDCLOUDcolormap = ""
+if plotWORDCLOUD:  plotWORDCLOUDcolormap = "Set3"
 
 stop_here = False 
 
@@ -39,7 +39,7 @@ output_format = ""
 output_style = "" 
 
 plotCYANNOTATOR = True
-if plotCYANNOTATOR:  plotCYANNOTATORhighlightcolour = "" 
+if plotCYANNOTATOR:  plotCYANNOTATORhighlightcolour = "#00bcd4" # this is cyan 
 
 ####################################################
 

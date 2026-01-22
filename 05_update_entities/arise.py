@@ -26,7 +26,7 @@ from params_arise import *
 
 if is_this_a_test:
     dir_output = "test/"
-    ontology_filepath = "../01_converter/test/space.owl"
+    ontology_filepath = "../01_converter/test/20260122-203441_space.owl"
     update_entities = "../test/CelestialObject/corpus/new_entities.tsv"
     new_version = "v0.2"
 
@@ -202,10 +202,9 @@ del the_class, the_annotation, the_tag
 
 # Updating version
 
-'''
 current_version = g.value(subject= URIRef( Namespace(str(the_namespace)[:-1]) ), 
                   predicate=OWL.versionInfo)
-
+'''
 if float(new_version[1:]) <= float(str(current_version[1:])):
     logging.warning(f"New version ({new_version}) should be greater than current version ({current_version})")
     new_version = "v" + str(float(current_version[1:]) + 0.1)
@@ -214,6 +213,7 @@ if float(new_version[1:]) <= float(str(current_version[1:])):
 if new_version:
     g.remove(( URIRef( Namespace(str(the_namespace)[:-1]) ), OWL.versionInfo, None))
     g.add(( URIRef( Namespace(str(the_namespace)[:-1]) ), OWL.versionInfo, Literal(f"{new_version}")))
+    logging.info(f"Updated version from {current_version} to {new_version}")
 
 ###############
 # Exporting
@@ -225,5 +225,9 @@ g.serialize(f"{dir_output}{start_timestamp}_{output_name}", format="pretty-xml")
 
 logging.info(f"Exported:\t{dir_output}{start_timestamp}_{output_name}")
 del g, output_name
+
+####################################################
+
+logging.info("Completed - updated ontology!")
 
 # End of script

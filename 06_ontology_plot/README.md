@@ -22,7 +22,7 @@
 
 #### `to_annotate_subclasses`
 + choose `True` or `False` to overlay text for subclasses in plots
-+ recommended to use `False` if ontologies are large
++ recommended to use `False` if ontologies are large (text will be difficult to see as they may overlap)
 
 ***
 

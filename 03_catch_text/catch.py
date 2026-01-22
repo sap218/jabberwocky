@@ -38,7 +38,7 @@ if is_this_a_test:
     file_corpus = "../test/CelestialObject/corpus/social_media_posts.txt"
     plotWORDCLOUDcolormap = "plasma"
     stop_here = False
-    file_words_of_interest = "../02_snatch_metadata/test/20260121-183616_requested.txt"
+    file_words_of_interest = "../02_snatch_metadata/test/20260122-203746_requested.txt"
     plotCYANNOTATORhighlightcolour = "#00bcd4"
     output_style = "original"
     output_format = "wtags"
@@ -139,9 +139,10 @@ del post, doc_lemma_stpwrd_filter
 # WordCloud
 
 if plotWORDCLOUD:
-    logging.info(f"Plotting WordCloud")
+    logging.info("Plotting WordCloud")
     
     if plotWORDCLOUDcolormap not in list(plt.colormaps()):
+        logging.warning(f"The plotWORDCLOUDcolormap [{plotWORDCLOUDcolormap}] cannot be found, using default [Set3]")
         plotWORDCLOUDcolormap = "Set3"
         
     wc = WordCloud(
@@ -166,6 +167,7 @@ if plotWORDCLOUD:
     plt.imshow(wc, interpolation="bilinear")
     plt.savefig(f"{dir_output}{start_timestamp}_wordcloud.png")
     del wc, plotWORDCLOUD, plotWORDCLOUDcolormap
+    logging.info(f"Exported WordCloud:\t{dir_output}{start_timestamp}_wordcloud.png")
 
 del list_of_posts_lemma_stpwrd_joined
 
@@ -233,7 +235,9 @@ del concept_patterns, doc_lemma_stpwrd_filter
 
 # cyan with soft glow for highlighting, can use :cyan for original
 if plotCYANNOTATOR:
-    if not plotCYANNOTATORhighlightcolour: plotCYANNOTATORhighlightcolour = "cyan"
+    if not plotCYANNOTATORhighlightcolour: 
+        logging.warning("The plotCYANNOTATORhighlightcolour is empty, using default [cyan]")
+        plotCYANNOTATORhighlightcolour = "cyan"
     cyancolour = ["<span style='color: %s; text-shadow: 0 0 10px rgba(0, 188, 212, 0.5);'>" % plotCYANNOTATORhighlightcolour,
                "</span>"]  # plain
     cyannotator_text = []
@@ -348,14 +352,16 @@ del x, content
 # Outputting
 
 if not matched_output_list_output:
-    matched_output_list_output.append("NO ANNOTATIONS")
-    logging.warning("NO ANNOTATIONS, exiting...")
+    matched_output_list_output.append("NO RESULTS")
+    logging.warning("NO RESULTS, exiting...")
     sys.exit(0)
 else:
     with open(f"{dir_output}{start_timestamp}_{output_style}_{output_format}.txt", 'w') as t:
         for word in matched_output_list_output:
             t.write(word + '\n')
     del t, word
+    
+    logging.info(f"Exported:\t{dir_output}{start_timestamp}_{output_style}_{output_format}.txt")
 
 del output_format, output_style
 
@@ -364,7 +370,7 @@ del output_format, output_style
 # Cyannotator
 
 if plotCYANNOTATOR:
-    logging.info(f"Typing Cyannotator")
+    logging.info("Typing Cyannotator")
     html_content = "<html><body>"
     html_content += "<br>".join(cyannotator_text)
     html_content += "</body></html>"
@@ -374,11 +380,13 @@ if plotCYANNOTATOR:
     del f, cyannotator_text, html_content
     
     del plotCYANNOTATOR, plotCYANNOTATORhighlightcolour, cyancolour
+    
+    logging.info(f"Exported Cyannotator:\t{dir_output}{start_timestamp}_cyannotator.html")
 
 ####################################################
 
-logging.info(f"Completed - caught!")
-
 del dir_output, file_corpus, file_words_of_interest
+
+logging.info("Completed - caught!")
 
 # End of script

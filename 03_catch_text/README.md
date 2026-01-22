@@ -12,10 +12,10 @@
 ***
 
 ### `stopWord_filter_level`
-+ `light` is a small list consisting of 179 stopwords
-+ `heavy` is much larger list of stopwords of 1160
-+ `none` to **not remove** stopwords
-+ e.g. `stopWord_filter_level = "heavy"`
++ `light` = small list consisting of 179 stopwords
++ `heavy` = much larger list of stopwords of 1160
++ `none` = to **not remove** stopwords
++ e.g. `stopWord_filter_level="heavy"`
 
 ### `file_corpus`
 + a `.txt` file with individual posts/sentences on a new line
@@ -29,39 +29,38 @@
 #### `plotWORDCLOUDcolormap`
 + colour scheme for the wordcloud - users can provide [any palette](https://matplotlib.org/stable/users/explain/colors/colormaps.html)
 + some other recommendations: "Set3" (default, pastels), "plasma" (purple -> red -> yellow), "viridis" (purple -> green -> yellow)
-+ e.g. `plotWORDCLOUDcolormap = "Set3"`
 
 ***
 
 ### `stop_here`
-+ a `True` or `False` boolean, if True, the rest of the script will not run (essentially useful if users want a wordcloud)
-+ e.g. `stop_here = False` # will run whole script so users need to complete the below...
++ a `True` or `False` boolean, if `True` the script will stop here (essentially useful if users only want a wordcloud)
++ e.g. `stop_here=False` means the whole script will run and so users need to complete the below...
 
 ***
 
 ### `file_words_of_interest`
-+ a `.txt` file with concepts/words of interest separated by a new line (can be `snatch` output)
++ a `.txt` file with concepts/words of interest separated by a new line 
++ can be an output from `snatch`
 
 ### `output_format`
 + `wtags` = each annotated post **with** the terms that were annotated separated by `|`
-+ `grep` = output in grep format (simply only the annotated posts)
++ `grep` = output in grep format (meaning **only** the annotated posts)
 + `invertedgrep` = posts that were **NOT** annotated
-+ e.g. `output_format = "wtags"`
++ e.g. `output_format="wtags"`
 
 ### `output_style`
-+ `original` in the original format (without any text cleaning)
-+ `formatted` in the cleaned text format
-+ e.g. `output_style = "original"`
++ `original` = output the original format (without any text cleaning)
++ `formatted` = output in the cleaned format
++ e.g. `output_style="original"`
 
 ***
 
 ### `plotCYANNOTATOR`
-+ set `True` to output `HTML` of corpus with the highlighted matches
-+ text is cleaned/formatted
++ set `True` to output `HTML` of corpus with the highlighted matches (text is cleaned/formatted)
 
 #### `plotCYANNOTATORhighlightcolour`
-+ colour of highlighting - default is cyan (`#00bcd4`)
-+ e.g. `plotCYANNOTATORhighlightcolour = "cyan"` or `plotCYANNOTATORhighlightcolour = "#00bcd4"`
++ colour of highlighting
++ e.g. `plotCYANNOTATORhighlightcolour="#00bcd4"` or `plotCYANNOTATORhighlightcolour="cyan"`
 
 ***
 

@@ -31,8 +31,8 @@ from params_bite import *
 if is_this_a_test:
     dir_output = "test/"
     stopWord_filter_level = "heavy"
-    file_concepts_to_remove = "../02_snatch_metadata/test/20260121-183627_allEntities.txt"
-    file_corpus = "../03_catch_text/test/20260121-183721_original_invertedgrep.txt"    
+    file_concepts_to_remove = "../02_snatch_metadata/test/20260122-203511_allEntities.txt"
+    file_corpus = "../03_catch_text/test/20260122-204033_original_invertedgrep.txt"    
     ngram_count = [1,3]
     plotTFIDF = True
     plotTFIDFlimit = 30
@@ -108,16 +108,24 @@ if len(concepts_to_remove) == 0:
 
 #########################
 
-concepts_to_remove_formatted = [] 
+concepts_to_remove_split = []
+for concept in concepts_to_remove:
+    concepts_to_remove_split.extend(concept.split(" "))
+concepts_to_remove_split = list(set(concepts_to_remove_split))
+
+
+concepts_to_remove_split_formatted = [] 
 
 # preprocess concepts: Lemmatize & stopWords
-for concept in concepts_to_remove: 
+for concept in concepts_to_remove_split: 
+    concepts_to_remove_split_formatted.append(concept.lower())
     doc_lemma_stpwrd_filter = clean_lower_lemma(concept, "wordsInterest", stopWordsList)
     if doc_lemma_stpwrd_filter:
-        #concepts_to_remove_formatted.append(" ".join(doc_lemma_stpwrd_filter).lower())
         for t in doc_lemma_stpwrd_filter:
-            concepts_to_remove_formatted.append(t.lower())
+            concepts_to_remove_split_formatted.append(t.lower())
 del concept, doc_lemma_stpwrd_filter
+
+concepts_to_remove_split_formatted = list(set(concepts_to_remove_split_formatted))
 
 ####################################################
 ####################################################
@@ -172,7 +180,7 @@ list_of_posts_lemma_stpwrd_concepts = []
 for post in list_of_posts_lemma_stpwrd:
     words = []
     for word in post:
-        if word not in concepts_to_remove_formatted:
+        if word not in concepts_to_remove_split_formatted:
             words.append(word)
     if len(words) > 0:
         list_of_posts_lemma_stpwrd_concepts.append(" ".join(words))
@@ -182,6 +190,8 @@ del post, word, words
 ####################################################
 
 # Sorting n-grams
+
+logging.info(f"Chosen ngram_count:\t{ngram_count}")
 
 list_of_posts_lemma_stpwrd_concepts_grams = {}
 
@@ -260,15 +270,19 @@ df['Normalised score'] = df['Normalised score'].round(decimals=3)
 
 df.to_csv(f"{dir_output}{start_timestamp}_ranked.tsv", index=False, sep="\t")
 
+logging.info(f"Exported:\t{dir_output}{start_timestamp}_ranked.tsv")
+
 ####################################################
 ####################################################
 
 if plotTFIDF:
+    logging.info("Plotting TF-IDF")
+    
     if not plotTFIDFlimit: plotTFIDFlimit = 30
     if not plotTFIDFcolormap: plotTFIDFcolormap = "mediumseagreen"
     
-    #if plotWORDCLOUDcolormap not in list(plt.colormaps()):
-    #    plotWORDCLOUDcolormap = "Set3"
+    logging.info(f"Plot term limit:\t{plotTFIDFlimit}")
+    logging.info(f"Plot colormap:\t{plotTFIDFcolormap}")
     
     plt.figure(figsize=(10, 5))
     plt.style.use("seaborn-v0_8-poster")
@@ -277,11 +291,15 @@ if plotTFIDF:
     plt.xlabel('Terms', fontsize=10)
     plt.yticks(fontsize=8)
     plt.ylabel('Average score (normalised)', fontsize=10)
-    plt.title(f"Bar plot of top {plotTFIDFlimit} TF-IDF ranked terms", fontsize=12)
+    plt.title("Bar plot of top TF-IDF ranked terms", fontsize=12)
     plt.savefig(f"{dir_output}{start_timestamp}_ranked_plot.png", bbox_inches="tight")
     
     del plotTFIDF, plotTFIDFlimit, plotTFIDFcolormap
+    
+    logging.info(f"Exported plot:\t{dir_output}{start_timestamp}_ranked_plot.png")
 
 ####################################################
+
+logging.info("Completed - ranked terms!")
 
 # End of script

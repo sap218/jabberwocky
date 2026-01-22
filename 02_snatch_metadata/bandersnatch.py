@@ -22,12 +22,12 @@ from params_snatch import *
 
 if is_this_a_test:
     dir_output = "test/"
-    ontology_filepath = "../01_converter/test/space.owl"
+    ontology_filepath = "../01_converter/test/20260122-203441_space.owl"
     
     metadata_tags_file = "../test/CelestialObject/corpus/ontology_tags.txt"
     
     classes_of_interest = "../test/CelestialObject/corpus/classes_of_interest.txt"
-    classes_of_interest = ""
+    #classes_of_interest = ""
 
 #########################
 
@@ -145,6 +145,10 @@ with open(f'{dir_output}{output_name}.txt', 'w') as t:
         t.write(word + '\n')
 del t, word
 
+logging.info(f"Exported:\t{dir_output}{output_name}.txt")
+
 ##################################################
+
+logging.info("Completed - snatched!")
 
 # End of script

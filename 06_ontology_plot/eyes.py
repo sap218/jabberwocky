@@ -25,7 +25,7 @@ from params_eyes import *
 
 if is_this_a_test:
     dir_output = "test/"
-    ontology_filepath = "../05_update_entities/test/20260121-215122_space.owl"
+    ontology_filepath = "../05_update_entities/test/20260122-204859_20260122-203441_space.owl"
 
     #plot_type = "tree"
     plot_type = "web"
@@ -106,6 +106,8 @@ del finding, iri, label, subclass_label, subclass, superclass, subclasses
 high_level_classes = [node for node, degree in G.in_degree() if degree == 0]
 color_map = [superclass_colour if node in high_level_classes else subclass_colour for node in G.nodes()]
 
+logging.info(f"Colours chosen: superclass [({superclass_colour}] and subclass [{subclass_colour}]")
+
 #########################
 
 plt.figure(figsize=(18, 10))
@@ -157,6 +159,10 @@ plt.axis('off')
 plt.savefig(f"{dir_output}{start_timestamp}_{plot_type}-plot.png", format="PNG", dpi=300, bbox_inches='tight')
 plt.show()
 
+logging.info(f"Exported:\t{dir_output}{start_timestamp}_{plot_type}-plot.png")
+
 ####################################################
+
+logging.info("Completed - plotted ontology!")
 
 # End of script

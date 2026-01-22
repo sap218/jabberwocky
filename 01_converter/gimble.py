@@ -25,14 +25,10 @@ from params_gimble import *
 
 if is_this_a_test:
     dir_output = "test/"
-    #excel_file_location = "../test/CelestialObject/excel/"
     excel_file = "../test/CelestialObject/excel/space.xlsx"
 
     the_name = "space"
    
-    #git_uid = "sap218"
-    #git_repo = "CelestialObject"
-    #namespace = f"https://github.com/{git_uid}/{git_repo}/blob/master/{the_name}.owl"
     git_uid_repo = "sap218/CelestialObject"
     namespace = f"https://raw.githubusercontent.com/{git_uid_repo}/main/{the_name}.owl"
     
@@ -291,17 +287,23 @@ del subclass_iri, subclass_defined
 # Exporting
 ###############
 
+logging.info(f"IRI:\t{iri_prefix}")
+logging.info(f"GitHub repository:\twww.github.com/{git_uid_repo}")
+logging.info(f"Version:\t{version}")
+
 #o.serialize(f"output/{the_name}.owl", format="xml")
-o.serialize(f"{dir_output}{the_name}.owl", format="pretty-xml") # RDF/XML
+o.serialize(f"{dir_output}{start_timestamp}_{the_name}.owl", format="pretty-xml") # RDF/XML
 del o
 
 #logging.info(f"A total of {iri} concepts created")
-logging.info(f"Exported: {dir_output}{the_name}.owl")
+logging.info(f"Exported:\t{dir_output}{the_name}.owl")
 
 del xls, start_timestamp
 del git_uid_repo#, git_uid, git_repo
 del ontology_description, developers, contributors, version, licensed
 
 ####################################################
+
+logging.info("Completed - converted!")
 
 # End of script
