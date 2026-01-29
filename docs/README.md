@@ -48,6 +48,7 @@ This is where **ontologies are useful**. Ontologies are a controlled set of voca
 **Useful links**
 + GitHub repository for [Jabberwocky](https://github.com/sap218/jabberwocky)
 + GitHub repository for the test files, [CelestialObject](https://github.com/sap218/CelestialObject)
++ An introduction to ontologies and space being a practical example, [the Space Ontology and a Beginners Guide to Ontologies](https://sap218.uk/posts/celestialobject/)
 + Software for ontology editing, [Protégé](https://protege.stanford.edu/)
 + Annotation was developed based on spaCy's [PhraseMatcher](https://spacy.io/api/phrasematcher)
 + Wikipedia article for [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
