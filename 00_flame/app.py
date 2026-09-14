@@ -11,7 +11,7 @@
 """
 
 from datetime import datetime
-from io import StringIO
+from io import BytesIO, StringIO
 from pathlib import Path
 import csv
 import html
@@ -19,7 +19,13 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
+from nltk import ngrams
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+import pandas as pd
 import streamlit as st
+from wordcloud import WordCloud
 
 APP_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = APP_DIR.parent
@@ -30,10 +36,10 @@ if str(WORKSPACE_ROOT) not in sys.path:
 from highlevel import clean_lower_lemma, stopWords
 DEFAULT_TEXT_PATH = WORKSPACE_ROOT / "test" / "CelestialObject" / "corpus" / "social_media_posts.txt"
 DEFAULT_CLASSES_PATH = WORKSPACE_ROOT / "test" / "CelestialObject" / "corpus" / "classes_of_interest.txt"
-#DEFAULT_CLASSES_PATH = WORKSPACE_ROOT / "02_snatch_metadata" / "test" / "20260122-203746_requested.txt"
 DEFAULT_ONTOLOGY_TAGS_PATH = WORKSPACE_ROOT / "test" / "CelestialObject" / "corpus" / "ontology_tags.txt"
 DEFAULT_ONTOLOGY_PATH = WORKSPACE_ROOT / "01_converter" / "test" / "20260122-203441_space.owl"
 
+@st.cache_data(show_spinner=False)
 def load_file_text(file_path: Path) -> str:
     if file_path.exists():
         return file_path.read_text(encoding="utf-8")
@@ -45,6 +51,7 @@ def get_timestamped_filename(prefix: str, suffix: str) -> str:
     return f"{timestamp}_{prefix}{suffix}"
 
 
+@st.cache_data(show_spinner=False)
 def get_stopwords_list():
     stopword_level = stopWords[2]
     stopwords_lemma = []
@@ -57,6 +64,7 @@ def get_stopwords_list():
     return sorted(set(filter(None, stopwords_lemma_flat)))
 
 
+@st.cache_data(show_spinner=False)
 def normalize_for_matching(text: str, stopwords_list, mode: str):
     if not text:
         return []
@@ -77,6 +85,7 @@ def contains_term_as_subsequence(line_tokens, term_tokens):
     return matched == len(term_tokens)
 
 
+@st.cache_data(show_spinner=False)
 def build_highlighted_corpus_data(corpus_text: str, match_terms):
     if not corpus_text:
         return {
@@ -134,6 +143,7 @@ def build_highlighted_corpus_data(corpus_text: str, match_terms):
     }
 
 
+@st.cache_data(show_spinner=False)
 def build_class_synonym_match_rows(corpus_text: str, ontology_classes):
     if not corpus_text:
         return []
@@ -190,9 +200,10 @@ def build_class_synonym_match_rows(corpus_text: str, ontology_classes):
     return rows
 
 
+@st.cache_data(show_spinner=False)
 def build_class_synonym_csv(rows):
     buffer = StringIO()
-    writer = csv.writer(buffer)
+    writer = csv.writer(buffer, delimiter="\t")
     writer.writerow(["class", "synonym", "sentence"])
 
     for row in rows:
@@ -205,6 +216,170 @@ def build_class_synonym_csv(rows):
     return buffer.getvalue()
 
 
+@st.cache_data(show_spinner=False)
+def parse_ngram_values(ngram_text: str):
+    if not ngram_text or not ngram_text.strip():
+        return [1]
+
+    parsed_values = []
+    for chunk in re.split(r"[,\s]+", ngram_text.strip()):
+        if not chunk:
+            continue
+        try:
+            value = int(chunk)
+        except ValueError:
+            continue
+        if value >= 1:
+            parsed_values.append(value)
+
+    return sorted(set(parsed_values)) if parsed_values else [1]
+
+
+@st.cache_data(show_spinner=False)
+def build_tfidf_ranked_terms(corpus_text: str, ngram_values):
+    if not corpus_text or not ngram_values:
+        return pd.DataFrame()
+
+    stopwords_list = get_stopwords_list()
+    cleaned_posts = []
+
+    for line in corpus_text.splitlines():
+        if not line.strip():
+            continue
+        cleaned = clean_lower_lemma(line, "corpus", stopwords_list)
+        if cleaned:
+            cleaned_posts.append(" ".join(cleaned))
+
+    if not cleaned_posts:
+        return pd.DataFrame()
+
+    ngram_strings = []
+    for post in cleaned_posts:
+        ngram_tokens = []
+        for n in ngram_values:
+            ngram_tokens.extend("_".join(gram) for gram in ngrams(post.split(), n))
+        ngram_strings.append(" ".join(ngram_tokens))
+
+    tfidf_vectorizer = TfidfVectorizer()
+    tfidf_matrix = tfidf_vectorizer.fit_transform(ngram_strings)
+
+    tfidf_df = pd.DataFrame(
+        data=tfidf_matrix.toarray(),
+        columns=tfidf_vectorizer.get_feature_names_out(),
+    )
+
+    tfidf_df["Sentence"] = cleaned_posts
+    summary_scores = tfidf_df.drop(columns=["Sentence"]).agg("mean", axis=0)
+
+    ranked_df = pd.DataFrame({
+        "Word": summary_scores.index,
+        "Raw score": summary_scores.values,
+    })
+
+    scaler = MinMaxScaler()
+    ranked_df["Normalised score"] = scaler.fit_transform(ranked_df[["Raw score"]])
+    ranked_df = ranked_df.sort_values("Normalised score", ascending=False)
+    ranked_df = ranked_df[ranked_df["Normalised score"] != 0].copy()
+
+    ranked_df["Raw score"] = ranked_df["Raw score"].round(decimals=3)
+    ranked_df["Normalised score"] = ranked_df["Normalised score"].round(decimals=3)
+
+    return ranked_df.reset_index(drop=True)
+
+
+@st.cache_data(show_spinner=False)
+def build_wordcloud_image(corpus_text: str):
+    if not corpus_text:
+        return None
+
+    stopwords_list = get_stopwords_list()
+    lemmatised_tokens = []
+
+    for line in corpus_text.splitlines():
+        if not line.strip():
+            continue
+        lemmatised_tokens.extend(clean_lower_lemma(line, "corpus", stopwords_list))
+
+    if not lemmatised_tokens:
+        return None
+
+    wordcloud = WordCloud(
+        width=2400,
+        height=1350,
+        background_color="white",
+        colormap="plasma",
+        max_words=40,
+        min_font_size=10,
+        collocations=True,
+        normalize_plurals=False,
+        prefer_horizontal=0.8,
+        scale=2,
+        random_state=123,
+    )
+
+    wordcloud.generate(" ".join(lemmatised_tokens))
+
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=300)
+    ax.imshow(wordcloud, interpolation="bilinear")
+    ax.axis("off")
+
+    buffer = BytesIO()
+    fig.savefig(buffer, format="png", bbox_inches="tight", pad_inches=0, dpi=300)
+    plt.close(fig)
+
+    return buffer.getvalue()
+
+
+@st.cache_data(show_spinner=False)
+def build_interest_wordcloud_image(corpus_text: str, focus_terms):
+    if not corpus_text or not focus_terms:
+        return None
+
+    stopwords_list = get_stopwords_list()
+    matching_text_parts = []
+
+    for line in corpus_text.splitlines():
+        if not line.strip():
+            continue
+
+        normalized_line = normalize_for_matching(line, stopwords_list, "corpus")
+
+        for term in focus_terms:
+            normalized_term = normalize_for_matching(term, stopwords_list, "wordsInterest")
+            if contains_term_as_subsequence(normalized_line, normalized_term):
+                matching_text_parts.append(term)
+
+    if not matching_text_parts:
+        return None
+
+    wordcloud = WordCloud(
+        width=2400,
+        height=1350,
+        background_color="white",
+        colormap="viridis",
+        max_words=60,
+        min_font_size=10,
+        collocations=False,
+        normalize_plurals=False,
+        prefer_horizontal=0.8,
+        scale=2,
+        random_state=123,
+    )
+
+    wordcloud.generate(" ".join(matching_text_parts))
+
+    fig, ax = plt.subplots(figsize=(16, 9), dpi=300)
+    ax.imshow(wordcloud, interpolation="bilinear")
+    ax.axis("off")
+
+    buffer = BytesIO()
+    fig.savefig(buffer, format="png", bbox_inches="tight", pad_inches=0, dpi=300)
+    plt.close(fig)
+
+    return buffer.getvalue()
+
+
+@st.cache_data(show_spinner=False)
 def extract_classes_with_annotations(ontology_text: str, classes_of_interest_text: str, annotation_tags):
     if not ontology_text or not annotation_tags:
         return {}
@@ -272,51 +447,37 @@ ontology_text = load_file_text(DEFAULT_ONTOLOGY_PATH)
 
 #########################
 
-with st.container(border=True):
+with st.container():#border=True):
     with st.form("input_form"):
-        uploaded_file = st.file_uploader(
-            "Upload your own corpus text file",
-            type=["txt"],
-            key="uploaded_file",
-            help=(
-                "If you do not upload a file, the app will use the bundled sample corpus as a placeholder. "
-                f"Sample file: {DEFAULT_TEXT_PATH}"
-            ),
+        #st.markdown("### Inputs")
+
+        uploaded_file = st.file_uploader("Upload Corpus", type=["txt"], key="uploaded_file",
+            help=("Upload a TXT file (new line delimited) of your corpus"),
         )
 
-        uploaded_classes_file = st.file_uploader(
-            "Upload your own words of interest file",
-            type=["txt"],
-            key="uploaded_classes_file",
-            help=(
-                "If you do not upload a file, the app will use the bundled words-of-interest sample as a placeholder. "
-                f"Sample file: {DEFAULT_CLASSES_PATH}"
-            ),
+        uploaded_classes_file = st.file_uploader("Upload Words-of-Interest", type=["txt"], key="uploaded_classes_file",
+            help=("Upload a TXT file (new line delimited) of your words of interest"),
         )
 
-        uploaded_ontology_file = st.file_uploader(
-            "Upload your own ontology file",
-            type=["owl"],
-            key="uploaded_ontology_file",
-            help=(
-                "If you do not upload a file, the app will use the bundled ontology placeholder. "
-                f"Sample file: {DEFAULT_ONTOLOGY_PATH}"
-            ),
+        uploaded_ontology_file = st.file_uploader("Upload Ontology", type=["owl"], key="uploaded_ontology_file",
+            help=("Upload an OWL file (RDF/XML format)"),
         )
 
-        uploaded_ontology_tags_file = st.file_uploader(
-            "Upload your own ontology tags file",
-            type=["txt"],
-            key="uploaded_ontology_tags_file",
-            help=(
-                "If you do not upload a file, the app will use the bundled ontology tags sample. "
-                f"Sample file: {DEFAULT_ONTOLOGY_TAGS_PATH}"
-            ),
+        uploaded_ontology_tags_file = st.file_uploader("Upload Ontology tags", type=["txt"], key="uploaded_ontology_tags_file",
+            help=("Upload a TXT file (new line delimited) of the ontology tags for metadata extraction of the words of interest"),
         )
 
-        button_col_1, button_col_2 = st.columns(2)
+        ngram_input = st.text_input(
+            "N-grams to consider",
+            value="1,2,3",
+            help="Comma-separated values, for example: 1,2,3",
+        )
+
+        st.markdown("<small><i>running without uploading any files will use test files as a placeholder</i></small>", unsafe_allow_html=True)
+
+        button_col_1, button_col_2 = st.columns([1, 1], gap="small")
         with button_col_1:
-            update_outputs_clicked = st.form_submit_button("Update outputs")
+            update_outputs_clicked = st.form_submit_button("Run matcher")
         with button_col_2:
             reset_inputs_clicked = st.form_submit_button("Reset page")
 
@@ -390,121 +551,172 @@ ontology_tags_status = (
     f"Ontology tags line count:\t{len(ontology_tag_options)}"
 )
 
-summary_text = "No ontology classes were found for the selected ontology and annotation tags."
+show_results = st.session_state.get("show_results", False)
 
-ontology_classes = extract_classes_with_annotations(
-    ontology_text,
-    classes_of_interest,
-    ontology_tag_options,
-)
+if show_results:
+    progress_placeholder = st.empty()
 
-requested_lines = []
-if ontology_classes:
-    for word, annotations in ontology_classes.items():
-        requested_lines.append(word)
-        for annotation_tag in ontology_tag_options:
-            if annotation_tag in annotations:
-                requested_lines.extend(annotations[annotation_tag])
+    progress_placeholder.progress(0, text="Preparing inputs...")
 
-    seen = set()
-    unique_requested_lines = []
-    for line in requested_lines:
-        if line not in seen:
-            seen.add(line)
-            unique_requested_lines.append(line)
+    progress_placeholder.progress(15, text="Parsing ontology annotations...")
+    ontology_classes = extract_classes_with_annotations(
+        ontology_text,
+        classes_of_interest,
+        ontology_tag_options,
+    )
 
-    summary_text = "\n".join(unique_requested_lines).strip()
+    requested_lines = []
+    if ontology_classes:
+        for word, annotations in ontology_classes.items():
+            requested_lines.append(word)
+            for annotation_tag in ontology_tag_options:
+                if annotation_tag in annotations:
+                    requested_lines.extend(annotations[annotation_tag])
+
+        seen = set()
+        unique_requested_lines = []
+        for line in requested_lines:
+            if line not in seen:
+                seen.add(line)
+                unique_requested_lines.append(line)
+    else:
+        unique_requested_lines = []
+
+    progress_placeholder.progress(35, text="Building highlighted corpus output...")
+    highlighted_corpus_data = build_highlighted_corpus_data(corpus_text, unique_requested_lines)
+    highlighted_corpus_html = highlighted_corpus_data["html"]
+
+    progress_placeholder.progress(55, text="Building class/synonym export...")
+    class_synonym_match_rows = build_class_synonym_match_rows(corpus_text, ontology_classes)
+    class_synonym_csv = build_class_synonym_csv(class_synonym_match_rows)
+
+    progress_placeholder.progress(70, text="Creating word clouds...")
+    wordcloud_image = build_wordcloud_image(corpus_text)
+    interest_wordcloud_image = build_interest_wordcloud_image(corpus_text, unique_requested_lines)
+
+    progress_placeholder.progress(85, text="Computing ranked TF-IDF terms...")
+    ngram_values = parse_ngram_values(ngram_input)
+    ranked_terms_df = build_tfidf_ranked_terms(corpus_text, ngram_values)
+    ranked_terms_tsv = ranked_terms_df.to_csv(index=False, sep="\t") if not ranked_terms_df.empty else ""
+
+    progress_placeholder.progress(100, text="Finished — results are ready.")
 else:
+    ontology_classes = {}
     unique_requested_lines = []
-    summary_text = "No ontology classes were found for the selected ontology and annotation tags."
-
-highlighted_corpus_data = build_highlighted_corpus_data(corpus_text, unique_requested_lines)
-highlighted_corpus_html = highlighted_corpus_data["html"]
-class_synonym_match_rows = build_class_synonym_match_rows(corpus_text, ontology_classes)
-class_synonym_csv = build_class_synonym_csv(class_synonym_match_rows)
+    highlighted_corpus_data = {"html": "", "highlighted_lines": [], "non_highlighted_lines": []}
+    highlighted_corpus_html = ""
+    class_synonym_match_rows = []
+    class_synonym_csv = ""
+    wordcloud_image = None
+    interest_wordcloud_image = None
+    ngram_values = []
+    ranked_terms_df = pd.DataFrame()
+    ranked_terms_tsv = ""
 
 #########################
 
 if st.session_state.get("show_results", False):
-    st.write("---")
-
+    
     st.markdown("### Corpus matches from classes and synonyms")
     if highlighted_corpus_html:
-        st.markdown(highlighted_corpus_html, unsafe_allow_html=True)
+        with st.container():
+            st.markdown(
+                f"<div style='border: 1px solid #d0d7de; border-radius: 8px; padding: 0.75rem; background-color: #ffffff;'>{highlighted_corpus_html}</div>",
+                unsafe_allow_html=True,
+            )
     else:
         st.info("No matching classes or synonyms were found in the corpus.")
 
-    st.markdown("### Download outputs")
+    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+
+    st.markdown("#### Download outputs")
     download_cols = st.columns(4)
 
     with download_cols[0]:
         st.download_button(
-            label="Download highlighted lines",
+            label="Class & tags TSV",
+            data=class_synonym_csv,
+            file_name=get_timestamped_filename("class_synonym_matches", ".tsv"),
+            mime="text/tab-separated-values",
+            disabled=not class_synonym_match_rows,
+        )
+
+    with download_cols[1]:
+        st.download_button(
+            label="Matched lines only",
             data="\n".join(highlighted_corpus_data["highlighted_lines"]),
             file_name=get_timestamped_filename("highlighted_lines", ".txt"),
             mime="text/plain",
             disabled=not highlighted_corpus_data["highlighted_lines"],
         )
 
-    with download_cols[1]:
+    with download_cols[2]:
         st.download_button(
-            label="Download non-highlighted lines",
+            label="No matches",
             data="\n".join(highlighted_corpus_data["non_highlighted_lines"]),
             file_name=get_timestamped_filename("non_highlighted_lines", ".txt"),
             mime="text/plain",
             disabled=not highlighted_corpus_data["non_highlighted_lines"],
         )
 
-    with download_cols[2]:
+    with download_cols[3]:
         st.download_button(
-            label="Download highlighted HTML",
+            label="Highlights as HTML",
             data=highlighted_corpus_html,
             file_name=get_timestamped_filename("cyannotator", ".html"),
             mime="text/html",
             disabled=not highlighted_corpus_html,
         )
 
-    with download_cols[3]:
+    #########################
+    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+
+    st.markdown("### Corpus word cloud")
+    if wordcloud_image:
+        st.image(wordcloud_image, caption="Corpus word cloud (lemmatised, stopword-filtered)", use_container_width=True)
+    else:
+        st.info("No corpus content was available to generate a word cloud.")
+
+    st.download_button(
+        label="Download corpus word cloud",
+        data=wordcloud_image,
+        file_name=get_timestamped_filename("corpus_wordcloud", ".png"),
+        mime="image/png",
+        disabled=not wordcloud_image,
+    )
+
+    #########################
+    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+
+    st.markdown("### Ranked terms (TF-IDF)")
+    if ranked_terms_df.empty:
+        st.info("No ranked terms were produced for the selected n-grams.")
+    else:
+        top_ranked_terms = ranked_terms_df.head(30).copy()
+        max_ngram_value = max(ngram_values) if ngram_values else 1
+        st.caption(f"Plot shows normalised TF-IDF scores for n-grams up to {max_ngram_value}")
+        st.bar_chart(top_ranked_terms.set_index("Word")["Normalised score"])
+        #st.dataframe(top_ranked_terms, use_container_width=True)
+
         st.download_button(
-            label="Download class/synonym CSV",
-            data=class_synonym_csv,
-            file_name=get_timestamped_filename("class_synonym_matches", ".csv"),
-            mime="text/csv",
-            disabled=not class_synonym_match_rows,
+            label="Download ranked TSV",
+            data=ranked_terms_tsv,
+            file_name=get_timestamped_filename("ranked_terms", ".tsv"),
+            mime="text/tab-separated-values",
+            disabled=ranked_terms_df.empty,
         )
 
-    
+    #########################
+    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+
+    st.markdown("### Summaries")
     st.code(corpus_status)
-    '''
-    st.text_area("Corpus text", value=corpus_text, height=320, key="corpus_text",)
-    '''
-
     st.code(classes_status)
-    '''
-    st.text_area("Words of interest", value=classes_of_interest, height=140, key="classes_of_interest",
-        help=("This is pre-populated from the bundled words-of-interest sample. "
-        f"Sample file: {DEFAULT_CLASSES_PATH}"),
-    )
-    '''
-
     st.code(ontology_source)
     st.code(ontology_tags_status)
-    st.write("Ontology tags")
-    st.code(ontology_tags_text)
-
-    '''
-    st.text_area("Classes and synonyms", value=summary_text, height=220, key="ontology_summary",)
-    '''
+    st.code(f"Ontology tags: {ontology_tags_text}")
     
     #########################
-
-    st.write("---")
-
-    #########################
-
-
-
-
 
 #########################
 
