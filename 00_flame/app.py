@@ -436,7 +436,14 @@ def extract_classes_with_annotations(ontology_text: str, classes_of_interest_tex
 #########################
 
 st.title("Jabberwocky")
-st.write("@ sap218")
+
+st.markdown("a toolkit for Natural Language Processing (NLP) and Ontologies &nbsp; <small>@ sap218</small>",unsafe_allow_html=True)
+
+link_colsA, link_colsB, _ = st.columns([0.8, 0.8, 3], gap="small")
+with link_colsA:
+    st.link_button("Github", "https://github.com/sap218/jabberwocky")
+with link_colsB:
+    st.link_button("Post", "https://sap218.uk/projects/jabberwocky/")
 
 #########################
 
@@ -464,12 +471,13 @@ with st.container():#border=True):
         )
 
         uploaded_ontology_tags_file = st.file_uploader("Upload Ontology tags", type=["txt"], key="uploaded_ontology_tags_file",
-            help=("Upload a TXT file (new line delimited) of the ontology tags for metadata extraction of the words of interest"),
+            help=(
+                "Upload a TXT file (new line delimited) of the ontology tags for metadata extraction of the words of interest\n\n"
+                "If unsure, run as is and see bottom of page for an example"
+                ),
         )
 
-        ngram_input = st.text_input(
-            "N-grams to consider",
-            value="1,2,3",
+        ngram_input = st.text_input("N-grams to consider",value="1,2,3",
             help="Comma-separated values, for example: 1,2,3",
         )
 
@@ -618,7 +626,7 @@ else:
 
 if st.session_state.get("show_results", False):
     
-    st.markdown("### Corpus matches from classes and synonyms")
+    st.markdown("### Phrase matching")
     if highlighted_corpus_html:
         with st.container():
             st.markdown(
@@ -634,56 +642,42 @@ if st.session_state.get("show_results", False):
     download_cols = st.columns(4)
 
     with download_cols[0]:
-        st.download_button(
-            label="Class & tags TSV",
-            data=class_synonym_csv,
+        st.download_button(label="Class & tags TSV", data=class_synonym_csv,
             file_name=get_timestamped_filename("class_synonym_matches", ".tsv"),
-            mime="text/tab-separated-values",
-            disabled=not class_synonym_match_rows,
+            mime="text/tab-separated-values", disabled=not class_synonym_match_rows,
         )
 
     with download_cols[1]:
-        st.download_button(
-            label="Matched lines only",
-            data="\n".join(highlighted_corpus_data["highlighted_lines"]),
+        st.download_button(label="Matched lines only", data="\n".join(highlighted_corpus_data["highlighted_lines"]),
             file_name=get_timestamped_filename("highlighted_lines", ".txt"),
-            mime="text/plain",
-            disabled=not highlighted_corpus_data["highlighted_lines"],
+            mime="text/plain", disabled=not highlighted_corpus_data["highlighted_lines"],
         )
 
     with download_cols[2]:
-        st.download_button(
-            label="No matches",
-            data="\n".join(highlighted_corpus_data["non_highlighted_lines"]),
+        st.download_button(label="No matches", data="\n".join(highlighted_corpus_data["non_highlighted_lines"]),
             file_name=get_timestamped_filename("non_highlighted_lines", ".txt"),
-            mime="text/plain",
-            disabled=not highlighted_corpus_data["non_highlighted_lines"],
+            mime="text/plain", disabled=not highlighted_corpus_data["non_highlighted_lines"],
         )
 
     with download_cols[3]:
-        st.download_button(
-            label="Highlights as HTML",
-            data=highlighted_corpus_html,
+        st.download_button(label="Highlights as HTML", data=highlighted_corpus_html,
             file_name=get_timestamped_filename("cyannotator", ".html"),
-            mime="text/html",
-            disabled=not highlighted_corpus_html,
+            mime="text/html", disabled=not highlighted_corpus_html,
         )
 
     #########################
     st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
 
-    st.markdown("### Corpus word cloud")
+    st.markdown("### Wordcloud")
     if wordcloud_image:
-        st.image(wordcloud_image, caption="Corpus word cloud (lemmatised, stopword-filtered)", use_container_width=True)
+        #st.image(wordcloud_image, caption="Corpus word cloud (lemmatised, stopword-filtered)", use_container_width=True)
+        st.image(wordcloud_image, use_container_width=True)
     else:
         st.info("No corpus content was available to generate a word cloud.")
 
-    st.download_button(
-        label="Download corpus word cloud",
-        data=wordcloud_image,
+    st.download_button(label="Download corpus word cloud", data=wordcloud_image,
         file_name=get_timestamped_filename("corpus_wordcloud", ".png"),
-        mime="image/png",
-        disabled=not wordcloud_image,
+        mime="image/png", disabled=not wordcloud_image,
     )
 
     #########################
@@ -695,16 +689,13 @@ if st.session_state.get("show_results", False):
     else:
         top_ranked_terms = ranked_terms_df.head(30).copy()
         max_ngram_value = max(ngram_values) if ngram_values else 1
-        st.caption(f"Plot shows normalised TF-IDF scores for n-grams up to {max_ngram_value}")
+        st.caption(f"Bar plot of normalised TF-IDF scores for n-grams up to {max_ngram_value}")
         st.bar_chart(top_ranked_terms.set_index("Word")["Normalised score"])
         #st.dataframe(top_ranked_terms, use_container_width=True)
 
-        st.download_button(
-            label="Download ranked TSV",
-            data=ranked_terms_tsv,
+        st.download_button(label="Download ranked TSV", data=ranked_terms_tsv,
             file_name=get_timestamped_filename("ranked_terms", ".tsv"),
-            mime="text/tab-separated-values",
-            disabled=ranked_terms_df.empty,
+            mime="text/tab-separated-values", disabled=ranked_terms_df.empty,
         )
 
     #########################
