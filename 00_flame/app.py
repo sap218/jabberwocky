@@ -10,14 +10,24 @@
     # https://docs.streamlit.io/
 """
 
+from datetime import datetime
+from io import StringIO
 from pathlib import Path
+import csv
+import html
 import re
+import sys
 import xml.etree.ElementTree as ET
 
 import streamlit as st
 
 APP_DIR = Path(__file__).resolve().parent
 WORKSPACE_ROOT = APP_DIR.parent
+
+if str(WORKSPACE_ROOT) not in sys.path:
+    sys.path.insert(0, str(WORKSPACE_ROOT))
+
+from highlevel import clean_lower_lemma, stopWords
 DEFAULT_TEXT_PATH = WORKSPACE_ROOT / "test" / "CelestialObject" / "corpus" / "social_media_posts.txt"
 DEFAULT_CLASSES_PATH = WORKSPACE_ROOT / "test" / "CelestialObject" / "corpus" / "classes_of_interest.txt"
 #DEFAULT_CLASSES_PATH = WORKSPACE_ROOT / "02_snatch_metadata" / "test" / "20260122-203746_requested.txt"
@@ -30,48 +40,169 @@ def load_file_text(file_path: Path) -> str:
     return ""
 
 
-def extract_annotation_tags_from_ontology(ontology_text: str, fallback_tags_text: str = ""):
-    if ontology_text:
-        try:
-            root = ET.fromstring(ontology_text)
-        except ET.ParseError:
-            root = None
+def get_timestamped_filename(prefix: str, suffix: str) -> str:
+    timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
+    return f"{timestamp}_{prefix}{suffix}"
 
-        if root is not None:
-            namespace_map = {}
-            for match in re.finditer(r'xmlns(?::([A-Za-z0-9_\-]+))?="([^"]+)"', ontology_text):
-                prefix, uri = match.groups()
-                if prefix and uri:
-                    namespace_map[uri] = prefix
 
-            tags = []
-            seen = set()
-            for concept in root.iter():
-                if concept.tag.split("}")[-1] != "Class":
+def get_stopwords_list():
+    stopword_level = stopWords[2]
+    stopwords_lemma = []
+    stopwords_list = []
+
+    for word in stopword_level:
+        stopwords_lemma.append(clean_lower_lemma(word, "stopwords", stopwords_list))
+
+    stopwords_lemma_flat = [word for phrase in stopwords_lemma for word in phrase.split()]
+    return sorted(set(filter(None, stopwords_lemma_flat)))
+
+
+def normalize_for_matching(text: str, stopwords_list, mode: str):
+    if not text:
+        return []
+
+    normalized = clean_lower_lemma(text, mode, stopwords_list)
+    return [token for token in normalized if token]
+
+
+def contains_term_as_subsequence(line_tokens, term_tokens):
+    if not term_tokens or not line_tokens:
+        return False
+
+    matched = 0
+    for token in line_tokens:
+        if matched < len(term_tokens) and token == term_tokens[matched]:
+            matched += 1
+
+    return matched == len(term_tokens)
+
+
+def build_highlighted_corpus_data(corpus_text: str, match_terms):
+    if not corpus_text:
+        return {
+            "html": "",
+            "highlighted_lines": [],
+            "non_highlighted_lines": [],
+        }
+
+    stopwords_list = get_stopwords_list()
+
+    normalized_terms = []
+    for term in match_terms:
+        normalized_term = normalize_for_matching(term, stopwords_list, "wordsInterest")
+        if normalized_term:
+            normalized_terms.append(normalized_term)
+
+    if not normalized_terms:
+        return {
+            "html": "",
+            "highlighted_lines": [],
+            "non_highlighted_lines": [line.strip("\n") for line in corpus_text.splitlines() if line.strip()],
+        }
+
+    highlighted_lines = []
+    non_highlighted_lines = []
+    html_lines = []
+
+    for line in corpus_text.splitlines():
+        if not line.strip():
+            continue
+
+        normalized_line = normalize_for_matching(line, stopwords_list, "corpus")
+        is_match = any(contains_term_as_subsequence(normalized_line, term) for term in normalized_terms)
+
+        if is_match:
+            highlighted_lines.append(line)
+            html_lines.append(
+                f"<div><mark style='background-color: #9be7ff; color: #0f172a; border-radius: 4px; padding: 0 2px;'>{html.escape(line)}</mark></div>"
+            )
+        else:
+            non_highlighted_lines.append(line)
+            html_lines.append(f"<div>{html.escape(line)}</div>")
+
+    html_output = (
+        "<div style='max-height: 440px; overflow-y: auto; white-space: pre-wrap; "
+        "line-height: 1.6; font-family: monospace; padding: 0.5rem;'>"
+        + "".join(html_lines)
+        + "</div>"
+    )
+
+    return {
+        "html": html_output,
+        "highlighted_lines": highlighted_lines,
+        "non_highlighted_lines": non_highlighted_lines,
+    }
+
+
+def build_class_synonym_match_rows(corpus_text: str, ontology_classes):
+    if not corpus_text:
+        return []
+
+    stopwords_list = get_stopwords_list()
+    rows = []
+
+    for class_name, annotations in ontology_classes.items():
+        class_match_sentence = None
+        normalized_class = normalize_for_matching(class_name, stopwords_list, "wordsInterest")
+
+        for line in corpus_text.splitlines():
+            if not line.strip():
+                continue
+            normalized_line = normalize_for_matching(line, stopwords_list, "corpus")
+            if contains_term_as_subsequence(normalized_line, normalized_class):
+                class_match_sentence = line
+                break
+
+        rows.append(
+            {
+                "class": class_name,
+                "synonym": None,
+                "sentence": class_match_sentence,
+            }
+        )
+
+        seen_synonyms = set()
+        for annotation_tag in annotations:
+            for synonym in annotations[annotation_tag]:
+                if synonym in seen_synonyms:
                     continue
+                seen_synonyms.add(synonym)
 
-                for child in concept:
-                    local_name = child.tag.split("}")[-1]
-                    if local_name in {"label", "subClassOf", "type", "Class"}:
-                        continue
-                    if not child.text or not child.text.strip():
-                        continue
+                normalized_synonym = normalize_for_matching(synonym, stopwords_list, "wordsInterest")
+                match_sentence = None
+                if normalized_synonym:
+                    for line in corpus_text.splitlines():
+                        if not line.strip():
+                            continue
+                        normalized_line = normalize_for_matching(line, stopwords_list, "corpus")
+                        if contains_term_as_subsequence(normalized_line, normalized_synonym):
+                            match_sentence = line
+                            break
 
-                    uri = child.tag[1:].split("}", 1)[0] if child.tag.startswith("{") else ""
-                    if uri in namespace_map:
-                        tag_name = f"{namespace_map[uri]}:{local_name}"
-                    else:
-                        tag_name = local_name
+                rows.append(
+                    {
+                        "class": class_name,
+                        "synonym": synonym,
+                        "sentence": match_sentence,
+                    }
+                )
 
-                    if tag_name not in seen:
-                        tags.append(tag_name)
-                        seen.add(tag_name)
+    return rows
 
-            if tags:
-                return tags
 
-    fallback_tags = [line.strip() for line in fallback_tags_text.splitlines() if line.strip()]
-    return fallback_tags
+def build_class_synonym_csv(rows):
+    buffer = StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(["class", "synonym", "sentence"])
+
+    for row in rows:
+        writer.writerow([
+            row["class"],
+            row["synonym"] or "",
+            row["sentence"] or "",
+        ])
+
+    return buffer.getvalue()
 
 
 def extract_classes_with_annotations(ontology_text: str, classes_of_interest_text: str, annotation_tags):
@@ -146,6 +277,7 @@ with st.container(border=True):
         uploaded_file = st.file_uploader(
             "Upload your own corpus text file",
             type=["txt"],
+            key="uploaded_file",
             help=(
                 "If you do not upload a file, the app will use the bundled sample corpus as a placeholder. "
                 f"Sample file: {DEFAULT_TEXT_PATH}"
@@ -155,6 +287,7 @@ with st.container(border=True):
         uploaded_classes_file = st.file_uploader(
             "Upload your own words of interest file",
             type=["txt"],
+            key="uploaded_classes_file",
             help=(
                 "If you do not upload a file, the app will use the bundled words-of-interest sample as a placeholder. "
                 f"Sample file: {DEFAULT_CLASSES_PATH}"
@@ -164,6 +297,7 @@ with st.container(border=True):
         uploaded_ontology_file = st.file_uploader(
             "Upload your own ontology file",
             type=["owl"],
+            key="uploaded_ontology_file",
             help=(
                 "If you do not upload a file, the app will use the bundled ontology placeholder. "
                 f"Sample file: {DEFAULT_ONTOLOGY_PATH}"
@@ -173,13 +307,35 @@ with st.container(border=True):
         uploaded_ontology_tags_file = st.file_uploader(
             "Upload your own ontology tags file",
             type=["txt"],
+            key="uploaded_ontology_tags_file",
             help=(
                 "If you do not upload a file, the app will use the bundled ontology tags sample. "
                 f"Sample file: {DEFAULT_ONTOLOGY_TAGS_PATH}"
             ),
         )
 
-        update_outputs_clicked = st.form_submit_button("Update outputs")
+        button_col_1, button_col_2 = st.columns(2)
+        with button_col_1:
+            update_outputs_clicked = st.form_submit_button("Update outputs")
+        with button_col_2:
+            reset_inputs_clicked = st.form_submit_button("Reset page")
+
+if reset_inputs_clicked:
+    for key in [
+        "uploaded_file",
+        "uploaded_classes_file",
+        "uploaded_ontology_file",
+        "uploaded_ontology_tags_file",
+    ]:
+        st.session_state.pop(key, None)
+    st.session_state["show_results"] = False
+    st.rerun()
+
+if update_outputs_clicked:
+    st.session_state["show_results"] = True
+
+if "show_results" not in st.session_state:
+    st.session_state["show_results"] = False
 
 if uploaded_file is not None:
     corpus_text = uploaded_file.read().decode("utf-8", errors="replace")
@@ -259,65 +415,92 @@ if ontology_classes:
 
     summary_text = "\n".join(unique_requested_lines).strip()
 else:
+    unique_requested_lines = []
     summary_text = "No ontology classes were found for the selected ontology and annotation tags."
 
-#########################
-
-st.write("---")
-
-#########################
-
-st.code(corpus_status)
-st.text_area(
-    "Corpus text",
-    value=corpus_text,
-    height=320,
-    key="corpus_text",
-)
-
-st.write("---")
-
-st.code(classes_status)
-st.text_area(
-    "Words of interest",
-    value=classes_of_interest,
-    height=140,
-    key="classes_of_interest",
-    help=(
-        "This is pre-populated from the bundled words-of-interest sample. "
-        f"Sample file: {DEFAULT_CLASSES_PATH}"
-    ),
-)
-
-st.write("---")
-
-st.code(ontology_source)
-st.code(ontology_tags_status)
-st.text_area(
-    "Ontology tags",
-    value=ontology_tags_text,
-    height=140,
-    key="ontology_tags_text",
-    help=(
-        "This is the list of ontology annotation tags used to build the class/synonym summary. "
-        f"Sample file: {DEFAULT_ONTOLOGY_TAGS_PATH}"
-    ),
-)
-
-st.write("---")
-
-st.text_area(
-    "Classes and synonyms",
-    value=summary_text,
-    height=220,
-    key="ontology_summary",
-)
+highlighted_corpus_data = build_highlighted_corpus_data(corpus_text, unique_requested_lines)
+highlighted_corpus_html = highlighted_corpus_data["html"]
+class_synonym_match_rows = build_class_synonym_match_rows(corpus_text, ontology_classes)
+class_synonym_csv = build_class_synonym_csv(class_synonym_match_rows)
 
 #########################
 
-st.write("---")
+if st.session_state.get("show_results", False):
+    st.write("---")
 
-#########################
+    st.markdown("### Corpus matches from classes and synonyms")
+    if highlighted_corpus_html:
+        st.markdown(highlighted_corpus_html, unsafe_allow_html=True)
+    else:
+        st.info("No matching classes or synonyms were found in the corpus.")
+
+    st.markdown("### Download outputs")
+    download_cols = st.columns(4)
+
+    with download_cols[0]:
+        st.download_button(
+            label="Download highlighted lines",
+            data="\n".join(highlighted_corpus_data["highlighted_lines"]),
+            file_name=get_timestamped_filename("highlighted_lines", ".txt"),
+            mime="text/plain",
+            disabled=not highlighted_corpus_data["highlighted_lines"],
+        )
+
+    with download_cols[1]:
+        st.download_button(
+            label="Download non-highlighted lines",
+            data="\n".join(highlighted_corpus_data["non_highlighted_lines"]),
+            file_name=get_timestamped_filename("non_highlighted_lines", ".txt"),
+            mime="text/plain",
+            disabled=not highlighted_corpus_data["non_highlighted_lines"],
+        )
+
+    with download_cols[2]:
+        st.download_button(
+            label="Download highlighted HTML",
+            data=highlighted_corpus_html,
+            file_name=get_timestamped_filename("cyannotator", ".html"),
+            mime="text/html",
+            disabled=not highlighted_corpus_html,
+        )
+
+    with download_cols[3]:
+        st.download_button(
+            label="Download class/synonym CSV",
+            data=class_synonym_csv,
+            file_name=get_timestamped_filename("class_synonym_matches", ".csv"),
+            mime="text/csv",
+            disabled=not class_synonym_match_rows,
+        )
+
+    
+    st.code(corpus_status)
+    '''
+    st.text_area("Corpus text", value=corpus_text, height=320, key="corpus_text",)
+    '''
+
+    st.code(classes_status)
+    '''
+    st.text_area("Words of interest", value=classes_of_interest, height=140, key="classes_of_interest",
+        help=("This is pre-populated from the bundled words-of-interest sample. "
+        f"Sample file: {DEFAULT_CLASSES_PATH}"),
+    )
+    '''
+
+    st.code(ontology_source)
+    st.code(ontology_tags_status)
+    st.write("Ontology tags")
+    st.code(ontology_tags_text)
+
+    '''
+    st.text_area("Classes and synonyms", value=summary_text, height=220, key="ontology_summary",)
+    '''
+    
+    #########################
+
+    st.write("---")
+
+    #########################
 
 
 
