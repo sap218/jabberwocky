@@ -516,14 +516,15 @@ if uploaded_ontology_file is not None:
     ontology_text = uploaded_ontology_file.read().decode("utf-8", errors="replace")
     ontology_source = f"Loaded uploaded ontology file: {uploaded_ontology_file.name}"
 else:
-    ontology_source = f"Using the bundled ontology placeholder: {DEFAULT_ONTOLOGY_PATH.name}"
+    #ontology_source = f"Using the bundled ontology placeholder: {DEFAULT_ONTOLOGY_PATH.name}"
+    ontology_source = f"Using the bundled ontology as a placeholder."
 
 if uploaded_ontology_tags_file is not None:
     ontology_tags_text = uploaded_ontology_tags_file.read().decode("utf-8", errors="replace")
     ontology_tags_source = f"Loaded uploaded ontology tags file: {uploaded_ontology_tags_file.name}"
 else:
     ontology_tags_text = load_file_text(DEFAULT_ONTOLOGY_TAGS_PATH)
-    ontology_tags_source = "Using the bundled ontology tags sample as a placeholder."
+    ontology_tags_source = "Using the bundled ontology tags as a placeholder."
 
 corpus_lines = [line.strip() for line in corpus_text.splitlines() if line.strip()]
 corpus_line_count = len(corpus_lines)
@@ -542,13 +543,13 @@ classes_line_count = len(classes_lines)
 
 classes_status = (
     f"{classes_source}\n"
-    f"Words line count:\t{classes_line_count}"
+    f"Phrases count:\t{classes_line_count}"
 )
 
 ontology_tag_options = [line.strip() for line in ontology_tags_text.splitlines() if line.strip()]
 ontology_tags_status = (
     f"{ontology_tags_source}\n"
-    f"Ontology tags line count:\t{len(ontology_tag_options)}"
+    #f"Ontology tags line count:\t{len(ontology_tag_options)}"
 )
 
 show_results = st.session_state.get("show_results", False)
@@ -712,10 +713,20 @@ if st.session_state.get("show_results", False):
     st.markdown("### Summaries")
     st.code(corpus_status)
     st.code(classes_status)
+    st.code(f"Expanded phrases count:\t{len(unique_requested_lines)}")
     st.code(ontology_source)
-    st.code(ontology_tags_status)
-    st.code(f"Ontology tags: {ontology_tags_text}")
-    
+    st.code(f"{ontology_tags_status}\nOntology tags:\t{', '.join([tag.strip() for tag in ontology_tags_text.splitlines() if tag.strip()])}")
+
+    matched_ontology_tags = sorted({
+        tag
+        for annotations in ontology_classes.values()
+        for tag in annotations.keys()
+    })
+    st.code(
+        "Matched ontology tags:\t"
+        + (", ".join(matched_ontology_tags) if matched_ontology_tags else "None")
+    )
+
     #########################
 
 #########################
