@@ -8,6 +8,11 @@
 
 @useful links:
     # https://docs.streamlit.io/
+
+# word cloud & tf-idf
+# consider matched & unmatched 
+# tf-idf should remove terms from ontology
+
 """
 
 from datetime import datetime
@@ -144,32 +149,36 @@ def build_highlighted_corpus_data(corpus_text: str, match_terms):
 
 
 @st.cache_data(show_spinner=False)
-def build_class_synonym_match_rows(corpus_text: str, ontology_classes):
-    if not corpus_text:
-        return []
-
+def build_class_synonym_match_rows(corpus_text: str, ontology_classes, include_unmatched):
     stopwords_list = get_stopwords_list()
     rows = []
+    corpus_lines = []
+    for line in corpus_text.splitlines():
+        if not line.strip():
+            continue
+        corpus_lines.append((
+            line,
+            normalize_for_matching(line, stopwords_list, "corpus"),
+        ))
 
     for class_name, annotations in ontology_classes.items():
-        class_match_sentence = None
         normalized_class = normalize_for_matching(class_name, stopwords_list, "wordsInterest")
-
-        for line in corpus_text.splitlines():
-            if not line.strip():
-                continue
-            normalized_line = normalize_for_matching(line, stopwords_list, "corpus")
-            if contains_term_as_subsequence(normalized_line, normalized_class):
-                class_match_sentence = line
-                break
-
-        rows.append(
-            {
-                "class": class_name,
-                "synonym": None,
-                "sentence": class_match_sentence,
-            }
-        )
+        class_matches = [
+            line
+            for line, normalized_line in corpus_lines
+            if contains_term_as_subsequence(normalized_line, normalized_class)
+        ]
+        if class_matches:
+            rows.extend(
+                {
+                    "class": class_name,
+                    "synonym": None,
+                    "sentence": line,
+                }
+                for line in class_matches
+            )
+        elif include_unmatched:
+            rows.append({"class": class_name, "synonym": None, "sentence": None})
 
         seen_synonyms = set()
         for annotation_tag in annotations:
@@ -179,23 +188,23 @@ def build_class_synonym_match_rows(corpus_text: str, ontology_classes):
                 seen_synonyms.add(synonym)
 
                 normalized_synonym = normalize_for_matching(synonym, stopwords_list, "wordsInterest")
-                match_sentence = None
-                if normalized_synonym:
-                    for line in corpus_text.splitlines():
-                        if not line.strip():
-                            continue
-                        normalized_line = normalize_for_matching(line, stopwords_list, "corpus")
-                        if contains_term_as_subsequence(normalized_line, normalized_synonym):
-                            match_sentence = line
-                            break
-
-                rows.append(
-                    {
-                        "class": class_name,
-                        "synonym": synonym,
-                        "sentence": match_sentence,
-                    }
-                )
+                synonym_matches = [
+                    line
+                    for line, normalized_line in corpus_lines
+                    if normalized_synonym
+                    and contains_term_as_subsequence(normalized_line, normalized_synonym)
+                ]
+                if synonym_matches:
+                    rows.extend(
+                        {
+                            "class": class_name,
+                            "synonym": synonym,
+                            "sentence": line,
+                        }
+                        for line in synonym_matches
+                    )
+                elif include_unmatched:
+                    rows.append({"class": class_name, "synonym": synonym, "sentence": None})
 
     return rows
 
@@ -288,17 +297,33 @@ def build_tfidf_ranked_terms(corpus_text: str, ngram_values):
 
 
 @st.cache_data(show_spinner=False)
-def build_wordcloud_image(corpus_text: str):
+def build_normalized_corpus_lines(corpus_text: str):
     if not corpus_text:
-        return None
+        return []
 
     stopwords_list = get_stopwords_list()
-    lemmatised_tokens = []
+    normalized_lines = []
 
     for line in corpus_text.splitlines():
         if not line.strip():
             continue
-        lemmatised_tokens.extend(clean_lower_lemma(line, "corpus", stopwords_list))
+        normalized_line = clean_lower_lemma(line, "corpus", stopwords_list)
+        if normalized_line:
+            normalized_lines.append(normalized_line)
+
+    return normalized_lines
+
+
+@st.cache_data(show_spinner=False)
+def build_wordcloud_image(corpus_text: str):
+    if not corpus_text:
+        return None
+
+    lemmatised_tokens = [
+        token
+        for line_tokens in build_normalized_corpus_lines(corpus_text)
+        for token in line_tokens
+    ]
 
     if not lemmatised_tokens:
         return None
@@ -318,55 +343,6 @@ def build_wordcloud_image(corpus_text: str):
     )
 
     wordcloud.generate(" ".join(lemmatised_tokens))
-
-    fig, ax = plt.subplots(figsize=(16, 9), dpi=300)
-    ax.imshow(wordcloud, interpolation="bilinear")
-    ax.axis("off")
-
-    buffer = BytesIO()
-    fig.savefig(buffer, format="png", bbox_inches="tight", pad_inches=0, dpi=300)
-    plt.close(fig)
-
-    return buffer.getvalue()
-
-
-@st.cache_data(show_spinner=False)
-def build_interest_wordcloud_image(corpus_text: str, focus_terms):
-    if not corpus_text or not focus_terms:
-        return None
-
-    stopwords_list = get_stopwords_list()
-    matching_text_parts = []
-
-    for line in corpus_text.splitlines():
-        if not line.strip():
-            continue
-
-        normalized_line = normalize_for_matching(line, stopwords_list, "corpus")
-
-        for term in focus_terms:
-            normalized_term = normalize_for_matching(term, stopwords_list, "wordsInterest")
-            if contains_term_as_subsequence(normalized_line, normalized_term):
-                matching_text_parts.append(term)
-
-    if not matching_text_parts:
-        return None
-
-    wordcloud = WordCloud(
-        width=2400,
-        height=1350,
-        background_color="white",
-        colormap="viridis",
-        max_words=60,
-        min_font_size=10,
-        collocations=False,
-        normalize_plurals=False,
-        prefer_horizontal=0.8,
-        scale=2,
-        random_state=123,
-    )
-
-    wordcloud.generate(" ".join(matching_text_parts))
 
     fig, ax = plt.subplots(figsize=(16, 9), dpi=300)
     ax.imshow(wordcloud, interpolation="bilinear")
@@ -466,6 +442,10 @@ with st.container():#border=True):
             help=("Upload a TXT file (new line delimited) of your words of interest"),
         )
 
+        use_all_ontology_classes = st.checkbox("Use all classes from the ontology", key="use_all_ontology_classes",
+            help="Bypass the Words-of-Interest file input and use all classes found in the ontology",
+        )
+
         uploaded_ontology_file = st.file_uploader("Upload Ontology", type=["owl"], key="uploaded_ontology_file",
             help=("Upload an OWL file (RDF/XML format)"),
         )
@@ -493,6 +473,7 @@ if reset_inputs_clicked:
     for key in [
         "uploaded_file",
         "uploaded_classes_file",
+        "use_all_ontology_classes",
         "uploaded_ontology_file",
         "uploaded_ontology_tags_file",
     ]:
@@ -520,6 +501,10 @@ else:
     classes_of_interest = load_file_text(DEFAULT_CLASSES_PATH)
     classes_source = "Using the bundled words-of-interest sample as a placeholder."
 
+if use_all_ontology_classes:
+    classes_of_interest = ""
+    classes_source = "Using all classes from the ontology."
+
 if uploaded_ontology_file is not None:
     ontology_text = uploaded_ontology_file.read().decode("utf-8", errors="replace")
     ontology_source = f"Loaded uploaded ontology file: {uploaded_ontology_file.name}"
@@ -546,13 +531,7 @@ corpus_status = (
     f"Average word count in corpus:\t{corpus_average_word_count:.1f}"
 )
 
-classes_lines = [line.strip() for line in classes_of_interest.splitlines() if line.strip()]
-classes_line_count = len(classes_lines)
-
-classes_status = (
-    f"{classes_source}\n"
-    f"Phrases count:\t{classes_line_count}"
-)
+classes_status = classes_source
 
 ontology_tag_options = [line.strip() for line in ontology_tags_text.splitlines() if line.strip()]
 ontology_tags_status = (
@@ -572,6 +551,10 @@ if show_results:
         ontology_text,
         classes_of_interest,
         ontology_tag_options,
+    )
+    classes_status = (
+        f"{classes_source}\n"
+        f"Words of interest count:\t{len(ontology_classes)}"
     )
 
     requested_lines = []
@@ -596,12 +579,26 @@ if show_results:
     highlighted_corpus_html = highlighted_corpus_data["html"]
 
     progress_placeholder.progress(55, text="Building class/synonym export...")
-    class_synonym_match_rows = build_class_synonym_match_rows(corpus_text, ontology_classes)
+    class_synonym_match_rows = build_class_synonym_match_rows(
+        corpus_text,
+        ontology_classes,
+        include_unmatched=not use_all_ontology_classes,
+    )
     class_synonym_csv = build_class_synonym_csv(class_synonym_match_rows)
+    matched_classes = {
+        row["class"]
+        for row in class_synonym_match_rows
+        if row["synonym"] is None and row["sentence"]
+    }
+    matched_class_count = len(matched_classes)
+    matched_expanded_terms = {
+        row["class"] if row["synonym"] is None else row["synonym"]
+        for row in class_synonym_match_rows
+        if row["sentence"]
+    }
 
     progress_placeholder.progress(70, text="Creating word clouds...")
     wordcloud_image = build_wordcloud_image(corpus_text)
-    interest_wordcloud_image = build_interest_wordcloud_image(corpus_text, unique_requested_lines)
 
     progress_placeholder.progress(85, text="Computing ranked TF-IDF terms...")
     ngram_values = parse_ngram_values(ngram_input)
@@ -616,8 +613,9 @@ else:
     highlighted_corpus_html = ""
     class_synonym_match_rows = []
     class_synonym_csv = ""
+    matched_class_count = 0
+    matched_expanded_terms = set()
     wordcloud_image = None
-    interest_wordcloud_image = None
     ngram_values = []
     ranked_terms_df = pd.DataFrame()
     ranked_terms_tsv = ""
@@ -625,6 +623,20 @@ else:
 #########################
 
 if st.session_state.get("show_results", False):
+
+    with st.container(border=True):
+        st.markdown("#### Match summary")
+        summary_cols = st.columns(2)
+        with summary_cols[0]:
+            st.metric(
+                "Words of interest matched",
+                f"{matched_class_count}/{len(ontology_classes)}",
+            )
+        with summary_cols[1]:
+            st.metric(
+                "Expanded terms matched",
+                f"{len(matched_expanded_terms)}/{len(unique_requested_lines)}",
+            )
     
     st.markdown("### Phrase matching")
     if highlighted_corpus_html:
