@@ -224,6 +224,8 @@ def build_class_synonym_csv(rows):
 def parse_ngram_values(ngram_text: str):
     if not ngram_text or not ngram_text.strip():
         return [1]
+    if not is_valid_ngram_input(ngram_text):
+        return [1]
 
     parsed_values = []
     for chunk in re.split(r"[,\s]+", ngram_text.strip()):
@@ -237,6 +239,16 @@ def parse_ngram_values(ngram_text: str):
             parsed_values.append(value)
 
     return sorted(set(parsed_values)) if parsed_values else [1]
+
+
+def is_valid_ngram_input(ngram_text: str):
+    if not ngram_text or not ngram_text.strip():
+        return False
+
+    return bool(re.fullmatch(
+        r"\s*[1-9]\d*(?:(?:\s*,\s*|\s+)[1-9]\d*)*\s*",
+        ngram_text,
+    ))
 
 
 @st.cache_data(show_spinner=False)
@@ -772,6 +784,7 @@ if show_results:
         )
     ranked_terms_df = build_tfidf_ranked_terms(tfidf_corpus, ngram_values)
     ranked_terms_tsv = ranked_terms_df.to_csv(index=False, sep="\t") if not ranked_terms_df.empty else ""
+    ngram_input_fallback = not is_valid_ngram_input(ngram_input)
 
     progress_placeholder.progress(100, text="Finished — results are ready.")
 else:
@@ -799,6 +812,7 @@ else:
     ngram_values = []
     ranked_terms_df = pd.DataFrame()
     ranked_terms_tsv = ""
+    ngram_input_fallback = False
 
 #########################
 
@@ -911,6 +925,11 @@ if st.session_state.get("show_results", False):
         max_ngram_value = max(ngram_values) if ngram_values else 1
         st.caption(f"Bar plot of normalised TF-IDF scores for the top 30 important terms, including n-grams up to {max_ngram_value}")
         st.bar_chart(top_ranked_terms.set_index("Word")["Normalised score"])
+        if ngram_input_fallback:
+            st.markdown(
+                "<small><i>Could not recognise input, so defaulted to 1 n-gram.</i></small>",
+                unsafe_allow_html=True,
+            )
         #st.dataframe(ranked_terms_df, use_container_width=True, hide_index=True)
 
         st.download_button(label="Download TSV of all ranked terms", data=ranked_terms_tsv,
@@ -961,10 +980,11 @@ if st.session_state.get("show_results", False):
         "Matched ontology tags:\t"
         + (", ".join(matched_ontology_tags) if matched_ontology_tags else "None")
     )
-    st.code(
-        "Ontology classes without matches:\t"
-        + ("\t".join(unmatched_ontology_classes) if unmatched_ontology_classes else "None")
-    )
+    unmatched_class_count = len(unmatched_ontology_classes)
+    unmatched_class_summary = f"{unmatched_class_count} Ontology classes without matches"
+    if not use_all_ontology_classes and unmatched_ontology_classes:
+        unmatched_class_summary += ": " + ", ".join(unmatched_ontology_classes)
+    st.code(unmatched_class_summary)
 
     #########################
 
