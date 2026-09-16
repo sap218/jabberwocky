@@ -8,11 +8,6 @@
 
 @useful links:
     # https://docs.streamlit.io/
-
-# word cloud & tf-idf
-# consider matched & unmatched 
-# tf-idf should remove terms from ontology
-
 """
 
 from datetime import datetime
@@ -456,10 +451,12 @@ st.title("Jabberwocky")
 
 st.markdown("a toolkit for Natural Language Processing (NLP) and Ontologies &nbsp; <small>@ sap218</small>",unsafe_allow_html=True)
 
-link_colsA, link_colsB, _ = st.columns([0.8, 0.8, 3], gap="small")
+link_colsA, link_colsB, link_colsC, _ = st.columns([0.15, 0.15, 0.15, 0.6], gap="small")
 with link_colsA:
-    st.link_button("Github", "https://github.com/sap218/jabberwocky")
+    st.link_button("JOSS", "https://joss.theoj.org/papers/10.21105/joss.02168")
 with link_colsB:
+    st.link_button("Github", "https://github.com/sap218/jabberwocky")
+with link_colsC:
     st.link_button("Post", "https://sap218.uk/projects/jabberwocky/")
 
 #########################
@@ -475,15 +472,15 @@ with st.container():#border=True):
     with st.form("input_form"):
         #st.markdown("### Inputs")
 
-        st.markdown("##### Corpus")
+        #st.markdown("##### Corpus")
 
-        uploaded_file = st.file_uploader("Upload Corpus", type=["txt"], key="uploaded_file",
+        uploaded_file = st.file_uploader("Corpus:", type=["txt"], key="uploaded_file",
             help=("Upload a TXT file (new line delimited) of your corpus"),
         )
 
-        st.markdown("##### Words-of-Interest")
+        #st.markdown("##### Words-of-Interest")
 
-        uploaded_classes_file = st.file_uploader("Upload Words-of-Interest", type=["txt"], key="uploaded_classes_file",
+        uploaded_classes_file = st.file_uploader("Words-of-Interest file:", type=["txt"], key="uploaded_classes_file",
             help=("Upload a TXT file (new line delimited) of your words of interest"),
         )
 
@@ -491,30 +488,32 @@ with st.container():#border=True):
             help="Bypass the Words-of-Interest file input and use all classes found in the ontology",
         )
 
-        st.markdown("##### Ontology")
+        #st.markdown("##### Ontology")
 
-        uploaded_ontology_file = st.file_uploader("Upload Ontology", type=["owl"], key="uploaded_ontology_file",
+        uploaded_ontology_file = st.file_uploader("Ontology file:", type=["owl"], key="uploaded_ontology_file",
             help=("Upload an OWL file (RDF/XML format)"),
         )
 
-        uploaded_ontology_tags_file = st.file_uploader("Upload Ontology tags", type=["txt"], key="uploaded_ontology_tags_file",
+        uploaded_ontology_tags_file = st.file_uploader("Ontology tags:", type=["txt"], key="uploaded_ontology_tags_file",
             help=(
                 "Upload a TXT file (new line delimited) of the ontology tags for metadata extraction of the words of interest\n\n"
                 "If unsure, run as is and see bottom of page for an example"
                 ),
         )
 
-        st.markdown("##### Important terms analysis")
+        #st.markdown("##### Wordcloud")
 
-        tfidf_corpus_mode = st.radio("TF-IDF corpus", options=["Whole corpus", "Corpus with classes and synonyms removed"],
+        #st.markdown("##### Important terms analysis")
+
+        tfidf_corpus_mode = st.radio("TF-IDF performed on:", options=["Whole corpus", "Corpus with classes and synonyms removed"],
             key="tfidf_corpus_mode", help="Choose how to preprocess the corpus for TF-IDF",
         )
 
-        ngram_input = st.text_input("N-grams to consider",value="1,2,3",
+        ngram_input = st.text_input("N-grams to consider for TF-IDF:",value="1,2,3",
             help="Comma-separated values, for example: 1,2,3",
         )
 
-        st.markdown("<small><i>running without uploading any files will use test files as a placeholder</i></small>", unsafe_allow_html=True)
+        st.markdown("<small><i>running without uploading will use test files as a placeholder</i></small>", unsafe_allow_html=True)
 
         button_col_1, button_col_2 = st.columns([1, 1], gap="small")
         with button_col_1:
