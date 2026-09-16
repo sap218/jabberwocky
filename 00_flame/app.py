@@ -85,6 +85,43 @@ def contains_term_as_subsequence(line_tokens, term_tokens):
     return matched == len(term_tokens)
 
 
+def find_highlight_span(line: str, normalized_terms, stopwords_list):
+    original_tokens = list(re.finditer(r"\S+", line))
+    normalized_tokens = []
+    original_token_indexes = []
+
+    for original_index, original_token in enumerate(original_tokens):
+        token_values = normalize_for_matching(
+            original_token.group(),
+            stopwords_list,
+            "corpus",
+        )
+        normalized_tokens.extend(token_values)
+        original_token_indexes.extend([original_index] * len(token_values))
+
+    best_span = None
+    for term_tokens in normalized_terms:
+        matched_indexes = []
+        term_index = 0
+        for normalized_index, token in enumerate(normalized_tokens):
+            if term_index < len(term_tokens) and token == term_tokens[term_index]:
+                matched_indexes.append(normalized_index)
+                term_index += 1
+                if term_index == len(term_tokens):
+                    start_index = original_token_indexes[matched_indexes[0]]
+                    end_index = original_token_indexes[matched_indexes[-1]]
+                    span = (start_index, end_index)
+                    if best_span is None or (end_index - start_index) < (best_span[1] - best_span[0]):
+                        best_span = span
+                    break
+
+    if best_span is None:
+        return None
+
+    start_token, end_token = best_span
+    return original_tokens[start_token].start(), original_tokens[end_token].end()
+
+
 @st.cache_data(show_spinner=False)
 def build_highlighted_corpus_data(corpus_text: str, match_terms):
     if not corpus_text:
@@ -118,12 +155,23 @@ def build_highlighted_corpus_data(corpus_text: str, match_terms):
             continue
 
         normalized_line = normalize_for_matching(line, stopwords_list, "corpus")
+        highlight_span = find_highlight_span(line, normalized_terms, stopwords_list)
         is_match = any(contains_term_as_subsequence(normalized_line, term) for term in normalized_terms)
+        if is_match and highlight_span is None:
+            highlight_span = (0, len(line))
 
         if is_match:
             highlighted_lines.append(line)
+            start, end = highlight_span
+            highlighted_text = (
+                html.escape(line[:start])
+                + "<mark style='background-color: #9be7ff; color: #0f172a; border-radius: 4px; padding: 0 2px;'>"
+                + html.escape(line[start:end])
+                + "</mark>"
+                + html.escape(line[end:])
+            )
             html_lines.append(
-                f"<div><mark style='background-color: #9be7ff; color: #0f172a; border-radius: 4px; padding: 0 2px;'>{html.escape(line)}</mark></div>"
+                f"<div>{highlighted_text}</div>"
             )
         else:
             non_highlighted_lines.append(line)
