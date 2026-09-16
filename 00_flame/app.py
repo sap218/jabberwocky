@@ -297,6 +297,47 @@ def build_tfidf_ranked_terms(corpus_text: str, ngram_values):
 
 
 @st.cache_data(show_spinner=False)
+def remove_class_synonyms_from_corpus(corpus_text: str, requested_terms):
+    if not corpus_text or not requested_terms:
+        return corpus_text
+
+    stopwords_list = get_stopwords_list()
+    normalized_terms = [
+        normalize_for_matching(term, stopwords_list, "wordsInterest")
+        for term in requested_terms
+    ]
+    normalized_terms = sorted(
+        (term for term in normalized_terms if term),
+        key=len,
+        reverse=True,
+    )
+
+    filtered_lines = []
+    for line in corpus_text.splitlines():
+        if not line.strip():
+            continue
+
+        remaining_tokens = normalize_for_matching(line, stopwords_list, "corpus")
+        changed = True
+        while changed:
+            changed = False
+            for term_tokens in normalized_terms:
+                term_length = len(term_tokens)
+                index = 0
+                while index <= len(remaining_tokens) - term_length:
+                    if remaining_tokens[index:index + term_length] == term_tokens:
+                        del remaining_tokens[index:index + term_length]
+                        changed = True
+                    else:
+                        index += 1
+
+        if remaining_tokens:
+            filtered_lines.append(" ".join(remaining_tokens))
+
+    return "\n".join(filtered_lines)
+
+
+@st.cache_data(show_spinner=False)
 def build_normalized_corpus_lines(corpus_text: str):
     if not corpus_text:
         return []
@@ -434,9 +475,13 @@ with st.container():#border=True):
     with st.form("input_form"):
         #st.markdown("### Inputs")
 
+        st.markdown("##### Corpus")
+
         uploaded_file = st.file_uploader("Upload Corpus", type=["txt"], key="uploaded_file",
             help=("Upload a TXT file (new line delimited) of your corpus"),
         )
+
+        st.markdown("##### Words-of-Interest")
 
         uploaded_classes_file = st.file_uploader("Upload Words-of-Interest", type=["txt"], key="uploaded_classes_file",
             help=("Upload a TXT file (new line delimited) of your words of interest"),
@@ -445,6 +490,8 @@ with st.container():#border=True):
         use_all_ontology_classes = st.checkbox("Use all classes from the ontology", key="use_all_ontology_classes",
             help="Bypass the Words-of-Interest file input and use all classes found in the ontology",
         )
+
+        st.markdown("##### Ontology")
 
         uploaded_ontology_file = st.file_uploader("Upload Ontology", type=["owl"], key="uploaded_ontology_file",
             help=("Upload an OWL file (RDF/XML format)"),
@@ -455,6 +502,12 @@ with st.container():#border=True):
                 "Upload a TXT file (new line delimited) of the ontology tags for metadata extraction of the words of interest\n\n"
                 "If unsure, run as is and see bottom of page for an example"
                 ),
+        )
+
+        st.markdown("##### Important terms analysis")
+
+        tfidf_corpus_mode = st.radio("TF-IDF corpus", options=["Whole corpus", "Corpus with classes and synonyms removed"],
+            key="tfidf_corpus_mode", help="Choose how to preprocess the corpus for TF-IDF",
         )
 
         ngram_input = st.text_input("N-grams to consider",value="1,2,3",
@@ -476,6 +529,7 @@ if reset_inputs_clicked:
         "use_all_ontology_classes",
         "uploaded_ontology_file",
         "uploaded_ontology_tags_file",
+        "tfidf_corpus_mode",
     ]:
         st.session_state.pop(key, None)
     st.session_state["show_results"] = False
@@ -602,7 +656,13 @@ if show_results:
 
     progress_placeholder.progress(85, text="Computing ranked TF-IDF terms...")
     ngram_values = parse_ngram_values(ngram_input)
-    ranked_terms_df = build_tfidf_ranked_terms(corpus_text, ngram_values)
+    tfidf_corpus = corpus_text
+    if tfidf_corpus_mode == "Corpus with classes and synonyms removed":
+        tfidf_corpus = remove_class_synonyms_from_corpus(
+            corpus_text,
+            tuple(unique_requested_lines),
+        )
+    ranked_terms_df = build_tfidf_ranked_terms(tfidf_corpus, ngram_values)
     ranked_terms_tsv = ranked_terms_df.to_csv(index=False, sep="\t") if not ranked_terms_df.empty else ""
 
     progress_placeholder.progress(100, text="Finished — results are ready.")
