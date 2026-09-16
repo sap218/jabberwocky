@@ -392,6 +392,37 @@ def build_wordcloud_image(corpus_text: str):
 
 
 @st.cache_data(show_spinner=False)
+def build_class_match_plot_image(class_match_counts):
+    if class_match_counts.empty:
+        return None
+
+    plot_data = class_match_counts.sort_values(
+        "Class + synonym matches",
+        ascending=False,
+    ).head(30).sort_values(
+        "Class + synonym matches",
+        ascending=True,
+    )
+    figure_height = max(4, 0.35 * len(plot_data) + 1.5)
+    fig, ax = plt.subplots(figsize=(12, figure_height), dpi=200)
+    ax.barh(
+        plot_data["Class"],
+        plot_data["Class + synonym matches"],
+        color="#4c78a8",
+    )
+    ax.set_xlabel("Unique corpus lines matched")
+    ax.set_ylabel("Ontology class")
+    ax.set_title("Ontology class matches")
+    ax.grid(axis="x", alpha=0.25)
+    fig.tight_layout()
+
+    buffer = BytesIO()
+    fig.savefig(buffer, format="png", bbox_inches="tight", dpi=200)
+    plt.close(fig)
+    return buffer.getvalue()
+
+
+@st.cache_data(show_spinner=False)
 def extract_classes_with_annotations(ontology_text: str, classes_of_interest_text: str, annotation_tags):
     if not ontology_text or not annotation_tags:
         return {}
@@ -448,6 +479,20 @@ def extract_classes_with_annotations(ontology_text: str, classes_of_interest_tex
 #########################
 
 st.title("Jabberwocky")
+
+st.markdown(
+    """
+    <style>
+    [data-testid="stMetricValue"] {
+        font-size: 1.45rem;
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 0.85rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.markdown("a toolkit for Natural Language Processing (NLP) and Ontologies &nbsp; <small>@ sap218</small>",unsafe_allow_html=True)
 
@@ -649,6 +694,70 @@ if show_results:
         for row in class_synonym_match_rows
         if row["sentence"]
     }
+    class_only_match_lines = {}
+    class_combined_match_lines = {}
+    synonym_match_lines = {}
+    for row in class_synonym_match_rows:
+        if not row["sentence"]:
+            continue
+        class_name = row["class"]
+        class_combined_match_lines.setdefault(class_name, set()).add(row["sentence"])
+        if row["synonym"] is None:
+            class_only_match_lines.setdefault(class_name, set()).add(row["sentence"])
+        else:
+            synonym_match_lines.setdefault(
+                (row["synonym"], class_name),
+                set(),
+            ).add(row["sentence"])
+
+    class_match_counts = pd.DataFrame([
+        {
+            "Class": class_name,
+            "Class matches": len(class_only_match_lines.get(class_name, set())),
+            "Class + synonym matches": len(class_combined_match_lines.get(class_name, set())),
+        }
+        for class_name in ontology_classes
+    ]).sort_values(
+        "Class + synonym matches",
+        ascending=False,
+    ) if ontology_classes else pd.DataFrame(
+        columns=["Class", "Class matches", "Class + synonym matches"]
+    )
+    class_match_counts = class_match_counts.reset_index(drop=True)
+    class_only_ranked = class_match_counts[class_match_counts["Class matches"] > 0].sort_values(
+        ["Class matches", "Class"], ascending=[False, True]
+    )
+    class_combined_ranked = class_match_counts[
+        class_match_counts["Class + synonym matches"] > 0
+    ]
+    class_only_top = class_only_ranked.iloc[0] if not class_only_ranked.empty else None
+    class_combined_top = class_combined_ranked.iloc[0] if not class_combined_ranked.empty else None
+    synonym_top = max(
+        (
+            (len(match_lines), synonym, class_name)
+            for (synonym, class_name), match_lines in synonym_match_lines.items()
+        ),
+        default=None,
+    )
+
+    matched_corpus_line_count = len(highlighted_corpus_data["highlighted_lines"])
+    matched_corpus_percentage = (
+        matched_corpus_line_count / corpus_line_count * 100
+        if corpus_line_count else 0
+    )
+    class_match_percentage = (
+        matched_class_count / len(ontology_classes) * 100
+        if ontology_classes else 0
+    )
+    expanded_match_percentage = (
+        len(matched_expanded_terms) / len(unique_requested_lines) * 100
+        if unique_requested_lines else 0
+    )
+    unmatched_ontology_classes = [
+        class_name
+        for class_name in ontology_classes
+        if not class_combined_match_lines.get(class_name)
+    ]
 
     progress_placeholder.progress(70, text="Creating word clouds...")
     wordcloud_image = build_wordcloud_image(corpus_text)
@@ -674,6 +783,18 @@ else:
     class_synonym_csv = ""
     matched_class_count = 0
     matched_expanded_terms = set()
+    class_match_counts = pd.DataFrame(
+        columns=["Class", "Class matches", "Class + synonym matches"]
+    )
+    class_match_plot_image = None
+    class_only_top = None
+    class_combined_top = None
+    synonym_top = None
+    matched_corpus_line_count = 0
+    matched_corpus_percentage = 0
+    class_match_percentage = 0
+    expanded_match_percentage = 0
+    unmatched_ontology_classes = []
     wordcloud_image = None
     ngram_values = []
     ranked_terms_df = pd.DataFrame()
@@ -684,18 +805,46 @@ else:
 if st.session_state.get("show_results", False):
 
     with st.container(border=True):
-        st.markdown("#### Match summary")
-        summary_cols = st.columns(2)
+        st.markdown("#### Summary metrics")
+        summary_cols = st.columns(3)
         with summary_cols[0]:
             st.metric(
                 "Words of interest matched",
-                f"{matched_class_count}/{len(ontology_classes)}",
+                f"{matched_class_count}/{len(ontology_classes)} ({class_match_percentage:.0f}%)",
             )
         with summary_cols[1]:
             st.metric(
                 "Expanded terms matched",
-                f"{len(matched_expanded_terms)}/{len(unique_requested_lines)}",
+                f"{len(matched_expanded_terms)}/{len(unique_requested_lines)} ({expanded_match_percentage:.0f}%)",
             )
+        with summary_cols[2]:
+            st.metric(
+                "Corpus lines matched",
+                f"{matched_corpus_line_count}/{corpus_line_count} ({matched_corpus_percentage:.0f}%)",
+            )
+
+        top_cols = st.columns(3)
+        with top_cols[0]:
+            st.metric(
+                "Top class-only match",
+                class_only_top["Class"] if class_only_top is not None else "None",
+            )
+            if class_only_top is not None:
+                st.caption(f"{int(class_only_top['Class matches'])} lines")
+        with top_cols[1]:
+            st.metric(
+                "Top class + synonym match",
+                class_combined_top["Class"] if class_combined_top is not None else "None",
+            )
+            if class_combined_top is not None:
+                st.caption(f"{int(class_combined_top['Class + synonym matches'])} lines")
+        with top_cols[2]:
+            st.metric(
+                "Top synonym match",
+                f"{synonym_top[1]} ({synonym_top[2]})" if synonym_top is not None else "None",
+            )
+            if synonym_top is not None:
+                st.caption(f"{synonym_top[0]} lines")
     
     st.markdown("### Phrase matching")
     if highlighted_corpus_html:
@@ -746,7 +895,7 @@ if st.session_state.get("show_results", False):
     else:
         st.info("No corpus content was available to generate a word cloud.")
 
-    st.download_button(label="Download corpus word cloud", data=wordcloud_image,
+    st.download_button(label="Download Wordcloud", data=wordcloud_image,
         file_name=get_timestamped_filename("corpus_wordcloud", ".png"),
         mime="image/png", disabled=not wordcloud_image,
     )
@@ -754,19 +903,37 @@ if st.session_state.get("show_results", False):
     #########################
     st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
 
-    st.markdown("### Ranked terms (TF-IDF)")
+    st.markdown("### Important terms")
     if ranked_terms_df.empty:
         st.info("No ranked terms were produced for the selected n-grams.")
     else:
         top_ranked_terms = ranked_terms_df.head(30).copy()
         max_ngram_value = max(ngram_values) if ngram_values else 1
-        st.caption(f"Bar plot of normalised TF-IDF scores for n-grams up to {max_ngram_value}")
+        st.caption(f"Bar plot of normalised TF-IDF scores for the top 30 important terms, including n-grams up to {max_ngram_value}")
         st.bar_chart(top_ranked_terms.set_index("Word")["Normalised score"])
-        #st.dataframe(top_ranked_terms, use_container_width=True)
+        #st.dataframe(ranked_terms_df, use_container_width=True, hide_index=True)
 
-        st.download_button(label="Download ranked TSV", data=ranked_terms_tsv,
+        st.download_button(label="Download TSV of all ranked terms", data=ranked_terms_tsv,
             file_name=get_timestamped_filename("ranked_terms", ".tsv"),
             mime="text/tab-separated-values", disabled=ranked_terms_df.empty,
+        )
+
+    #########################
+
+    st.markdown("### Ontology class matches")
+    if class_match_counts.empty:
+        st.info("No ontology class matches were produced.")
+    else:
+        top_class_match_counts = class_match_counts.head(30)
+        st.caption("Top 30 classes by unique corpus lines matched, including synonyms.")
+        st.bar_chart(
+            top_class_match_counts.set_index("Class")["Class + synonym matches"]
+        )
+
+        class_match_plot_image = build_class_match_plot_image(class_match_counts)
+        st.download_button(label="Download class matches plot", data=class_match_plot_image,
+            file_name=get_timestamped_filename("ontology_class_matches", ".png"),
+            mime="image/png", disabled=not class_match_plot_image,
         )
 
     #########################
@@ -775,6 +942,12 @@ if st.session_state.get("show_results", False):
     st.markdown("### Summaries")
     st.code(corpus_status)
     st.code(classes_status)
+    unmatched_words_status = (
+        "All match"
+        if use_all_ontology_classes or not unmatched_ontology_classes
+        else "\t".join(unmatched_ontology_classes)
+    )
+    st.code(f"Words of interest not matched:\t{unmatched_words_status}")
     st.code(f"Expanded phrases count:\t{len(unique_requested_lines)}")
     st.code(ontology_source)
     st.code(f"{ontology_tags_status}\nOntology tags:\t{', '.join([tag.strip() for tag in ontology_tags_text.splitlines() if tag.strip()])}")
@@ -787,6 +960,10 @@ if st.session_state.get("show_results", False):
     st.code(
         "Matched ontology tags:\t"
         + (", ".join(matched_ontology_tags) if matched_ontology_tags else "None")
+    )
+    st.code(
+        "Ontology classes without matches:\t"
+        + ("\t".join(unmatched_ontology_classes) if unmatched_ontology_classes else "None")
     )
 
     #########################
