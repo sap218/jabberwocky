@@ -38,17 +38,71 @@ DEFAULT_TEXT_PATH = WORKSPACE_ROOT / "test" / "CelestialObject" / "corpus" / "so
 DEFAULT_CLASSES_PATH = WORKSPACE_ROOT / "test" / "CelestialObject" / "corpus" / "classes_of_interest.txt"
 DEFAULT_ONTOLOGY_TAGS_PATH = WORKSPACE_ROOT / "test" / "CelestialObject" / "corpus" / "ontology_tags.txt"
 DEFAULT_ONTOLOGY_PATH = WORKSPACE_ROOT / "01_converter" / "test" / "20260122-203441_space.owl"
+FALLBACK_SAMPLE_TEXT = """The Sun is extra bright today!
+its a solar eclipse! you shouldnt look at it!
+I forgot sunglasses...
+NO NO even if you forgot sunglasses you shouldn't look at the sun directly!
+
+anyone got a telescope spare? I want to check out Saturn
+You'll have a better chance at mars or the moon
+It might be a good time of the year to see Venus though.
+is it venus or mars that is known as the red planet?
+telescopes are crazy expensive...
+on a good night - or without light pollution - you could try looking at orions belt
+
+Still crazy that the sun orbits our world.
+Actually the earth orbits the sun!
+Thank you for the information :-)
+
+so who agrees that PLUTO is a planet?
+its a dwarf planet #StillAPlanetToMe
+
+Is the ISS fast? How about comets?
+
+Did anyone know that our moon is called Luna?
+I did! the sun is also called Sol!
+does Earth have a name?
+
+Did you know the Mars Rover sings Happy Birthday to celebrate the landing anniversary? #RoverFacts
+
+Is the sun yelling or are those flares crazy today? #joke
+Saturn has more rings than i do
+
+anyone else believe in aliens? :o
+Well I did just watch the movie, Mars attack
+
+stars are pretty tonight!
+
+what time of the year can I see the Big Dipper?
+If you're in the UK then you can see it all year, but I guess it depends where you are because of light pollution.
+It looks like a pan to me
+Samee!"""
+FALLBACK_CLASSES_TEXT = "mars\norion's belt\nsaturn\nsol"
+FALLBACK_ONTOLOGY_TAGS_TEXT = "UFO:hasSynonym"
 
 @st.cache_data(show_spinner=False)
-def load_file_text(file_path: Path) -> str:
+def load_file_text(file_path: Path, fallback: str = "") -> str:
     if file_path.exists():
         return file_path.read_text(encoding="utf-8")
-    return ""
+    return fallback
 
 
 def get_timestamped_filename(prefix: str, suffix: str) -> str:
     timestamp = datetime.today().strftime("%Y%m%d-%H%M%S")
     return f"{timestamp}_{prefix}{suffix}"
+
+
+def reset_inputs():
+    for key in [
+        "uploaded_file",
+        "uploaded_classes_file",
+        "use_all_ontology_classes",
+        "uploaded_ontology_file",
+        "uploaded_ontology_tags_file",
+        "tfidf_corpus_mode",
+    ]:
+        st.session_state.pop(key, None)
+    st.session_state["show_results"] = False
 
 
 @st.cache_data(show_spinner=False)
@@ -483,6 +537,27 @@ def build_class_match_plot_image(class_match_counts):
 
 
 @st.cache_data(show_spinner=False)
+def extract_ontology_class_labels(ontology_text: str):
+    if not ontology_text:
+        return set()
+
+    try:
+        root = ET.fromstring(ontology_text)
+    except ET.ParseError:
+        return set()
+
+    labels = set()
+    for concept in root.iter():
+        if concept.tag.split("}")[-1] != "Class":
+            continue
+        for child in concept:
+            if child.tag.split("}")[-1] == "label" and child.text:
+                labels.add(child.text.strip())
+                break
+    return labels
+
+
+@st.cache_data(show_spinner=False)
 def extract_classes_with_annotations(ontology_text: str, classes_of_interest_text: str, annotation_tags):
     if not ontology_text or not annotation_tags:
         return {}
@@ -568,9 +643,9 @@ with link_colsD:
 
 #########################
 
-sample_text = load_file_text(DEFAULT_TEXT_PATH)
-classes_of_interest = load_file_text(DEFAULT_CLASSES_PATH)
-ontology_tags_text = load_file_text(DEFAULT_ONTOLOGY_TAGS_PATH)
+sample_text = load_file_text(DEFAULT_TEXT_PATH, FALLBACK_SAMPLE_TEXT)
+classes_of_interest = load_file_text(DEFAULT_CLASSES_PATH, FALLBACK_CLASSES_TEXT)
+ontology_tags_text = load_file_text(DEFAULT_ONTOLOGY_TAGS_PATH, FALLBACK_ONTOLOGY_TAGS_TEXT)
 ontology_text = load_file_text(DEFAULT_ONTOLOGY_PATH)
 
 #########################
@@ -626,20 +701,7 @@ with st.container():#border=True):
         with button_col_1:
             update_outputs_clicked = st.form_submit_button("Run matcher")
         with button_col_2:
-            reset_inputs_clicked = st.form_submit_button("Reset page")
-
-if reset_inputs_clicked:
-    for key in [
-        "uploaded_file",
-        "uploaded_classes_file",
-        "use_all_ontology_classes",
-        "uploaded_ontology_file",
-        "uploaded_ontology_tags_file",
-        "tfidf_corpus_mode",
-    ]:
-        st.session_state.pop(key, None)
-    st.session_state["show_results"] = False
-    st.rerun()
+            st.form_submit_button("Reset page", on_click=reset_inputs)
 
 if update_outputs_clicked:
     st.session_state["show_results"] = True
@@ -658,12 +720,19 @@ if uploaded_classes_file is not None:
     classes_of_interest = uploaded_classes_file.read().decode("utf-8", errors="replace")
     classes_source = f"Loaded uploaded words file: {uploaded_classes_file.name}"
 else:
-    classes_of_interest = load_file_text(DEFAULT_CLASSES_PATH)
+    classes_of_interest = load_file_text(DEFAULT_CLASSES_PATH, FALLBACK_CLASSES_TEXT)
     classes_source = "Using the bundled words-of-interest sample as a placeholder."
 
-if use_all_ontology_classes:
+classes_of_interest_lines = [
+    line.strip() for line in classes_of_interest.splitlines() if line.strip()
+]
+if use_all_ontology_classes or not classes_of_interest_lines:
     classes_of_interest = ""
-    classes_source = "Using all classes from the ontology."
+    use_all_ontology_classes = True
+    if classes_of_interest_lines:
+        classes_source = "Using all classes from the ontology."
+    else:
+        classes_source = "No words-of-interest lines provided; using all classes from the ontology."
 
 if uploaded_ontology_file is not None:
     ontology_text = uploaded_ontology_file.read().decode("utf-8", errors="replace")
@@ -676,7 +745,7 @@ if uploaded_ontology_tags_file is not None:
     ontology_tags_text = uploaded_ontology_tags_file.read().decode("utf-8", errors="replace")
     ontology_tags_source = f"Loaded uploaded ontology tags file: {uploaded_ontology_tags_file.name}"
 else:
-    ontology_tags_text = load_file_text(DEFAULT_ONTOLOGY_TAGS_PATH)
+    ontology_tags_text = load_file_text(DEFAULT_ONTOLOGY_TAGS_PATH, FALLBACK_ONTOLOGY_TAGS_TEXT)
     ontology_tags_source = "Using the bundled ontology tags as a placeholder."
 
 corpus_lines = [line.strip() for line in corpus_text.splitlines() if line.strip()]
@@ -712,6 +781,17 @@ if show_results:
         classes_of_interest,
         ontology_tag_options,
     )
+    ontology_class_labels = extract_ontology_class_labels(ontology_text)
+    ontology_class_names = [
+        class_name
+        for class_name in ontology_classes
+        if class_name in ontology_class_labels
+    ]
+    unmatched_words_of_interest = [
+        word
+        for word in classes_of_interest_lines
+        if not use_all_ontology_classes and word not in ontology_class_labels
+    ]
     classes_status = (
         f"{classes_source}\n"
         f"Words of interest count:\t{len(ontology_classes)}"
@@ -748,7 +828,9 @@ if show_results:
     matched_classes = {
         row["class"]
         for row in class_synonym_match_rows
-        if row["synonym"] is None and row["sentence"]
+        if row["synonym"] is None
+        and row["sentence"]
+        and row["class"] in ontology_class_names
     }
     matched_class_count = len(matched_classes)
     matched_expanded_terms = {
@@ -778,11 +860,11 @@ if show_results:
             "Class matches": len(class_only_match_lines.get(class_name, set())),
             "Class + synonym matches": len(class_combined_match_lines.get(class_name, set())),
         }
-        for class_name in ontology_classes
+        for class_name in ontology_class_names
     ]).sort_values(
         "Class + synonym matches",
         ascending=False,
-    ) if ontology_classes else pd.DataFrame(
+    ) if ontology_class_names else pd.DataFrame(
         columns=["Class", "Class matches", "Class + synonym matches"]
     )
     class_match_counts = class_match_counts.reset_index(drop=True)
@@ -808,8 +890,8 @@ if show_results:
         if corpus_line_count else 0
     )
     class_match_percentage = (
-        matched_class_count / len(ontology_classes) * 100
-        if ontology_classes else 0
+        matched_class_count / len(ontology_class_names) * 100
+        if ontology_class_names else 0
     )
     expanded_match_percentage = (
         len(matched_expanded_terms) / len(unique_requested_lines) * 100
@@ -817,7 +899,7 @@ if show_results:
     )
     unmatched_ontology_classes = [
         class_name
-        for class_name in ontology_classes
+        for class_name in ontology_class_names
         if not class_combined_match_lines.get(class_name)
     ]
 
@@ -858,6 +940,7 @@ else:
     class_match_percentage = 0
     expanded_match_percentage = 0
     unmatched_ontology_classes = []
+    unmatched_words_of_interest = []
     wordcloud_image = None
     ngram_values = []
     ranked_terms_df = pd.DataFrame()
@@ -952,17 +1035,15 @@ if st.session_state.get("show_results", False):
     #########################
     st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
 
-    st.markdown("### Wordcloud")
     if wordcloud_image:
-        #st.image(wordcloud_image, caption="Corpus word cloud (lemmatised, stopword-filtered)", use_container_width=True)
+        st.markdown("### Wordcloud")
         st.image(wordcloud_image, use_container_width=True)
-    else:
-        st.info("No corpus content was available to generate a word cloud.")
-
-    st.download_button(label="Download Wordcloud", data=wordcloud_image,
-        file_name=get_timestamped_filename("corpus_wordcloud", ".png"),
-        mime="image/png", disabled=not wordcloud_image,
-    )
+        st.download_button(label="Download Wordcloud", data=wordcloud_image,
+            file_name=get_timestamped_filename("corpus_wordcloud", ".png"),
+            mime="image/png",
+        )
+    elif corpus_line_count:
+        st.info("No usable words were available to generate a word cloud.")
 
     #########################
     st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
@@ -1011,13 +1092,25 @@ if st.session_state.get("show_results", False):
     st.markdown("### Log")
     st.code(corpus_status)
     st.code(classes_status)
-    unmatched_words_status = (
-        "All match"
-        if use_all_ontology_classes or not unmatched_ontology_classes
-        else "\t".join(unmatched_ontology_classes)
+    ontology_selection_status = (
+        "All ontology classes"
+        if use_all_ontology_classes
+        else f"Words-of-interest file ({len(classes_of_interest_lines)} lines)"
     )
-    st.code(f"Words of interest not matched:\t{unmatched_words_status}")
+    #st.code(f"Ontology classes used:\t{ontology_selection_status}")
+    unmatched_words_status = "\n".join(unmatched_words_of_interest) or "None"
+    if len(unmatched_words_of_interest) == 0:
+        st.code("All words of interest matched ontology classes")
+    else:
+        st.text_area(
+            f"Words of interest that didn't match to ontology classes: ({len(unmatched_words_of_interest)})",
+            f"{unmatched_words_status}",
+            height=120, disabled=True,
+        )
+
     st.code(f"Expanded phrases count:\t{len(unique_requested_lines)}")
+    if len(unique_requested_lines) == len(ontology_classes):
+        st.code("Words-of-interest count & Expanded phrases have the same count, check below if provided correct annotations tag(s)")
     st.code(ontology_source)
     st.code(f"{ontology_tags_status}\nOntology tags:\t{', '.join([tag.strip() for tag in ontology_tags_text.splitlines() if tag.strip()])}")
 
@@ -1031,10 +1124,15 @@ if st.session_state.get("show_results", False):
         + (", ".join(matched_ontology_tags) if matched_ontology_tags else "None")
     )
     unmatched_class_count = len(unmatched_ontology_classes)
-    unmatched_class_summary = f"{unmatched_class_count} Ontology classes without matches"
-    if not use_all_ontology_classes and unmatched_ontology_classes:
-        unmatched_class_summary += ": " + ", ".join(unmatched_ontology_classes)
-    st.code(unmatched_class_summary)
+    unmatched_class_status = "\n".join(unmatched_ontology_classes) or "None"
+    if unmatched_class_count == 0:
+        st.code("All words-of-interest had matches")
+    else:
+        st.text_area(
+            f"Ontology classes without matching corpus lines: ({unmatched_class_count})",
+            f"{unmatched_class_status}",
+            height=120, disabled=True,
+        )
 
     #########################
 
