@@ -1,5 +1,7 @@
 # Changelog
 
+* **v4.0.1** [17/09/2026]
+    - now available as a `Streamlit` web app 
 * **v4.0.0** [22/01/2026]
     - logging & new testing files
     - can convert `excel` to `owl`
