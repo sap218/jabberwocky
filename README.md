@@ -6,7 +6,7 @@
 Jabberwocky is a toolkit for Natural Language Processing (NLP) and **ontologies**. 
 Read the [**documentation**](https://sap218.github.io/jabberwocky/) for more detail.
 
-**Update**: Jabberwocky NLP features are now available via an [**online web app**](link soon)! 
+**Update**: Jabberwocky NLP features are now available via an [**online web app**](https://jabberwocky.streamlit.app/)! 
 
 |  | function | description
 | --- | --- | ---
@@ -57,7 +57,7 @@ When combining these Jabberwocky functions, users can create an **NLP** workflow
 
 + The poem, Jabberwocky, written by Lewis Carrol, is described as a *nonsense* poem :dragon:
 + You may think, why not use a Large Language Model (LMM)? Well I wrote a blog to compare w/ LLMs and how they overdo simple tasks, [read here](https://sap218.uk/posts/llms/).
-+ Here is a [new blog]("https://sap218.uk/posts/using-ai-to-develop/") about my experience building the [web app](link soon) with Copilot.
++ Here is a [new blog](https://sap218.uk/posts/using-ai-to-develop/) about my experience building the [web app](https://jabberwocky.streamlit.app/) with Copilot.
 
 ***
 

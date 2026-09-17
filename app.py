@@ -556,13 +556,15 @@ st.markdown(
 
 st.markdown("a toolkit for Natural Language Processing (NLP) and Ontologies &nbsp; <small>@ sap218</small>",unsafe_allow_html=True)
 
-link_colsA, link_colsB, link_colsC, _ = st.columns([0.15, 0.15, 0.15, 0.6], gap="small")
+link_colsA, link_colsB, link_colsC, link_colsD, _ = st.columns([0.15, 0.15, 0.15, 0.15, 0.6], gap="small")
 with link_colsA:
     st.link_button("JOSS", "https://joss.theoj.org/papers/10.21105/joss.02168")
 with link_colsB:
     st.link_button("Github", "https://github.com/sap218/jabberwocky")
 with link_colsC:
-    st.link_button("Post", "https://sap218.uk/projects/jabberwocky/")
+    st.link_button("Post", "https://sap218.uk/posts/using-ai-to-develop/")
+with link_colsD:
+    st.link_button("Docs", "https://sap218.github.io/jabberwocky/")
 
 #########################
 
