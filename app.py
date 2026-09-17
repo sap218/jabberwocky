@@ -28,7 +28,7 @@ import streamlit as st
 from wordcloud import WordCloud
 
 APP_DIR = Path(__file__).resolve().parent
-WORKSPACE_ROOT = APP_DIR.parent
+WORKSPACE_ROOT = APP_DIR
 
 if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
@@ -1006,7 +1006,7 @@ if st.session_state.get("show_results", False):
     #########################
     st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
 
-    st.markdown("### Summaries")
+    st.markdown("### Log")
     st.code(corpus_status)
     st.code(classes_status)
     unmatched_words_status = (
